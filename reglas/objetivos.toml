@@ -1,0 +1,21 @@
+# Reglas de objetivos neutrales por parche.
+# ESTADO: SIN VERIFICAR. Los valores vienen de guías secundarias; hay que contrastarlos
+# con las notas de parche oficiales antes de que el motor de reglas los use.
+
+verificado = false
+parche = "26.22"
+fuente = "guías secundarias citadas en el informe de investigación (noviembre de 2026)"
+
+[apariciones]            # minuto:segundo de la primera aparición
+dragon = "5:00"
+vastilarvas = "8:00"      # aparecen una sola vez
+heraldo = "15:00"
+baron = "20:00"
+
+[eliminados]
+atakhan = "eliminado en el parche 26.1"
+hazanas_de_fuerza = "eliminadas en el parche 26.1"
+
+[notas]
+primer_baron_oro_equipo = 150
+placas = "ya no caen; torres interiores y de inhibidor también tienen 5 placas"

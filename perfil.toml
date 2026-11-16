@@ -1,0 +1,17 @@
+# Perfil del jugador: pool, roles y metas. Edítalo cuando cambien.
+
+pool = ["Ahri", "Cassiopeia", "Sylas", "Taliyah", "Tristana"]
+
+[roles]
+principal = "MIDDLE"
+secundario = "BOTTOM"
+
+[metas]
+cs_10 = 70                    # súbditos al minuto 10
+muertes_antes_de_14 = 1       # máximo deseado por partida
+partidas_por_sesion = 3       # a partir de la siguiente, la app avisa
+
+[sesion]
+# Horas que se restan a la hora UTC para decidir a qué día pertenece una partida.
+# 10 = UTC-5 con el día cortando a las 5 de la mañana.
+desfase_horas = 10
