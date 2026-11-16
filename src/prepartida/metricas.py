@@ -39,7 +39,15 @@ SELECT yo.match_id, yo.inicio, yo.parche, yo.campeon, yo.posicion, yo.lado, yo.v
        c10.oro_total - r10.oro_total AS dif_oro_10,
        c15.oro_total - r15.oro_total AS dif_oro_15,
        coalesce(mu.muertes_14, 0) AS muertes_14,
-       mu.primera_muerte_min
+       mu.primera_muerte_min,
+       yo.champion_id AS champion_id,
+       r.champion_id AS rival_champion_id,
+       yo.item0 AS item0, yo.item1 AS item1, yo.item2 AS item2, yo.item3 AS item3,
+       yo.item4 AS item4, yo.item5 AS item5, yo.item6 AS item6,
+       yo.hechizo1 AS hechizo1, yo.hechizo2 AS hechizo2,
+       yo.runa_clave AS runa_clave,
+       yo.arbol_primario AS arbol_primario,
+       yo.arbol_secundario AS arbol_secundario
 FROM yo
 LEFT JOIN participantes r
        ON r.match_id = yo.match_id AND r.posicion = yo.posicion

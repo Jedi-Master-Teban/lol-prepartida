@@ -197,7 +197,7 @@ Hecho cuando:
 - `git status` está limpio.
 - `git ls-files | grep -E "^\.env$|^data/|^\.venv/"` no devuelve nada.
 
-### [ ] T02 — Exportador de datos
+### [x] T02 — Exportador de datos
 
 Crea `src/prepartida/exportar.py` y `tests/test_exportar.py`.
 
@@ -374,7 +374,8 @@ Hecho cuando: abrir cualquier partida muestra sus tres bloques sin errores en co
   2. `git push -u origin main`.
   3. En el repositorio: Settings → Pages → Source "Deploy from a branch" → rama `main`, carpeta `/docs`.
 - Antes del primer push, comprueba que `git ls-files` no incluye `.env` ni nada de `data/`,
-  y que `git grep -n "RGAPI-"` no devuelve nada.
+  y que `git grep -nE "RGAPI-[0-9a-f]{8}-"` no devuelve nada (este patrón detecta claves reales
+  e ignora el marcador de `.env.example`, que usa `x` en lugar de dígitos).
 
 Hecho cuando: el README tiene los pasos y las dos comprobaciones pasan.
 
