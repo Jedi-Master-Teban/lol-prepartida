@@ -225,7 +225,7 @@ Para probar `muertes`, puedes insertar un evento con `position` en la base de pr
 
 Hecho cuando: `pytest` pasa completo.
 
-### [ ] T03 — Comandos `exportar` y `publicar`
+### [x] T03 — Comandos `exportar` y `publicar`
 
 En `cli.py`:
 - `prepartida exportar`: abre la base en solo lectura, llama a `exportar(...)` con destino `docs/data`

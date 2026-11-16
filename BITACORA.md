@@ -54,3 +54,28 @@
     lista completa, se cambia para dejar `[]` en cada partida.
   - En `partidas.json`, `hechizos` es un arreglo de dos posiciones: si falta un hechizo queda `null`
     dentro del arreglo. No pasa con los datos reales.
+
+## T03 — 2026-11-16
+- Archivos: `src/prepartida/cli.py` (comandos `exportar` y `publicar`), `tests/test_cli.py` (nuevo),
+  `docs/data/*.json` (los seis archivos con datos reales), `.gitignore`, `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (30 pasan, 4 nuevos); `prepartida exportar` genera los seis archivos con la
+  base real (77 partidas, 77 curvas, 496 muertes, 204 compras, 171 estáticos); `prepartida publicar`
+  con una clave falsa muestra el error y no continúa
+- Decisiones tomadas:
+  - `exportar` abre la base en solo lectura con `duckdb.connect(..., read_only=True)`; `db.py` no se
+    tocó. Si la base no existe, avisa y devuelve 2.
+  - `exportar` y `publicar` aceptan `--destino` (por defecto `docs/data`) y `--perfil`
+    (por defecto `perfil.toml`).
+  - `publicar` hace ingesta, exportación, `git add`, commit y push. Si los datos no cambiaron, lo
+    dice y no hace commit ni push. Si no hay remoto configurado, hace el commit y avisa que omite
+    el push.
+  - Los comandos de git se ejecutan en la raíz del repositorio (`git rev-parse --show-toplevel`),
+    así que el comando funciona desde cualquier subcarpeta.
+  - El mensaje del commit de datos es `datos: <fecha> <hora>` en hora local, por ejemplo
+    `datos: 2026-11-16 16:20`.
+  - `.gitignore`: el patrón `data/` ignoraba también `docs/data/`, que sí se versiona (es lo que se
+    publica). Se cambió a `/data/`, que sigue ignorando la base local y las respuestas crudas.
+  - Con clave inválida, `publicar` captura `ClaveInvalida`, escribe `La ingesta falló: ...` y
+    devuelve 1 sin exportar ni hacer commit.
+- Dudas para el supervisor: el formato del commit de datos (`datos: <fecha> <hora>`) fue decisión
+  mía; se puede cambiar a solo fecha si se prefiere.
