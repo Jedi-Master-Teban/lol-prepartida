@@ -58,6 +58,8 @@ function renderCabecera(meta) {
   const jugador = meta.jugador;
   const tierTexto = jugador.tier ? TIER_ESPANOL[jugador.tier] || jugador.tier : "";
   const partes = [tierTexto, jugador.division, jugador.lp != null ? `${jugador.lp} LP` : null].filter(Boolean);
+  const tierDivision = [tierTexto, jugador.division].filter(Boolean).join(" ");
+  const partes = [tierDivision, jugador.lp != null ? `${jugador.lp} LP` : null].filter(Boolean);
   const rango = partes.length ? partes.join(" · ") : "Sin rango";
   nombreEl.textContent = `${jugador.game_name} #${jugador.tag_line}`;
   rangoEl.textContent = `${rango} · ${jugador.victorias} victorias, ${jugador.derrotas} derrotas`;

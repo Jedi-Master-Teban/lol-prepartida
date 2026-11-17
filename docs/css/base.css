@@ -450,3 +450,16 @@ img {
   font-size: 10px;
 }
 
+.leyenda-pool {
+  display: flex;
+  gap: 24px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--texto-suave);
+  flex-wrap: wrap;
+}
+
+.leyenda-item {
+  white-space: nowrap;
+}
+

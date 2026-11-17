@@ -356,8 +356,11 @@ export function render(container, datos) {
 
   const leyenda = document.createElement("div");
   leyenda.className = "leyenda-pool suave";
-  leyenda.textContent = datosPool
-    .map((d) => `${d.etiqueta}: ${d.tasa} % · ${d.victorias} de ${d.partidas}`)
-    .join("   ");
+  for (const d of datosPool) {
+    const item = document.createElement("span");
+    item.className = "leyenda-item";
+    item.textContent = `${d.etiqueta}: ${d.tasa} % · ${d.victorias} de ${d.partidas}`;
+    leyenda.appendChild(item);
+  }
   poolVs.appendChild(leyenda);
 }

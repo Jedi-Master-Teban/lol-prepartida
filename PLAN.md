@@ -421,7 +421,7 @@ Nota del supervisor: el commit de T06b borró `docs/js/vistas/pool.js` y `main.j
 quedó rota ("No se pudieron cargar los datos"). El supervisor creó un `pool.js` vacío para poder
 revisar. T07 lo llenará; no lo borres.
 
-### [ ] T06d — Colores de las gráficas y minigráficas
+### [x] T06d — Colores de las gráficas y minigráficas
 
 El supervisor midió T06c en un navegador real: 1280 px → 925 px de alto; 390 px → 1.763 px; canvas de
 44, 44, 44, 44, 260 y 120 px; cuatro tarjetas en una fila; retratos de 48 px; `pool.js` versionado.
@@ -452,7 +452,12 @@ Hecho cuando (medido en un navegador real, con captura o descripción de lo que 
 **PUNTO DE CONTROL 2 (tercer repaso).** Detente. El supervisor revisa las gráficas; con su visto bueno
 sigue T07.
 
-### [ ] T07 — Vista Pool
+> **Nota del supervisor para T07 (dos retoques menores de Inicio, mismo commit):** la cabecera lee
+> "Bronce · III · 22 LP", y debe leer "Bronce III · 22 LP" (sin punto entre el tier y la división); y
+> los textos bajo las barras de "Pool vs fuera del pool" salen pegados ("27 de 56 Fuera del pool"),
+> sepáralos con un espacio de 24 px o en dos líneas.
+
+### [x] T07 — Vista Pool
 
 `docs/js/vistas/pool.js`:
 - Una tarjeta por combinación campeón–posición del pool, ordenadas por partidas.

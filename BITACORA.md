@@ -282,3 +282,33 @@ Medido en un navegador real tras reiniciar el servidor local.
   4. Cabecera: rango lee "Bronce III · 22 LP · 31 victorias, 39 derrotas" (separador " · ").
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T06d
+
+Medido en un navegador real (707 px de ancho): página de 1.220 px; canvas 44, 44, 44, 44, 260 y 120 px.
+Las barras son azul y gris claro, los ejes y la leyenda se leen, las minigráficas recorren el ancho de la
+tarjeta, la línea de meta es dorada y punteada. Sin `var(--` en opciones de gráficas.
+Retoques menores pasados a T07: "Bronce · III" debe ser "Bronce III"; separar los dos textos bajo las barras.
+Veredicto: T06d aprobada. Punto de control 2 superado; sigue T07.
+
+## T07 — 2026-11-16
+- Archivos: `docs/js/vistas/pool.js` (nuevo), `docs/js/main.js`, `docs/js/vistas/inicio.js`, `docs/css/base.css`,
+  `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan); todos los archivos JS pasan
+  `node --check`; recursos servidos con 200 (`pool.js`, `tema.js`, `main.js`, `inicio.js`, `chart.umd.js`);
+  Ahri MIDDLE: 31 partidas, 14 victorias, tasa ajustada 46.3 %, oro al 15 −350 (coincide con `prepartida estado`);
+  cabecera lee "Bronce III · 22 LP · 31 victorias, 39 derrotas" (sin punto entre tier y división);
+  leyenda "Pool vs fuera del pool" separada con gap 24 px ("En el pool: 48.2 % · 27 de 56" / "Fuera del pool: ...").
+- Retoques del supervisor aplicados en el mismo commit (nota de T06d):
+  1. Cabecera: tier y división unidos con espacio ("Bronce III"), separado de LP con " · ".
+  2. Textos bajo las barras de pool/fuera: cada uno en su propio `<span>` dentro de `.leyenda-pool`
+     (flex `gap: 24px`), sin texto pegado.
+- Decisiones tomadas (T07):
+  - Tarjetas por campeon|posición del pool, ordenadas por partidas (`agrupar` ya ordena por partidas desc).
+  - Cada tarjeta: retrato 48 px, nombre, posición, partidas, victorias, tasa ajustada, CS al 10, oro al 15
+    (entero con signo), muertes antes del 14 (2 decimales); etiqueta "muestra pequeña" si < 10 partidas.
+  - Indicador de línea: barra centrada en cero con escala común pool + fuera (mitad del ancho a cada lado),
+    color `--victoria`/`--derrota` y número escrito.
+  - Sección plegable `<details>` "Fuera del pool" con las mismas tarjetas en tamaño reducido (`.tarjeta-reducida`).
+  - Colores vía `token()` de `tema.js`; ninguna cadena `var(--` en opciones de Chart.js.
+- Dudas para el supervisor: ninguna.
+
