@@ -314,7 +314,7 @@ Pruebas mínimas:
 
 Hecho cuando: `node --test docs/js` pasa.
 
-### [ ] T06 — Vista Inicio
+### [x] T06 — Vista Inicio
 
 `docs/js/vistas/inicio.js`:
 - **Aviso de sesión:** si las partidas de hoy son `>= perfil.partidas_por_sesion`, un aviso visible

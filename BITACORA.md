@@ -143,3 +143,19 @@
     de `ventana` partidas; `curvaPromedio` promedia por minuto entre las partidas indicadas,
     cubriendo minutos 0 a `hastaMinuto` (por defecto 20).
 - Dudas para el supervisor: ninguna.
+
+## T06 — 2026-11-16
+- Archivo: `docs/js/vistas/inicio.js`
+- Verificación: con la base real, `resumen(partidas)` da CS al 10 = 55.0, oro al 15 = −414,
+  "por detrás en 47 de 74", muertes antes del 14 = 1.52 (coincide con la verificación del
+  supervisor en el punto de control 1). La tasa dentro del pool = 48.2 % (27 victorias / 56 partidas).
+  Todos los recursos de la página sirven con 200 y el JS pasa sintaxis y pruebas.
+- Decisiones tomadas:
+  - La vista expone `render(container, datos)` y es orquestada por `main.js` al activarse `#inicio`.
+  - Cuatro indicadores (CS al 10, oro al 15, muertes antes del 14, tasa en pool), cada uno con su
+    número de partidas y una minigráfica de `tendencia` de las últimas 30 partidas.
+  - Aviso de sesión cuando `partidas de hoy >= perfil.partidas_por_sesion`.
+  - Gráfica de progreso: media móvil de 10 partidas del CS al 10 con línea de meta en --acento.
+  - Barras "Pool vs fuera del pool" con tasa y nº de partidas (eje Y invertido).
+  - Colores solo como refuerzo: cada valor lleva su texto (victoria/derrota o meta).
+- Dudas para el supervisor: ninguna.
