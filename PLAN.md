@@ -559,7 +559,7 @@ Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
 > (Tristana +1026) se sale de la tarjeta: cuando la barra pase del 40 % del contenedor, pon el número
 > dentro de la barra (texto oscuro) o del lado contrario del cero.
 
-### [ ] T09 — Vista Muertes
+### [x] T09 — Vista Muertes
 
 `docs/js/vistas/muertes.js`:
 - Minimapa cuadrado con las muertes como puntos, posicionadas con `aCoordenadaMapa`.
@@ -573,7 +573,15 @@ detente y anótalo: no ajustes los límites a ojo.
 
 Hecho cuando: los filtros funcionan y la verificación de coordenadas se cumple.
 
-### [ ] T10 — Vista Partidas
+> **Retoques pendientes de Muertes (haz esto primero, en el commit de T10; incluye el cambio del
+> supervisor en `docs/css/base.css`, que ya está en el árbol sin commit):** (a) en el selector de
+> campeón, "Todos" incluye campeones de fuera del pool (MissFortune, etc.): llama a esa opción
+> "Todas las partidas" y añade "Todo el pool" como valor por defecto, igual que en Línea. (b) En el
+> título de cada punto usa el nombre visible del campeón (`estaticos.campeones[clave].nombre`, p. ej.
+> "Miss Fortune", no "MissFortune"); igual en las demás vistas que muestren nombres. (c) Leyenda bajo el
+> mapa: punto azul = victoria, punto rojo = derrota.
+
+### [x] T10 — Vista Partidas
 
 `docs/js/vistas/partidas.js`:
 - Lista de las últimas 30 partidas, de la más reciente a la más antigua: fecha local, resultado

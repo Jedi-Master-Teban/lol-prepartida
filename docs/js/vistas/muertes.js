@@ -11,7 +11,7 @@ function formatoNumero(valor, decimales = 1) {
 }
 
 export function render(container, datos) {
-  const { partidas, muertes, meta } = datos;
+  const { partidas, muertes, meta, estaticos } = datos;
   const version = meta.version_ddragon;
   container.innerHTML = "";
 
@@ -26,11 +26,17 @@ export function render(container, datos) {
     };
   }
 
+  // Lookup: clave de campeón → nombre visible (p. ej. "MissFortune" → "Miss Fortune")
+  const nombreCampeon = {};
+  for (const [id, info] of Object.entries(estaticos.campeones || {})) {
+    if (info.clave) nombreCampeon[info.clave] = info.nombre;
+  }
+
   // Campeones del pool para el filtro
   const campeonesPool = [...new Set(partidas.filter(p => p.en_pool).map(p => p.campeon))].sort();
 
   // --- Estado de filtros ---
-  let filtroCampeon = "todos";
+  let filtroCampeon = "pool";
   let filtroLado = "todos";
   let filtroTiempo = "0-14";
 
@@ -41,7 +47,10 @@ export function render(container, datos) {
   const lblCampeon = document.createElement("label");
   lblCampeon.textContent = "Campeón: ";
   const selCampeon = document.createElement("select");
-  selCampeon.innerHTML = `<option value="todos">Todos</option>`;
+  selCampeon.innerHTML = `
+    <option value="pool" selected>Todo el pool</option>
+    <option value="todas">Todas las partidas</option>
+  `;
   for (const c of campeonesPool) {
     selCampeon.innerHTML += `<option value="${c}">${c}</option>`;
   }
@@ -96,6 +105,25 @@ export function render(container, datos) {
   puntosDiv.style.height = "100%";
   mapaDiv.appendChild(puntosDiv);
 
+  // Leyenda
+  const leyendaDiv = document.createElement("div");
+  leyendaDiv.className = "leyenda-mapa";
+  const puntoVictoria = document.createElement("span");
+  puntoVictoria.className = "punto-leyenda";
+  puntoVictoria.style.backgroundColor = token("victoria");
+  const lblVictoria = document.createElement("span");
+  lblVictoria.textContent = "Victoria";
+  const puntoDerrota = document.createElement("span");
+  puntoDerrota.className = "punto-leyenda";
+  puntoDerrota.style.backgroundColor = token("derrota");
+  const lblDerrota = document.createElement("span");
+  lblDerrota.textContent = "Derrota";
+  leyendaDiv.appendChild(puntoVictoria);
+  leyendaDiv.appendChild(lblVictoria);
+  leyendaDiv.appendChild(puntoDerrota);
+  leyendaDiv.appendChild(lblDerrota);
+  mapaDiv.appendChild(leyendaDiv);
+
   // Estadísticas
   const statsDiv = document.createElement("div");
   statsDiv.className = "stats";
@@ -118,7 +146,14 @@ export function render(container, datos) {
 
     let muertesFiltradas = muertes;
 
-    if (filtroCampeon !== "todos") {
+    if (filtroCampeon === "todas") {
+      // No filtro por campeón
+    } else if (filtroCampeon === "pool") {
+      muertesFiltradas = muertesFiltradas.filter(m => {
+        const info = matchLookup[m.match_id];
+        return info && info.en_pool;
+      });
+    } else {
       muertesFiltradas = muertesFiltradas.filter(m => {
         const info = matchLookup[m.match_id];
         return info && info.campeon === filtroCampeon;
@@ -151,13 +186,15 @@ export function render(container, datos) {
 
       const { izquierda, arriba } = aCoordenadaMapa(m.x, m.y);
 
+      const nombreCampeonVisible = nombreCampeon[info.campeon] || info.campeon;
+
       const punto = document.createElement("div");
       punto.className = "punto";
       punto.style.left = `${izquierda}%`;
       punto.style.top = `${arriba}%`;
       punto.style.backgroundColor = info.victoria ? token("victoria") : token("derrota");
 
-      punto.title = `${info.campeon} vs ${info.rival} · ${formatoNumero(m.minuto)} min · ${info.victoria ? "Victoria" : "Derrota"}`;
+      punto.title = `${nombreCampeonVisible} vs ${info.rival} · ${formatoNumero(m.minuto)} min · ${info.victoria ? "Victoria" : "Derrota"}`;
 
       puntosDiv.appendChild(punto);
     }

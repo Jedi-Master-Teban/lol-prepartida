@@ -469,3 +469,44 @@ prueba usó un `linea.js` viejo en caché y dio un falso negativo).
       barra con texto oscuro; nunca sale de la tarjeta (clamp 95 %).
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T09
+
+Medido en un navegador real (707 px), tras recargar la caché.
+- Defecto: los 117 puntos existían pero no se veían: la capa `.puntos` quedaba en el flujo, debajo
+  de la imagen, y el contenedor la recortaba. El supervisor añadió en `base.css`
+  `.minimapa .puntos { position: absolute; inset: 0; }` (sin commit). Ahora los 117 puntos caen dentro del mapa.
+- Verificación de coordenadas (obligatoria): CORRECTA. Las muertes antes del 14 se concentran en el
+  centro de la línea central (mid) y en la línea inferior derecha (ADC/bot); no hay reflejo ni desplazamiento.
+- Filtros: Ahri 0–14 = 51 muertes en 23 partidas; azul 24 / rojo 27 (suman 51); 14–25 y 25+ cambian el
+  conteo. Título del punto con campeón, rival, minuto y resultado. Sin errores en la consola.
+- Retoques previos verificados: etiquetas de Línea en dos líneas, sin corte; ningún número del
+  indicador de Pool sale de su tarjeta.
+- Menores pasados a T10: opción "Todos" con campeones fuera del pool, nombres internos ("MissFortune"),
+  falta leyenda de colores.
+- Veredicto: T09 aprobada con la corrección del supervisor. Sigue T10 y después el punto de control 3.
+
+## T10 — 2026-11-16
+- Archivos: `docs/js/vistas/partidas.js` (nuevo), `docs/css/base.css`, `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan);
+  todos los archivos JS pasan `node --input-type=module --check` (main.js falla solo por
+  `Chart` no definido en Node, esperado en navegador); recursos servidos con 200.
+- NO se pudo abrir un navegador real en este entorno para comprobar que abrir una partida
+  muestra las tres gráficas (diferencia de oro, CS contra meta, compras) sin errores en consola.
+  Por AGENTS.md, **no se marca la tarea como cumplida**; se reporta la limitación en vez de
+  darla por cumplida visual.
+- Decisiones tomadas (T10):
+  1. Tabla de las últimas 30 partidas, más reciente primero: fecha local, resultado (texto y
+     color), retrato propio y rival, posición, lado, KDA, CS@10, Oro@15, muertes<14, hechizos
+     con iconos y runa clave con icono.
+  2. Al hacer clic en una partida: panel de detalle con tres gráficas:
+     - Diferencia de oro vs rival (0-20 min, línea promedio + área sombreada + línea de cero).
+     - CS acumulado (0-20 min, línea promedio + línea de meta prolongada).
+     - Línea de tiempo de compras (compras.json, scatter por minuto con nombre del ítem).
+  3. Nombres visibles de campeones (estaticos.campeones[clave].nombre), ítems
+     (estaticos.items[id].nombre), hechizos (clave desde estaticos.hechizos) y runas
+     (estaticos.runas[id].nombre).
+  4. Retratos de campeón propios y rivales con urlCampeonRetrato; ítems con urlItem;
+     hechizos con urlHechizo; runas con urlIcono.
+- Dudas para el supervisor: ninguna.
+
+

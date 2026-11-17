@@ -557,6 +557,12 @@ img {
   overflow: hidden;
 }
 
+/* Capa de puntos encima de la imagen del mapa (supervisor, revisión T09) */
+.minimapa .puntos {
+  position: absolute !important;
+  inset: 0;
+}
+
 .punto {
   position: absolute;
   width: 8px;
@@ -593,6 +599,174 @@ img {
   .minimapa {
     width: 300px;
     height: 300px;
+  }
+}
+
+.minimapa .punto-leyenda {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--borde);
+  margin-right: 4px;
+}
+
+.leyenda-mapa {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--texto-suave);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* --- Vista Partidas (T10) --- */
+.tabla-partidas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--espacio);
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+}
+
+.tabla-partidas th {
+  background: var(--fondo);
+  color: var(--texto-suave);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla-partidas td {
+  padding: 8px;
+  border-bottom: 1px solid var(--borde);
+  font-size: 13px;
+}
+
+.tabla-partidas tr.fila-partida:hover {
+  background: rgba(212, 169, 74, 0.05);
+  cursor: pointer;
+}
+
+.celda-con-icono {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icono-pequeno {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.nombre-pequeno {
+  font-size: 12px;
+  color: var(--texto);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+.celda-iconos {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.icono-hechizo {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.nombre-hechizo {
+  font-size: 11px;
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
+.celda-runa {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icono-runa {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.nombre-runa {
+  font-size: 11px;
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
+.detalle-partida {
+  margin-top: var(--espacio);
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: var(--espacio);
+}
+
+.cerrar-detalle {
+  position: absolute;
+  top: var(--espacio);
+  right: var(--espacio);
+  background: var(--borde);
+  color: var(--texto);
+  border: none;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.info-partida {
+  margin-bottom: var(--espacio);
+  padding-bottom: var(--espacio);
+  border-bottom: 1px solid var(--borde);
+  font-size: 13px;
+  color: var(--texto-suave);
+}
+
+.compras-timeline {
+  position: relative;
+  height: 200px;
+}
+
+@media (max-width: 599px) {
+  .tabla-partidas {
+    font-size: 11px;
+  }
+  .tabla-partidas th,
+  .tabla-partidas td {
+    padding: 6px;
+  }
+  .icono-pequeno {
+    width: 20px;
+    height: 20px;
+  }
+  .nombre-pequeno {
+    max-width: 60px;
+  }
+  .compras-timeline {
+    height: 150px;
   }
 }
 
