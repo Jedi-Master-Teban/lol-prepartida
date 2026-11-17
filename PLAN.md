@@ -742,7 +742,7 @@ Decisiones del supervisor para esta fase:
 
 Hecho cuando: `pytest` pasa con las pruebas nuevas.
 
-### [ ] R02 — Comando `prepartida muestra`
+### [x] R02 — Comando `prepartida muestra`
 
 `src/prepartida/muestra.py` y el comando:
 

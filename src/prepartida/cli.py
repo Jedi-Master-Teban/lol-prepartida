@@ -10,7 +10,7 @@ from pathlib import Path
 
 import duckdb
 
-from prepartida import db, ddragon, estado, exportar, ingest
+from prepartida import db, ddragon, estado, exportar, ingest, muestra
 from prepartida.config import leer_config
 from prepartida.perfil import leer_perfil
 from prepartida.riot_client import ClaveInvalida, RiotClient, RiotError
@@ -165,6 +165,34 @@ def _publicar_en_git(destino: Path) -> int:
     return 0
 
 
+def _cmd_muestra(args: argparse.Namespace) -> int:
+    """Descarga una muestra de partidas de otro rango."""
+    cfg = leer_config()
+    if not cfg.api_key:
+        print("Falta RIOT_API_KEY en .env", file=sys.stderr)
+        return 2
+    ruta = Path("data") / "muestra.duckdb"
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    con = db.conectar(ruta)
+    try:
+        cliente = RiotClient(cfg.api_key, cfg.platform, cfg.region)
+        try:
+            muestra.run(
+                con,
+                cliente,
+                args.tier,
+                args.partidas,
+                args.por_jugador,
+                args.semilla,
+                aviso=print,
+            )
+        finally:
+            cliente.close()
+    finally:
+        con.close()
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="prepartida", description=__doc__)
     sub = parser.add_subparsers(dest="comando", required=True)
@@ -199,6 +227,17 @@ def main(argv: list[str] | None = None) -> int:
         "--todas-las-colas", action="store_true", help="Incluye colas distintas de Solo/Dúo"
     )
     p.set_defaults(func=_cmd_publicar)
+
+    p = sub.add_parser("muestra", help="Descarga una muestra de partidas de otro rango")
+    p.add_argument("--tier", required=True, help="Tier (ej. GOLD)")
+    p.add_argument(
+        "--partidas", type=int, default=300, help="Máximo de partidas a descargar"
+    )
+    p.add_argument(
+        "--por-jugador", type=int, default=2, help="Partidas por jugador a descargar"
+    )
+    p.add_argument("--semilla", type=int, default=None, help="Semilla aleatoria")
+    p.set_defaults(func=_cmd_muestra)
 
     args = parser.parse_args(argv)
     try:

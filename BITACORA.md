@@ -723,3 +723,23 @@ Medido en un navegador real, tras recargar la caché.
   Se quitó la copia. `pytest`: 35 pasan.
 - Veredicto: R01 aprobada. Sigue R02. Incluye este cambio en el commit de R02.
 
+## R02 — 2026-11-16
+- Archivos: `src/prepartida/muestra.py` (nuevo), `src/prepartida/cli.py` (comando `muestra`),
+  `tests/test_muestra.py` (nuevo), `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (40 pasan, 5 nuevas de R02)
+- Decisiones tomadas:
+  1. `muestra.py` crea su propia base `data/muestra.duckdb` usando `db.conectar()` (que crea
+     todo el esquema) y luego agrega la tabla `muestra_partidas(match_id, tier_muestra,
+     fecha_muestra)`.
+  2. Recorre divisiones I a IV del tier. En cada división pide páginas al azar con la semilla,
+     baraja la lista de jugadores y itera sobre ellos.
+  3. Para cada jugador, obtiene sus IDs de partida (queue=420), saltea las ya en
+     `muestra_partidas`, descarga las primeras `--por-jugador` que no estén guardadas y sean
+     recientes (menos de 30 días), y las guarda con `ingest.guardar_partida()` (raw_dir=None,
+     sin copia cruda).
+  4. Se detiene al alcanzar `--partidas` partidas totales del tier. Es reanudable: las partidas
+     ya en `muestra_partidas` se saltean en ejecuciones posteriores.
+  5. Muestra progreso cada 25 partidas: "GOLD: 75 de 300 partidas".
+  6. La tabla `muestra_partidas` registra `match_id`, `tier_muestra` y `fecha_muestra`.
+- Dudas para el supervisor: ninguna.
+
