@@ -457,7 +457,7 @@ sigue T07.
 > los textos bajo las barras de "Pool vs fuera del pool" salen pegados ("27 de 56 Fuera del pool"),
 > sepáralos con un espacio de 24 px o en dos líneas.
 
-### [x] T07 — Vista Pool
+### [ ] T07 — Vista Pool (reabierta: ver T07b)
 
 `docs/js/vistas/pool.js`:
 - Una tarjeta por combinación campeón–posición del pool, ordenadas por partidas.
@@ -468,6 +468,37 @@ sigue T07.
 - Sección plegable "Fuera del pool" con las mismas tarjetas en tamaño reducido.
 
 Hecho cuando: las cifras de Ahri MIDDLE coinciden con `prepartida estado`.
+
+### [ ] T07b — Correcciones de la vista Pool
+
+El supervisor abrió `#pool` en un navegador real. Antes de revisar tuvo que borrar una línea de
+`docs/js/main.js` (declaración doble de `const partes`, "Identifier 'partes' has already been
+declared"), que dejaba TODA la página en "Cargando...". Ese arreglo ya está en el árbol de trabajo
+(sin commit): inclúyelo en el commit de esta tarea. Ahora la vista carga, pero:
+
+1. **Las cifras de las tarjetas salen vacías.** `pool.js` lee `tasa_ajustada`, `cs_10`, `dif_oro_15`,
+   `muertes_14`, pero `agrupar()` de `calc.js` devuelve `tasaAjustada`, `cs10`, `difOro15`, `muertes14`
+   (camelCase). Resultado: "—%", "—", y oro "0" en todas las tarjetas, y las barras del indicador de línea
+   vacías. Usa los nombres que devuelve `agrupar()`. No cambies `calc.js` ni sus pruebas.
+2. **Muertes con 2 decimales.** `promedio()` redondea a 1 decimal; en esa vista las muertes antes del 14
+   deben verse con 2 decimales (p. ej. 1.52). Si hace falta, `agrupar()` devuelve sin redondear y las
+   vistas redondean al mostrar; ajusta `calc.test.js` si cambia.
+3. **Orden.** Las tarjetas deben ir de más a menos partidas (hoy: Ahri 31, Tristana 6, Cassiopeia 7...).
+   Ordena en `pool.js` con `.sort((a, b) => b.partidas - a.partidas)`.
+4. **Formato.** Tasa ajustada con un espacio antes del signo ("46.3 %"); oro con signo "−350" /
+   "+120" (usa el signo menos "−"); "Fuera del pool (9 combinaciones)" (el plural era "combinacións").
+5. **Indicador de línea.** La barra se ve como un punto. Con las cifras correctas debe verse una barra
+   horizontal centrada en cero con el número al lado (a favor azul, en contra rojo).
+6. **Verificación.** El comando `node --check archivo.js` NO detecta errores de módulos ES. Usa
+   `node --input-type=module --check < docs/js/main.js` (y lo mismo con cada archivo de `docs/js`), y
+   además abre la página y mira la consola. Si no tienes navegador, DILO y no marques la tarea.
+
+Hecho cuando (medido en un navegador real; si no hay navegador, no marques):
+- Ahri MIDDLE muestra 31 partidas, 14 victorias, tasa ajustada 46.3 %, oro al 15 de −350 (compara con
+  `python3 -m prepartida estado` o el comando equivalente), y su barra de oro es visible.
+- Ninguna tarjeta del pool muestra "—" salvo que el dato no exista.
+- La página `#pool` a 390 px de ancho mide menos de 4.500 px y no desborda horizontalmente.
+- `pytest` y `node --test docs/js/calc.test.js` pasan.
 
 ### [ ] T08 — Vista Línea
 

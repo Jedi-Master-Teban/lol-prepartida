@@ -9,7 +9,7 @@ export function tasaAjustada(victorias, partidas, prior = 10) {
 function promedio(valores) {
   if (valores.length === 0) return null;
   const suma = valores.reduce((acumulado, valor) => acumulado + valor, 0);
-  return Math.round((suma / valores.length) * 10) / 10;
+  return suma / valores.length;
 }
 
 export function agrupar(partidas, fnClave) {

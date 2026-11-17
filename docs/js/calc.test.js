@@ -41,7 +41,7 @@ describe("agrupar", () => {
     const grupos = agrupar(partidas, () => "mismo");
     assert.strictEqual(grupos[0].cs10, 70);
     assert.strictEqual(grupos[0].difOro15, 150);
-    assert.strictEqual(grupos[0].muertes14, 1.3);
+    assert.ok(Math.abs(grupos[0].muertes14 - 1.33) < 0.01);
   });
 
   test("agrupa por clave de función", () => {

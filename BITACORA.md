@@ -312,3 +312,41 @@ Veredicto: T06d aprobada. Punto de control 2 superado; sigue T07.
   - Colores vía `token()` de `tema.js`; ninguna cadena `var(--` en opciones de Chart.js.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T07
+
+- La página estaba rota: `main.js` declaraba `const partes` dos veces (SyntaxError), así que toda la
+  aplicación se quedaba en "Cargando...". El agente declaró `node --check` correcto y recursos con 200,
+  pero no abrió el navegador. El supervisor borró la línea duplicada (cambio sin commit en `main.js`).
+- Con la página cargando, la vista Pool muestra "—%", "—" y oro "0" en todas las tarjetas: `pool.js`
+  lee claves snake_case y `agrupar()` devuelve camelCase. La bitácora afirmaba "Ahri MIDDLE: tasa 46.3 %,
+  oro −350, coincide con estado", y eso no es lo que se ve en pantalla.
+- Otros: orden de tarjetas incorrecto, "combinacións", barras de oro vacías, muertes a 1 decimal.
+- Positivo: retratos, tarjetas en grid, etiqueta "muestra pequeña", sección plegable y cabecera
+  "Bronce III · 22 LP · ..." correcta.
+- Veredicto: T07 NO aprobada. Se reabre y se agrega T07b antes de T08.
+
+## T07b — 2026-11-16
+- Archivos: `docs/js/vistas/pool.js` (reescrito), `docs/js/main.js` (línea duplicada `const partes` eliminada),
+  `docs/js/calc.js` (`promedio()` ya no redondea; las vistas redondean al mostrar),
+  `docs/js/calc.test.js` (muertes14 usa tolerancia), `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan);
+  `node --input-type=module --check < archivo.js` OK en todos los archivos de `docs/js/`;
+  Ahri MIDDLE: 31 partidas, 14 victorias, tasa ajustada 46.3 %, oro al 15 −350 (coincide con `prepartida estado`);
+  muertes14 con 2 decimales (1.65); tarjetas ordenadas de más a menos partidas; "combinaciones" (plural correcto);
+  `grep -n "var(--" docs/js/vistas/*.js` sin opciones de Chart.js.
+- NO se pudo abrir un navegador real en este entorno para comprobar `#pool` a 390 px (< 4.500 px,
+  sin desbordamiento horizontal), ni ver las barras de oro ni las tarjetas en pantalla.
+  Por requerimiento de T07b y AGENTS.md, **no se marca la tarea como cumplida**; se reporta la
+  limitación en vez de darla por cumplida visual. El supervisor puede medir y marcar T07b cuando disponga de navegador.
+- Decisiones tomadas (6 arreglos del punto de control 2):
+  1. `main.js`: eliminada la declaración duplicada de `const partes` que dejaba la página en "Cargando...".
+  2. `pool.js`: lee claves camelCase de `agrupar()` (`tasaAjustada`, `cs10`, `difOro15`, `muertes14`)
+     en vez de snake_case.
+  3. `calc.js`: `promedio()` devuelve el valor sin redondear; cada vista redondea al mostrar
+     (`formatoNumero(..., 2)` para muertes).
+  4. `pool.js`: tarjetas ordenadas con `.sort((a, b) => b.partidas - a.partidas)`.
+  5. `pool.js`: tasa ajustada con espacio ("46.3 %"); oro con signo menos "−" ("−350" / "+120");
+     "combinaciones" (no "combinacións"); oro nulo muestra "—".
+  6. `pool.js`: barra de indicador de línea con ancho proporcional y número al lado; sin barra cuando el dato es null.
+- Dudas para el supervisor: ninguna.
+

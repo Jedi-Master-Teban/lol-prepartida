@@ -1,4 +1,4 @@
-/* Vista Pool (sección 1b, T07 de PLAN.md).
+/* Vista Pool (sección 1b, T07b de PLAN.md).
    Recibe datos ya calculados y solo dibuja. */
 
 import { agrupar } from "../calc.js";
@@ -12,7 +12,7 @@ function formatoNumero(valor, decimales = 1) {
 
 function numeroConSigno(valor) {
   if (valor == null) return "—";
-  return valor > 0 ? "+" + valor : valor;
+  return valor > 0 ? "+" + valor : String(valor).replace("-", "\u2212");
 }
 
 function claveGrupo(p) {
@@ -20,10 +20,18 @@ function claveGrupo(p) {
 }
 
 function renderTarjeta(contenedor, grupo, version, escala, esReducida) {
-  const { clave, partidas, victorias, tasa_ajustada, cs_10, dif_oro_15, muertes_14 } = grupo;
+  const {
+    clave,
+    partidas,
+    victorias,
+    tasaAjustada,
+    cs10,
+    difOro15,
+    muertes14,
+  } = grupo;
   const [campeon, posicion] = clave.split("|");
   const muestraPequena = partidas < 10;
-  const oroEntero = Math.round(dif_oro_15 ?? 0);
+  const oroEntero = difOro15 == null ? null : Math.round(difOro15);
 
   const tarjeta = document.createElement("article");
   tarjeta.className = `tarjeta tarjeta-campeon${esReducida ? " tarjeta-reducida" : ""}`;
@@ -38,16 +46,16 @@ function renderTarjeta(contenedor, grupo, version, escala, esReducida) {
     <div class="estadisticas">
       <div><span class="valor">${partidas}</span> partidas</div>
       <div><span class="valor">${victorias}</span> victorias</div>
-      <div><span class="valor">${formatoNumero(tasa_ajustada)}%</span> tasa ajustada</div>
-      <div><span class="valor">${formatoNumero(cs_10)}</span> CS al 10</div>
-      <div><span class="valor oro">${numeroConSigno(oroEntero)}</span> oro al 15</div>
-      <div><span class="valor">${formatoNumero(muertes_14, 2)}</span> muertes &lt; 14</div>
+      <div><span class="valor">${formatoNumero(tasaAjustada)} %</span> tasa ajustada</div>
+      <div><span class="valor">${formatoNumero(cs10)}</span> CS al 10</div>
+      <div><span class="valor oro">${oroEntero == null ? "—" : numeroConSigno(oroEntero)}</span> oro al 15</div>
+      <div><span class="valor">${formatoNumero(muertes14, 2)}</span> muertes &lt; 14</div>
     </div>
     <div class="indicador-linea">
       <div class="barra-contenedor">
         <div class="cero"></div>
-        <div class="barra" style="background:${dif_oro_15 >= 0 ? token("victoria") : token("derrota")}"></div>
-        <span class="numero-linea">${numeroConSigno(oroEntero)}</span>
+        <div class="barra" style="background:${oroEntero != null && oroEntero >= 0 ? token("victoria") : token("derrota")}"></div>
+        <span class="numero-linea">${oroEntero == null ? "—" : numeroConSigno(oroEntero)}</span>
       </div>
     </div>
     ${muestraPequena ? '<span class="etiqueta muestra-pequena">muestra pequeña</span>' : ""}
@@ -55,23 +63,21 @@ function renderTarjeta(contenedor, grupo, version, escala, esReducida) {
 
   const barra = tarjeta.querySelector(".barra");
   const numero = tarjeta.querySelector(".numero-linea");
-  const pct = escala > 0 ? Math.min((Math.abs(oroEntero) / escala) * 50, 50) : 0;
-  if (oroEntero >= 0) {
-    barra.style.left = "50%";
-    barra.style.width = `${pct}%`;
-    numero.style.marginLeft = "8px";
-    numero.style.marginRight = "";
-  } else {
-    barra.style.left = `${50 - pct}%`;
-    barra.style.width = `${pct}%`;
-    numero.style.marginRight = "8px";
-    numero.style.marginLeft = "";
-  }
-  if (dif_oro_15 == null) {
+  if (oroEntero == null) {
     barra.style.width = "0";
-    numero.textContent = "—";
   } else {
-    numero.textContent = numeroConSigno(oroEntero);
+    const pct = escala > 0 ? Math.min((Math.abs(oroEntero) / escala) * 50, 50) : 0;
+    if (oroEntero >= 0) {
+      barra.style.left = "50%";
+      barra.style.width = `${pct}%`;
+      numero.style.marginLeft = "8px";
+      numero.style.marginRight = "";
+    } else {
+      barra.style.left = `${50 - pct}%`;
+      barra.style.width = `${pct}%`;
+      numero.style.marginRight = "8px";
+      numero.style.marginLeft = "";
+    }
   }
 
   contenedor.appendChild(tarjeta);
@@ -86,12 +92,12 @@ export function render(container, datos) {
   const enPool = partidas.filter((p) => p.en_pool);
   const fueraPool = partidas.filter((p) => !p.en_pool);
 
-  const gruposPool = agrupar(enPool, claveGrupo);
-  const gruposFuera = agrupar(fueraPool, claveGrupo);
+  const gruposPool = agrupar(enPool, claveGrupo).sort((a, b) => b.partidas - a.partidas);
+  const gruposFuera = agrupar(fueraPool, claveGrupo).sort((a, b) => b.partidas - a.partidas);
 
   // Escala común para las barras de oro al 15 (mitad del ancho a cada lado del cero).
   const todos = [...gruposPool, ...gruposFuera];
-  const escala = Math.max(1, ...todos.map((g) => Math.abs(g.dif_oro_15 ?? 0)));
+  const escala = Math.max(1, ...todos.map((g) => Math.abs(g.difOro15 ?? 0)));
 
   // --- En el pool ---
   const seccionPool = document.createElement("div");
@@ -107,7 +113,7 @@ export function render(container, datos) {
   if (gruposFuera.length > 0) {
     const detalles = document.createElement("details");
     detalles.className = "seccion-fuera";
-    detalles.innerHTML = `<summary>Fuera del pool (${gruposFuera.length} combinación${gruposFuera.length !== 1 ? "s" : ""})</summary><div class='tarjetas'></div>`;
+    detalles.innerHTML = `<summary>Fuera del pool (${gruposFuera.length} combinaciones)</summary><div class='tarjetas'></div>`;
     const tarjetasFuera = detalles.querySelector(".tarjetas");
     for (const grupo of gruposFuera) {
       renderTarjeta(tarjetasFuera, grupo, version, escala, true);
