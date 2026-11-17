@@ -715,3 +715,11 @@ Medido en un navegador real, tras recargar la caché.
      entradas por página y lista vacía a partir de la página 4.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — R01
+
+- `entradas_de_liga` cumple la especificación (ruta de plataforma, cola Solo/Dúo, parámetro `page`);
+  `ids_de_partidas` ya aceptaba `queue` y `count`. Pruebas de ruta, página vacía y página uno.
+- Defecto corregido por el supervisor (sin commit): el método estaba definido dos veces, idéntico.
+  Se quitó la copia. `pytest`: 35 pasan.
+- Veredicto: R01 aprobada. Sigue R02. Incluye este cambio en el commit de R02.
+
