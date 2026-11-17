@@ -1,7 +1,7 @@
-/* Vista Inicio (sección 1b, T06/T06b de PLAN.md).
+/* Vista Inicio (sección 1b, T06/T06b/T06c de PLAN.md).
    Recibe datos ya calculados y solo dibuja. */
 
-import { agrupar, resumen, tendencia, tasaAjustada } from "../calc.js";
+import { agrupar, resumen, tendencia } from "../calc.js";
 import { urlCampeonRetrato } from "../imagenes.js";
 
 const TIER_ESPANOL = {
@@ -49,7 +49,7 @@ function crearSparkline(canvas, valores, color) {
           borderWidth: 2,
           pointRadius: 0,
           fill: false,
-          tension: 0.3,
+          tension: 0.1,
         },
       ],
     },
@@ -72,17 +72,22 @@ function tarjetaIndicador(container, titulo, valorTexto, metaTexto, partidasText
     ${metaTexto ? `<div class="meta suave">${metaTexto}</div>` : ""}
     <div class="partidas suave">${partidasTexto}</div>
   `;
-  const contenedor = document.createElement("div");
-  contenedor.className = "minigrafica";
-  const canvas = document.createElement("canvas");
-  canvas.className = "spark";
-  contenedor.appendChild(canvas);
-  tarjeta.appendChild(contenedor);
-  container.appendChild(tarjeta);
   if (valoresSpark && valoresSpark.some((v) => v != null)) {
+    const contenedor = document.createElement("div");
+    contenedor.className = "minigrafica";
+    const canvas = document.createElement("canvas");
+    canvas.className = "spark";
+    contenedor.appendChild(canvas);
+    tarjeta.appendChild(contenedor);
     crearSparkline(canvas, valoresSpark, color);
   }
+  container.appendChild(tarjeta);
   return tarjeta;
+}
+
+function tasaCruda(victorias, partidas) {
+  if (!partidas) return 0;
+  return Math.round((100 * victorias) / partidas * 10) / 10;
 }
 
 export function render(container, datos) {
@@ -112,15 +117,34 @@ export function render(container, datos) {
   const sparkOro = tendencia(ultimas30, "dif_oro_15", 3);
   const sparkMuertes = tendencia(ultimas30, "muertes_14", 3);
 
+  const valoresMuertes = partidas.map((p) => p.muertes_14).filter((v) => v != null);
+  const muertes14Raw = valoresMuertes.length
+    ? valoresMuertes.reduce((a, b) => a + b, 0) / valoresMuertes.length
+    : null;
+  const muertes14Texto = muertes14Raw != null ? formatoNumero(muertes14Raw, 2) : "—";
+
   const indicadores = document.createElement("div");
-  indicadores.className = "indicadores fila";
+  indicadores.className = "indicadores";
   container.appendChild(indicadores);
 
   const csEnPool = agrupar(partidas, (p) => (p.en_pool ? "pool" : "fuera"));
   const grupoPool = csEnPool.find((g) => g.clave === "pool");
+  const grupoFuera = csEnPool.find((g) => g.clave === "fuera");
   const partidasPool = grupoPool ? grupoPool.partidas : 0;
   const victoriasPool = grupoPool ? grupoPool.victorias : 0;
-  const tasaPool = grupoPool ? grupoPool.tasaAjustada : 0;
+  const partidasFuera = grupoFuera ? grupoFuera.partidas : 0;
+  const victoriasFuera = grupoFuera ? grupoFuera.victorias : 0;
+  const tasaPool = tasaCruda(victoriasPool, partidasPool);
+  const tasaFuera = tasaCruda(victoriasFuera, partidasFuera);
+
+  // Minigráfica de la tasa del pool: tasa acumulada de victorias en las últimas 20 del pool.
+  const poolMatches = partidas.filter((p) => p.en_pool).slice(-20);
+  const sparkPool = [];
+  let victoriasAcum = 0;
+  for (let i = 0; i < poolMatches.length; i++) {
+    if (poolMatches[i].victoria) victoriasAcum += 1;
+    sparkPool.push((victoriasAcum / (i + 1)) * 100);
+  }
 
   tarjetaIndicador(
     indicadores,
@@ -143,11 +167,13 @@ export function render(container, datos) {
   tarjetaIndicador(
     indicadores,
     "Muertes antes del 14",
-    formatoNumero(res.muertes14, 2),
-    diferenciaConMeta(res.muertes14, perfil.meta_muertes_14, 2),
+    muertes14Texto,
+    diferenciaConMeta(muertes14Raw, perfil.meta_muertes_14, 2),
     `${res.partidas} partidas`,
     sparkMuertes,
-    res.muertes14 > perfil.meta_muertes_14 ? "var(--derrota)" : "var(--victoria)"
+    muertes14Raw != null && muertes14Raw > perfil.meta_muertes_14
+      ? "var(--derrota)"
+      : "var(--victoria)"
   );
   tarjetaIndicador(
     indicadores,
@@ -155,7 +181,7 @@ export function render(container, datos) {
     `${formatoNumero(tasaPool)} %`,
     `${victoriasPool} de ${partidasPool} ganadas`,
     `${partidasPool} partidas`,
-    [],
+    sparkPool.length ? sparkPool : null,
     "var(--acento)"
   );
 
@@ -217,7 +243,7 @@ export function render(container, datos) {
           borderWidth: 2,
           pointRadius: 0,
           fill: true,
-          tension: 0.3,
+          tension: 0.1,
         },
         {
           label: `Meta ${perfil.meta_cs_10}`,
@@ -270,10 +296,9 @@ export function render(container, datos) {
   poolVs.innerHTML = `<h3>Pool vs fuera del pool</h3><div class="barras-pool"><canvas id="grafica-pool"></canvas></div>`;
   container.appendChild(poolVs);
   const ctxPool = document.getElementById("grafica-pool").getContext("2d");
-  const grupoFuera = csEnPool.find((g) => g.clave === "fuera");
   const datosPool = [
-    { etiqueta: "En el pool", tasa: grupoPool ? grupoPool.tasa : 0, n: grupoPool ? grupoPool.partidas : 0 },
-    { etiqueta: "Fuera del pool", tasa: grupoFuera ? grupoFuera.tasa : 0, n: grupoFuera ? grupoFuera.partidas : 0 },
+    { etiqueta: "En el pool", tasa: tasaPool, victorias: victoriasPool, partidas: partidasPool },
+    { etiqueta: "Fuera del pool", tasa: tasaFuera, victorias: victoriasFuera, partidas: partidasFuera },
   ];
   new Chart(ctxPool, {
     type: "bar",
@@ -299,7 +324,7 @@ export function render(container, datos) {
           callbacks: {
             label: (ctx) => {
               const d = datosPool[ctx.dataIndex];
-              return `${d.tasa} % · ${d.n} partidas`;
+              return `${d.tasa} % · ${d.victorias} de ${d.partidas}`;
             },
           },
         },
@@ -324,7 +349,7 @@ export function render(container, datos) {
   const leyenda = document.createElement("div");
   leyenda.className = "leyenda-pool suave";
   leyenda.textContent = datosPool
-    .map((d) => `${d.etiqueta}: ${d.tasa} % · ${d.n} de ${partidas.length}`)
+    .map((d) => `${d.etiqueta}: ${d.tasa} % · ${d.victorias} de ${d.partidas}`)
     .join("   ");
   poolVs.appendChild(leyenda);
 }

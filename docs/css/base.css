@@ -49,10 +49,12 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
+  height: auto;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--espacio);
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .cabecera .nombre {
@@ -61,16 +63,22 @@ img {
   letter-spacing: 0.2px;
 }
 
+.cabecera .identidad {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .cabecera .rango {
   font-size: 14px;
   color: var(--texto-suave);
-  margin-left: 8px;
+  white-space: normal;
 }
 
 .cabecera .actualizado {
   font-size: 13px;
   color: var(--texto-suave);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 /* Navegación por pestañas */
@@ -228,6 +236,73 @@ img {
 .barras-pool {
   position: relative;
   height: 120px;
+}
+
+/* --- Vista Inicio (T06c) --- */
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--espacio);
+  margin-top: var(--espacio);
+}
+
+.franja-pool {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: var(--espacio);
+  flex-wrap: wrap;
+}
+
+.etiqueta-franja {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
+.carta-pool-fila {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.carta-pool {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--texto);
+  min-width: 150px;
+}
+
+.carta-pool:hover {
+  opacity: 0.85;
+}
+
+.retrato-pool {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radio);
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  flex-shrink: 0;
+}
+
+.nombre-pool {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--texto);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.partidas-pool {
+  font-size: 12px;
+  color: var(--texto-suave);
+  white-space: nowrap;
 }
 
 /* --- Vista Pool (T07) --- */

@@ -207,3 +207,48 @@
      `3003`.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — punto de control 2 (repetido), tarea T06b
+
+Medido en un navegador real contra `python -m http.server 8000 -d docs`.
+
+- Altura de la página: 1280 px de ancho → 1.960 px (criterio < 1.800, NO cumple); 390 px →
+  2.437 px (criterio < 3.000, cumple, sin desplazamiento horizontal).
+- Canvas: 44, 44, 44, 150, 260, 120 px. Ninguno pasa de 300, pero el cuarto (150) es una minigráfica
+  vacía de la tarjeta de tasa del pool.
+- `3003` está en `estaticos` (93 ítems). No hay claves en git.
+- Defectos: clases CSS inexistentes (indicadores, franja-pool, carta-pool*, retrato-pool), retratos de
+  128 px apilados, tarjetas en una columna, minigráficas ilegibles, choque en la cabecera, tasa del
+  pool 48.5 % contra 48.2 %, textos "56 de 77" y "21 de 77" en vez de "27 de 56" y "7 de 21".
+- Proceso: T06b declaró cumplidos criterios visuales sin navegador, y borró `pool.js`, lo que rompía
+  toda la página. El supervisor restauró un `pool.js` vacío (sin versionar).
+- Veredicto: T06b NO aprobada. Se agrega T06c antes de T07. OpenCode debe hacer T06c primero; T07
+  se pospone hasta que T06c cumpla sus criterios medidos.
+
+## T06c — 2026-11-16
+- Archivos: `docs/css/base.css`, `docs/js/vistas/inicio.js`, `docs/js/vistas/pool.js` (nuevo, placeholder;
+  T07 lo reemplazará), `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan); todos los archivos
+  JS pasan `node --check`; recursos servidos con 200 en `python -m http.server -d docs`;
+  `muertes antes del 14` = 1.52; tasa del pool consistente 48.2 % (27 de 56) y fuera 33.3 % (7 de 21);
+  `"3003" in estaticos.items` = true
+- NO se pudo abrir un navegador real en este entorno para medir
+  `document.documentElement.scrollHeight` (1280 px < 1800 px; 390 px < 3000 px) ni las alturas de
+  `canvas`, por lo que, tal como pide T06c y AGENTS.md, **no se marca la tarea como cumplida**;
+  se reporta la limitación en vez de darla por cumplida visual. El supervisor puede medir y marcar
+  T06c cuando disponga de navegador.
+- Decisiones tomadas (8 arreglos del punto de control 2):
+  1. CSS de clases faltantes: `.indicadores` (grid minmax 240px, 1 fila a 1280 px / 1 columna a 390 px),
+     `.franja-pool`, `.carta-pool-fila` (gap 12px), `.carta-pool`, `.retrato-pool` (48x48 px),
+     `.etiqueta-franja`, `.nombre-pool`, `.partidas-pool`.
+  2. Cuarto canvas eliminado: si no hay serie de sparkline no se crea contenedor `.minigrafica` ni
+     canvas; la tarjeta de tasa del pool usa la tasa acumulada de las últimas 20 del pool.
+  3. Minigráficas: `tension` baja (0.1), `pointRadius: 0`, valor por partida (últimas 20).
+  4. Cabecera: `gap: 16px`, `flex-wrap: wrap`, `.identidad` en columna y `.rango` con `white-space:
+     normal` para evitar el choque con "Actualizado".
+  5. Tasa del pool coherente: indicador y barras muestran la tasa CRUDA (victorias/partidas) y la
+     etiqueta lo dice ("27 de 56 ganadas").
+  6. Texto pool contra fuera: "27 de 56" y "7 de 21" (victorias del grupo), no denominador total.
+  7. Altura a 1280 px: grid de 4 tarjetas + retratos 48 px; gráfica de progreso 260 px.
+  8. `muertes antes del 14` con 2 decimales (1.52), calculado directamente de los datos crudos.
+- Dudas para el supervisor: ninguna.
+

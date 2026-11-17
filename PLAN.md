@@ -377,6 +377,50 @@ Hecho cuando:
 
 **PUNTO DE CONTROL 2 (repetido).** Detente. El supervisor vuelve a renderizar la página.
 
+### [ ] T06c — Correcciones del segundo repaso del punto de control 2
+
+El supervisor midió la página en un navegador real (servidor local). Resultado de T06b: a 390 px mide
+2.437 px (cumple, < 3.000) y a 1280 px mide 1.960 px (NO cumple, < 1.800). Ningún canvas pasa de
+300 px, pero hay defectos. Causa común: `inicio.js` usa clases que no existen en ninguna hoja de
+estilo (`indicadores`, `franja-pool`, `carta-pool-fila`, `carta-pool`, `retrato-pool`,
+`etiqueta-franja`, `nombre-pool`, `partidas-pool`), así que los retratos salen a 128 px apilados.
+Arreglos, en un solo commit (incluye el archivo `docs/js/vistas/pool.js`, ver nota abajo):
+
+1. **CSS de las clases faltantes** en `docs/css/base.css`:
+   - `.indicadores`: `display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+     gap: var(--espacio)`. A 1280 px las cuatro tarjetas van en una fila; a 390 px en una columna.
+   - `.franja-pool`: fila horizontal con `flex-wrap`. `.carta-pool`: retrato de 48 px (`.retrato-pool`
+     con `width: 48px; height: 48px; border-radius: var(--radio)`), nombre y partidas a su lado.
+     `.carta-pool-fila` en fila con `gap` de 12 px.
+2. **Cuarto canvas de 150 px.** La tarjeta "Tasa dentro del pool" pasa `[]` como serie y deja un canvas
+   vacío con la altura por defecto. Si no hay serie, no crees el contenedor `.minigrafica` ni el
+   canvas. Si se quiere minigráfica en esa tarjeta, pasa la tasa móvil de las últimas partidas del pool.
+3. **Minigráficas ilegibles.** Se ven como líneas verticales finas. Revisa que `crearSparkline` reciba
+   un valor por partida (últimas 20), con `tension` baja, `pointRadius: 0` y que el ancho del contenedor
+   no sea 0 al crear la gráfica. Captura de pantalla de una tarjeta a 1280 px en la bitácora.
+4. **Cabecera.** A ancho intermedio el rango choca con "Actualizado". Dale `gap: 16px` y
+   `flex-wrap: wrap` al contenido, y que el rango pueda partirse en dos líneas.
+5. **Cifras de la tasa del pool coherentes.** El indicador muestra 48.5 % y las barras 48.2 %: usa un
+   solo valor y di cuál es. Regla: el indicador y las barras muestran la tasa cruda (victorias entre
+   partidas) y la etiqueta lo dice.
+6. **Texto de pool contra fuera del pool.** Hoy dice "56 de 77" y "21 de 77" (denominador total).
+   Debe decir "27 de 56" y "7 de 21" (victorias de partidas del grupo), como pedía T06b punto 6.
+7. **Altura a 1280 px.** Con el grid del punto 1 y los retratos de 48 px la página debe quedar por
+   debajo de 1.800 px; si no, reduce la gráfica de progreso a 220 px.
+
+Hecho cuando (mide en un navegador real y anota los valores en la bitácora; si no tienes
+navegador, dilo y detente, no marques la tarea):
+- A 1280 px: `document.documentElement.scrollHeight` < 1.800; las 4 tarjetas en una fila.
+- A 390 px: < 3.000, sin desplazamiento horizontal.
+- `[...document.querySelectorAll("canvas")].map(c => c.clientHeight)` no tiene valores de 150.
+- Los retratos de la franja miden 48 px y están en una fila.
+- `git status` no muestra `docs/js/vistas/pool.js` sin versionar.
+- `pytest` y `node --test docs/js/calc.test.js` pasan.
+
+Nota del supervisor: el commit de T06b borró `docs/js/vistas/pool.js` y `main.js` lo importa; la página
+quedó rota ("No se pudieron cargar los datos"). El supervisor creó un `pool.js` vacío para poder
+revisar. T07 lo llenará; no lo borres.
+
 ### [ ] T07 — Vista Pool
 
 `docs/js/vistas/pool.js`:
