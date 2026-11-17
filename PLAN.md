@@ -581,7 +581,7 @@ Hecho cuando: los filtros funcionan y la verificación de coordenadas se cumple.
 > "Miss Fortune", no "MissFortune"); igual en las demás vistas que muestren nombres. (c) Leyenda bajo el
 > mapa: punto azul = victoria, punto rojo = derrota.
 
-### [ ] T10 — Vista Partidas (reabierta: ver T10b)
+### [x] T10 — Vista Partidas
 
 `docs/js/vistas/partidas.js`:
 - Lista de las últimas 30 partidas, de la más reciente a la más antigua: fecha local, resultado
@@ -594,7 +594,7 @@ Hecho cuando: abrir cualquier partida muestra sus tres bloques sin errores en co
 
 **PUNTO DE CONTROL 3.** Detente. Revisión completa del supervisor antes de publicar.
 
-### [ ] T10b — Correcciones del punto de control 3
+### [x] T10b — Correcciones del punto de control 3
 
 El supervisor revisó las cinco vistas en un navegador real (707 px y 390 px). Sin errores en la
 consola. Defectos:
@@ -634,7 +634,7 @@ Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
 
 **PUNTO DE CONTROL 3 (repetido).** Detente.
 
-### [ ] T10c — Restaurar las gráficas del detalle de partida
+### [x] T10c — Restaurar las gráficas del detalle de partida
 
 El supervisor revisó T10b en un navegador real. Corrigió él mismo, sin commit, cuatro defectos pequeños
 (inclúyelos tal cual en el commit de esta tarea, no los deshagas):
@@ -664,7 +664,12 @@ Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
 
 **PUNTO DE CONTROL 3 (tercer repaso).** Detente.
 
-### [ ] T11 — Publicación en GitHub Pages
+> **Nota del supervisor para T11:** el árbol de trabajo tiene un último ajuste del supervisor sin commit
+> (`partidas.js` y `base.css`: el detalle de partida ocupa el ancho visible aunque la tabla tenga scroll).
+> Inclúyelo en el commit de T11. Comprobaciones previas ya hechas por el supervisor: ninguna clave en git
+> ni en `docs/`, `.env` y `data/` fuera de git, `docs/` pesa 552 KB. No hay remoto configurado todavía.
+
+### [x] T11 — Publicación en GitHub Pages
 
 - Actualiza `README.md`: cómo ver la página en local y cómo publicar.
 - Pasos que hace el usuario (escríbelos en el README, no los ejecutes tú):

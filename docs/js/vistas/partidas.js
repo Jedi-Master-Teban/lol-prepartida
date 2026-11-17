@@ -269,6 +269,8 @@ let chartCsDetalle = null;
     // Detalle justo debajo de la fila pulsada (corrección del supervisor, T10b)
     trFila.after(filaDetalle);
     filaDetalle.style.display = "table-row";
+    // El detalle ocupa el ancho visible aunque la tabla tenga scroll horizontal (supervisor, T10c)
+    tdDetalle.style.setProperty("--ancho-detalle", `${tablaWrap.clientWidth - 32}px`);
     filaDetalle.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
     // --- Chart 1: Diferencia de oro por minuto ---

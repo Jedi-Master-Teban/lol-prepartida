@@ -832,3 +832,12 @@ img {
   }
 }
 
+/* Detalle de partida: fijo a la izquierda y del ancho visible del contenedor con scroll (supervisor, T10c) */
+.td-detalle > * {
+  position: sticky;
+  left: 16px;
+  width: var(--ancho-detalle, auto);
+  max-width: var(--ancho-detalle, none);
+  box-sizing: border-box;
+}
+

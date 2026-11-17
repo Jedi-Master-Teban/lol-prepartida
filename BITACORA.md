@@ -602,4 +602,39 @@ Medido en un navegador real, tras recargar la caché.
      - `base.css`: `.celda-iconos` y `.celda-runa` con `white-space: nowrap` (td como table-cell).
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T10c (punto de control 3, tercer repaso)
+
+Medido en un navegador real, tras recargar la caché.
+- Las cuatro correcciones del supervisor están en el commit; la regla de `grep` está en AGENTS.md.
+- Detalle de partida: abiertas las filas 1, 6 y 13 y de nuevo la 6: cada una muestra dos gráficas con
+  21 puntos por serie y la fila de iconos de compras (3–4 ítems), justo bajo la fila pulsada. Las
+  instancias de Chart.js se mantienen en 2. Sin errores en la consola.
+- Defecto encontrado y corregido por el supervisor (sin commit): a menos de ~1.050 px, la tabla tiene
+  scroll horizontal y el detalle heredaba su ancho (1.017 px), dejando la gráfica de CS fuera de la vista.
+  Ahora el detalle es `sticky` y del ancho visible: a 707 y 390 px las dos gráficas quedan dentro.
+- Ninguna vista se desborda. Alturas a 390 px: Inicio 1.789, Pool 2.581, Línea 1.245, Muertes 800,
+  Partidas 3.048. A 1280 px: 930, 935, 800, 800, 3.119.
+- Comprobaciones previas a publicar: sin claves `RGAPI` en git ni en `docs/`; `.env`, `data/` y `.venv/`
+  fuera de git; `docs/` pesa 552 KB.
+- Veredicto: T10, T10b y T10c aprobadas. PUNTO DE CONTROL 3 SUPERADO. Sigue T11.
+
+## T11 — 2026-11-16
+- Archivos: `README.md` (documentación de publicación), `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan);
+  `git ls-files | grep -E "^\.env$|^data/|^\.venv/"` no devuelve nada;
+  `git grep -nE "RGAPI-[0-9a-f]{8}-"` no devuelve nada;
+  `docs/` pesa 552 KB.
+- No se abrió un navegador real para verificar la publicación en GitHub Pages (requiere un
+  repositorio público y remoto configurado, que el usuario creará). Los pasos para el usuario
+  están documentados en `README.md`.
+- Decisiones tomadas (T11):
+  1. `README.md` actualizado: estado de la fase 1b, comandos `exportar` y `publicar`,
+     cómo ver la página en local (`python -m http.server 8000 -d docs`) y los 3 pasos para
+     publicar en GitHub Pages.
+  2. Se incluye el último ajuste del supervisor en `partidas.js`
+     (`tdDetalle.style.setProperty("--ancho-detalle", ...)`) y `base.css`
+     (`.td-detalle > * { position: sticky; left: 16px; ... }`) para que el detalle ocupe el
+     ancho visible aunque la tabla tenga scroll horizontal.
+- Dudas para el supervisor: ninguna.
+
 
