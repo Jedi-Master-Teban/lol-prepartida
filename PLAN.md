@@ -523,6 +523,35 @@ Hecho cuando (medido en un navegador real; si no hay navegador, no marques):
 
 Hecho cuando: cambiar el selector actualiza las tres gráficas y cada una indica cuántas partidas promedia.
 
+### [ ] T08b — Correcciones de la vista Línea y del indicador de Pool
+
+El supervisor abrió `#linea` y `#pool` en un navegador real. Las tres gráficas de Línea se dibujan
+bien al cargar (oro vs rival, CS con meta, barras por muertes tempranas), pero:
+
+1. **Los selectores no funcionan.** Al cambiar campeón o posición la consola da
+   `ReferenceError: filtrar is not defined` (`linea.js` líneas 350 y 355). Escribe la función
+   `filtrar(partidas, campeon, posicion)` ("Todos"/"Todas" no filtran) y llama a
+   `destruirGraficas()` antes de volver a dibujar. Si el filtro deja 0 partidas, muestra el texto
+   "Sin partidas para esta selección" en lugar de las gráficas.
+2. **Valor por defecto.** "Todos los campeones" debe significar "todo el pool" (`en_pool`), no las 77
+   partidas: es la vista para entrenar el pool. Añade una opción aparte "Todas las partidas" al final.
+3. **Barras por muertes tempranas.** El texto con partidas y oro medio solo está en el tooltip. Ponlo
+   visible en la etiqueta de cada barra: "0 muertes · 25 partidas · +120 oro" (usa `−` para negativos).
+   Barra azul si su tasa ≥ 50 %, roja si < 50 %.
+4. **Indicador de línea de Pool (retoque de T08 mal resuelto).** Hoy la escala usa el máximo de las
+   combinaciones con 10+ partidas, que es solo Ahri, así que Ahri (−350) llena media barra y una
+   combinación de +57 ya mide 24 px. Usa una escala FIJA de ±1.000 (recorta en el tope). Además el
+   número de Ahri ("−350") se sale por el borde izquierdo de la tarjeta: el número debe quedar siempre
+   dentro de la tarjeta (`overflow: hidden` en el contenedor y número posicionado con `clamp`).
+
+Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
+- Cambiar a Ahri / MIDDLE no produce errores en la consola y las tres gráficas dicen
+  "Promedio de 31 partidas".
+- Con el valor por defecto dicen "Promedio de 56 partidas".
+- La barra de Ahri en Pool mide aproximadamente el 17 % del ancho del contenedor (350/1000 × 50 %), y
+  ningún número del indicador sale de su tarjeta.
+- `pytest` y `node --test docs/js/calc.test.js` pasan.
+
 ### [ ] T09 — Vista Muertes
 
 `docs/js/vistas/muertes.js`:

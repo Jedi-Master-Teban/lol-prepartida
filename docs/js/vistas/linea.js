@@ -1,4 +1,4 @@
-/* Vista Línea (sección 1b, T08 de PLAN.md).
+/* Vista Línea (sección 1b, T08b de PLAN.md).
    Recibe datos ya calculados y solo dibuja. */
 
 import { curvaPromedio } from "../calc.js";
@@ -43,6 +43,20 @@ function opcionesPosiciones(partidas) {
   return [...vista].sort();
 }
 
+function filtrar(partidas, campeon, posicion) {
+  return partidas.filter((p) => {
+    // Campeón: "todos" = pool (en_pool), "todas" = no filtro de campeón, else campeón específico en pool
+    if (campeon === "todos") {
+      if (!p.en_pool) return false;
+    } else if (campeon !== "todas") {
+      if (!p.en_pool || p.campeon !== campeon) return false;
+    }
+    // Posición
+    if (posicion !== "Todas" && p.posicion !== posicion) return false;
+    return true;
+  });
+}
+
 export function render(container, datos) {
   const { partidas, curvas, meta } = datos;
   const metaCs10 = meta.perfil.meta_cs_10;
@@ -55,14 +69,15 @@ export function render(container, datos) {
 
   const selCampeon = document.createElement("select");
   selCampeon.className = "select-campeon";
-  selCampeon.innerHTML = `<option value="Todos">Todos los campeones</option>`;
+  selCampeon.innerHTML = `<option value="todos" selected>Todos los campeones</option>`;
   for (const c of pool) {
     selCampeon.innerHTML += `<option value="${c}">${c}</option>`;
   }
+  selCampeon.innerHTML += `<option value="todas">Todas las partidas</option>`;
 
   const selPosicion = document.createElement("select");
   selPosicion.className = "select-posicion";
-  selPosicion.innerHTML = `<option value="Todas">Todas las posiciones</option>`;
+  selPosicion.innerHTML = `<option value="Todas" selected>Todas las posiciones</option>`;
   for (const pos of opcionesPosiciones(partidas)) {
     selPosicion.innerHTML += `<option value="${pos}">${pos}</option>`;
   }
@@ -78,6 +93,13 @@ export function render(container, datos) {
   selectores.appendChild(lblCampeon);
   selectores.appendChild(lblPosicion);
   container.appendChild(selectores);
+
+  // --- Mensaje sin partidas ---
+  const aviso = document.createElement("p");
+  aviso.className = "aviso-sin-partidas suave";
+  aviso.style.display = "none";
+  aviso.textContent = "Sin partidas para esta selección";
+  container.appendChild(aviso);
 
   // --- Contenedores de gráficas ---
   const graficas = document.createElement("div");
@@ -123,6 +145,14 @@ export function render(container, datos) {
     destruirGraficas();
     const ids = filtrados.map((p) => p.match_id);
     const n = filtrados.length;
+
+    if (n === 0) {
+      graficas.style.display = "none";
+      aviso.style.display = "block";
+      return;
+    }
+    graficas.style.display = "grid";
+    aviso.style.display = "none";
 
     const cuentaOro = colOro.querySelector(".cuenta-oro");
     cuentaOro.textContent = `Promedio de ${n} partida${n !== 1 ? "s" : ""}`;
@@ -276,7 +306,6 @@ export function render(container, datos) {
 
     // --- Chart 3: Según muertes tempranas ---
     const grupos = agruparPorMuertes(filtrados);
-    const categorias = ["0 muertes", "1 muerte", "2 o más muertes"];
     const claves = ["0", "1", "2"];
     const tasas = claves.map((k) => {
       const g = grupos[k];
@@ -284,6 +313,13 @@ export function render(container, datos) {
     });
     const orosMedios = claves.map((k) => oroMedio(grupos[k]));
     const conteos = claves.map((k) => grupos[k].length);
+
+    const categorias = claves.map((k, i) => {
+      const nombre = k === "0" ? "0 muertes" : k === "1" ? "1 muerte" : "2 o más muertes";
+      const oro = orosMedios[i];
+      const oroTexto = oro == null ? "—" : numeroConSigno(oro);
+      return `${nombre} · ${conteos[i]} partidas · ${oroTexto} oro`;
+    });
 
     const ctxMuertes = document.getElementById("grafica-muertes").getContext("2d");
     chartMuertes = new Chart(ctxMuertes, {
@@ -335,13 +371,10 @@ export function render(container, datos) {
         animation: { duration: 0 }
       }
     });
-
-    // Añadir etiquetas con conteo y oro bajo cada barra del eje Y no aplica en indexAxis: "y".
-    // Usar tooltip en su lugar.
   }
 
-  // Dibujar inicial con todos los partidos
-  dibujar(partidas);
+  // Dibujar inicial con los campeones del pool
+  dibujar(filtrar(partidas, "todos", "Todas"));
 
   // Event listeners de selectores
   selCampeon.addEventListener("change", () => {

@@ -398,6 +398,7 @@ img {
   position: relative;
   height: 10px;
   margin-top: 4px;
+  overflow: hidden;
 }
 
 .cero {
@@ -509,6 +510,11 @@ img {
 .barras-muertes {
   position: relative;
   height: 160px;
+}
+
+.aviso-sin-partidas {
+  text-align: center;
+  margin-top: 40px;
 }
 
 @media (max-width: 599px) {

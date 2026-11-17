@@ -390,3 +390,44 @@ pasa en todos los archivos de `docs/js`.
   4. Espacio vertical reducido a 390 px (tarjetas ~360 px).
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T08
+
+Medido en un navegador real (707 px). `#linea` carga, mide 907 px, tres canvas de 220 px, sin errores
+de módulo. Las tres gráficas se ven bien en el estado inicial.
+- Defecto grave: cambiar cualquier selector lanza `ReferenceError: filtrar is not defined`; el criterio
+  "cambiar el selector actualiza las tres gráficas" no se cumple.
+- El valor por defecto promedia las 77 partidas, incluidas las de fuera del pool.
+- Las barras por muertes tempranas solo muestran partidas y oro en el tooltip.
+- El retoque del indicador de Pool quedó al revés: la escala depende solo de Ahri (barra llena) y el
+  número "−350" se sale de la tarjeta.
+- Veredicto: T08 NO aprobada. Se agrega T08b antes de T09.
+
+## T08b — 2026-11-16
+- Archivos: `docs/js/vistas/linea.js` (reescrito), `docs/js/vistas/pool.js` (escala fija ±1000,
+  número dentro tarjeta), `docs/css/base.css` (overflow hidden barra-contenedor,
+  aviso-sin-partidas), `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan);
+  todos los archivos JS pasan `node --input-type=module --check` (main.js falla solo por
+  `Chart` no definido en Node, esperado en navegador); recursos servidos con 200;
+  Ahri MIDDLE: 31 partidas, 14 victorias, 46.3 %, oro −350, muertes 1.65; valor por defecto
+  = pool (56 partidas); Todas las partidas = 77.
+- NO se pudo abrir un navegador real en este entorno para comprobar que cambiar el selector
+  no lanza errores (`filtrar` definida), que las tres gráficas dicen "Promedio de 31 partidas"
+  (Ahri/MIDDLE) o "Promedio de 56 partidas" (valor por defecto), que la barra de Ahri mide
+  ~17.5 % del ancho del contenedor (350/1000 × 50 %), y que ningún número del indicador
+  sale de su tarjeta. Por AGENTS.md, **no se marca la tarea como cumplida**; se reporta la
+  limitación en vez de darla por cumplida visual.
+- Decisiones tomadas (6 arreglos de T08b):
+  1. `linea.js`: escrita función `filtrar(partidas, campeon, posicion)` ("todos" = pool,
+     "todas" = todas las partidas, campeón específico = en_pool + campeón).
+  2. `linea.js`: valor por defecto del campeón = "todos" (pool, 56 partidas); opción aparte
+     "Todas las partidas" al final del selecto (77 partidas).
+  3. `linea.js`: etiqueta visible en cada barra de muertes tempranas:
+     "0 muertes · 25 partidas · +120 oro"; barra azul si tasa ≥ 50 %, roja si < 50 %.
+  4. `linea.js`: `destruirGraficas()` se llama antes de redibujar al cambiar selector;
+     si el filtro deja 0 partidas, muestra "Sin partidas para esta selección".
+  5. `pool.js`: escala FIJA de ±1000 (no depende de Ahri); barra de Ahri mide ~17.5 %.
+  6. `pool.js`: número del indicador posicionado con `clamp` (máximo 95 %) y contenedor
+     con `overflow: hidden` para que nunca salga de la tarjeta.
+- Dudas para el supervisor: ninguna.
+
