@@ -7,6 +7,10 @@ import * as vistaPool from "./vistas/pool.js";
 import * as vistaLinea from "./vistas/linea.js";
 import * as vistaMuertes from "./vistas/muertes.js";
 import * as vistaPartidas from "./vistas/partidas.js";
+import { token } from "./tema.js";
+
+Chart.defaults.color = token("texto-suave");
+Chart.defaults.borderColor = token("borde");
 
 const SECCIONES = ["inicio", "pool", "linea", "muertes", "partidas"];
 const VISTAS = {
@@ -54,7 +58,7 @@ function renderCabecera(meta) {
   const jugador = meta.jugador;
   const tierTexto = jugador.tier ? TIER_ESPANOL[jugador.tier] || jugador.tier : "";
   const partes = [tierTexto, jugador.division, jugador.lp != null ? `${jugador.lp} LP` : null].filter(Boolean);
-  const rango = partes.length ? partes.join(" ") : "Sin rango";
+  const rango = partes.length ? partes.join(" · ") : "Sin rango";
   nombreEl.textContent = `${jugador.game_name} #${jugador.tag_line}`;
   rangoEl.textContent = `${rango} · ${jugador.victorias} victorias, ${jugador.derrotas} derrotas`;
   const fecha = new Date(meta.generado).toLocaleString("es-ES", {

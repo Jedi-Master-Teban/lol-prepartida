@@ -377,7 +377,7 @@ Hecho cuando:
 
 **PUNTO DE CONTROL 2 (repetido).** Detente. El supervisor vuelve a renderizar la página.
 
-### [ ] T06c — Correcciones del segundo repaso del punto de control 2
+### [x] T06c — Correcciones del segundo repaso del punto de control 2
 
 El supervisor midió la página en un navegador real (servidor local). Resultado de T06b: a 390 px mide
 2.437 px (cumple, < 3.000) y a 1280 px mide 1.960 px (NO cumple, < 1.800). Ningún canvas pasa de
@@ -420,6 +420,37 @@ navegador, dilo y detente, no marques la tarea):
 Nota del supervisor: el commit de T06b borró `docs/js/vistas/pool.js` y `main.js` lo importa; la página
 quedó rota ("No se pudieron cargar los datos"). El supervisor creó un `pool.js` vacío para poder
 revisar. T07 lo llenará; no lo borres.
+
+### [ ] T06d — Colores de las gráficas y minigráficas
+
+El supervisor midió T06c en un navegador real: 1280 px → 925 px de alto; 390 px → 1.763 px; canvas de
+44, 44, 44, 44, 260 y 120 px; cuatro tarjetas en una fila; retratos de 48 px; `pool.js` versionado.
+Eso cumple, y T06c queda marcada. Quedan dos defectos de las gráficas, con causa conocida:
+
+1. **Chart.js no entiende `var(--token)`.** Todos los `color`, `borderColor` y `backgroundColor` de las
+   gráficas son cadenas `"var(--...)"` (ver `inicio.js`). Dentro de un `canvas` eso no se resuelve: las
+   barras de "Pool vs fuera del pool" salen negras, y los textos, ejes y rejillas salen en el gris por
+   defecto de Chart.js, ilegibles sobre el fondo oscuro. Arreglo: crea `docs/js/tema.js` con
+   `export function token(nombre) { return getComputedStyle(document.documentElement).getPropertyValue("--" + nombre).trim(); }`
+   y úsalo en TODAS las opciones de Chart.js (`token("texto-suave")`, `token("borde")`, `token("victoria")`,
+   `token("derrota")`, `token("acento")`, `token("texto")`). Además, al inicio de `main.js` pon
+   `Chart.defaults.color = token("texto-suave")` y `Chart.defaults.borderColor = token("borde")`.
+   Regla para T07 a T10: ninguna gráfica usa cadenas `var(...)`. Las tarjetas HTML sí pueden usarlas en CSS.
+2. **Minigráficas como líneas verticales.** `crearSparkline` pasa datos `{x, y}` y deja la escala X como
+   categórica, y todos los puntos caen en una sola columna. Declara `scales: { x: { type: "linear", display: false },
+   y: { display: false } }`. Ajusta el eje Y al rango de los datos (`grace: "10%"`). Con `null` en la serie, usa
+   `spanGaps: true`.
+3. **Cabecera.** Falta el separador: debe leer "Bronce III · 22 LP · 31 victorias, 39 derrotas".
+
+Hecho cuando (medido en un navegador real, con captura o descripción de lo que se ve):
+- Las barras de "Pool vs fuera del pool" son azul y gris claro, no negras; los textos de ejes y leyenda se leen.
+- Cada minigráfica muestra una línea que recorre el ancho de la tarjeta, no una línea vertical.
+- `grep -n "var(--" docs/js/vistas/*.js` no devuelve opciones de Chart.js.
+- Alturas de página y de canvas siguen igual que en T06c (925 px y 1.763 px, tolerancia 10 %).
+- `pytest` y `node --test docs/js/calc.test.js` pasan.
+
+**PUNTO DE CONTROL 2 (tercer repaso).** Detente. El supervisor revisa las gráficas; con su visto bueno
+sigue T07.
 
 ### [ ] T07 — Vista Pool
 

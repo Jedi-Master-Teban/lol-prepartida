@@ -1,8 +1,9 @@
-/* Vista Inicio (sección 1b, T06/T06b/T06c de PLAN.md).
+/* Vista Inicio (sección 1b, T06/T06b/T06c/T06d de PLAN.md).
    Recibe datos ya calculados y solo dibuja. */
 
 import { agrupar, resumen, tendencia } from "../calc.js";
 import { urlCampeonRetrato } from "../imagenes.js";
+import { token } from "../tema.js";
 
 const TIER_ESPANOL = {
   IRON: "Hierro",
@@ -50,6 +51,7 @@ function crearSparkline(canvas, valores, color) {
           pointRadius: 0,
           fill: false,
           tension: 0.1,
+          spanGaps: true,
         },
       ],
     },
@@ -57,7 +59,13 @@ function crearSparkline(canvas, valores, color) {
       responsive: true,
       maintainAspectRatio: false,
       plugins: { legend: { display: false }, title: { display: false } },
-      scales: { x: { display: false }, y: { display: false } },
+      scales: {
+        x: { type: "linear", display: false },
+        y: {
+          display: false,
+          grace: "10%",
+        },
+      },
       animation: { duration: 0 },
     },
   });
@@ -153,7 +161,7 @@ export function render(container, datos) {
     diferenciaConMeta(res.cs10, perfil.meta_cs_10, 1),
     `${res.partidas} partidas`,
     sparkCs,
-    "var(--victoria)"
+    token("victoria")
   );
   tarjetaIndicador(
     indicadores,
@@ -162,7 +170,7 @@ export function render(container, datos) {
     `Por detrás en ${res.porDetras15} de ${res.conDato15}`,
     `${res.conDato15} partidas`,
     sparkOro,
-    res.difOro15 < 0 ? "var(--derrota)" : "var(--victoria)"
+    res.difOro15 < 0 ? token("derrota") : token("victoria")
   );
   tarjetaIndicador(
     indicadores,
@@ -172,8 +180,8 @@ export function render(container, datos) {
     `${res.partidas} partidas`,
     sparkMuertes,
     muertes14Raw != null && muertes14Raw > perfil.meta_muertes_14
-      ? "var(--derrota)"
-      : "var(--victoria)"
+      ? token("derrota")
+      : token("victoria")
   );
   tarjetaIndicador(
     indicadores,
@@ -182,7 +190,7 @@ export function render(container, datos) {
     `${victoriasPool} de ${partidasPool} ganadas`,
     `${partidasPool} partidas`,
     sparkPool.length ? sparkPool : null,
-    "var(--acento)"
+    token("acento")
   );
 
   // --- Franja del pool (bajo los indicadores) ---
@@ -238,7 +246,7 @@ export function render(container, datos) {
         {
           label: "CS al minuto 10",
           data: datosEtiqueta,
-          borderColor: "var(--texto)",
+          borderColor: token("texto"),
           backgroundColor: "rgba(230, 235, 245, 0.1)",
           borderWidth: 2,
           pointRadius: 0,
@@ -248,7 +256,7 @@ export function render(container, datos) {
         {
           label: `Meta ${perfil.meta_cs_10}`,
           data: etiquetas.map(() => perfil.meta_cs_10),
-          borderColor: "var(--acento)",
+          borderColor: token("acento"),
           backgroundColor: "transparent",
           borderWidth: 2,
           borderDash: [6, 4],
@@ -261,28 +269,28 @@ export function render(container, datos) {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { display: true, labels: { color: "var(--texto-suave)", font: { size: 12 } } },
+        legend: { display: true, labels: { color: token("texto-suave"), font: { size: 12 } } },
         title: {
           display: true,
           text: "CS al minuto 10 (últimas 30)",
-          color: "var(--texto-suave)",
+          color: token("texto-suave"),
           font: { size: 14 },
         },
       },
       scales: {
         x: {
           display: true,
-          grid: { color: "var(--borde)" },
-          ticks: { color: "var(--texto-suave)", font: { size: 11 } },
-          title: { display: true, text: "Partida", color: "var(--texto-suave)" },
+          grid: { color: token("borde") },
+          ticks: { color: token("texto-suave"), font: { size: 11 } },
+          title: { display: true, text: "Partida", color: token("texto-suave") },
         },
         y: {
-          grid: { color: "var(--borde)" },
-          ticks: { color: "var(--texto-suave)", font: { size: 11 } },
+          grid: { color: token("borde") },
+          ticks: { color: token("texto-suave"), font: { size: 11 } },
           title: {
             display: true,
             text: "CS al minuto 10",
-            color: "var(--texto-suave)",
+            color: token("texto-suave"),
           },
         },
       },
@@ -308,7 +316,7 @@ export function render(container, datos) {
         {
           label: "Tasa de victorias",
           data: datosPool.map((d) => d.tasa),
-          backgroundColor: ["var(--victoria)", "var(--texto-suave)"],
+          backgroundColor: [token("victoria"), token("texto-suave")],
           borderWidth: 0,
           borderRadius: 4,
         },
@@ -333,13 +341,13 @@ export function render(container, datos) {
         x: {
           min: 0,
           max: 100,
-          grid: { color: "var(--borde)" },
-          ticks: { color: "var(--texto-suave)", font: { size: 11 } },
-          title: { display: true, text: "Tasa de victorias (%)", color: "var(--texto-suave)" },
+          grid: { color: token("borde") },
+          ticks: { color: token("texto-suave"), font: { size: 11 } },
+          title: { display: true, text: "Tasa de victorias (%)", color: token("texto-suave") },
         },
         y: {
           grid: { display: false },
-          ticks: { color: "var(--texto)", font: { size: 12 } },
+          ticks: { color: token("texto"), font: { size: 12 } },
         },
       },
       animation: { duration: 0 },

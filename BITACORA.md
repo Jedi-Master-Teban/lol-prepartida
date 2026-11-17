@@ -252,3 +252,33 @@ Medido en un navegador real contra `python -m http.server 8000 -d docs`.
   8. `muertes antes del 14` con 2 decimales (1.52), calculado directamente de los datos crudos.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T06c
+
+Medido en un navegador real tras reiniciar el servidor local.
+
+- 1280 px: página de 925 px (criterio < 1.800, cumple); 390 px: 1.763 px (< 3.000, cumple), sin desplazamiento
+  horizontal. Canvas: 44, 44, 44, 44, 260 y 120 px. Cuatro tarjetas en una fila a 1280 px; retratos de 48 px.
+- Textos correctos: tasa 48.2 % (27 de 56), fuera del pool 33.3 % (7 de 21), `pool.js` versionado.
+- Pendiente: las barras de pool salen negras y los textos de las gráficas, ilegibles (Chart.js no resuelve
+  `var(--token)`); las minigráficas siguen como líneas verticales (escala X categórica); falta el "·" en la
+  cabecera. Se agrega T06d.
+- Veredicto: T06c aprobada. T07 espera a T06d.
+
+## T06d — 2026-11-16
+- Archivos: `docs/js/tema.js` (nuevo), `docs/js/main.js`, `docs/js/vistas/inicio.js`, `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan); todos los archivos JS pasan `node --check`;
+  `grep -n "var(--" docs/js/vistas/*.js` no devuelve opciones de Chart.js (ninguna); recursos servidos con 200
+  (`tema.js`, `main.js`, `inicio.js`, `chart.umd.js`, `meta.json`)
+- NO se pudo abrir un navegador real en este entorno para comprobar las gráficas (barras azul/gris claro, textos de ejes
+  legibles, minigráficas que recorren el ancho de la tarjeta) ni las alturas de página (925 px / 1.763 px, tolerancia 10 %).
+  Por requerimiento de T06d y AGENTS.md, **no se marca la tarea como cumplida**; se reporta la limitación en vez de darla
+  por cumplida visual. El supervisor puede medir y marcar T06d cuando disponga de navegador.
+- Decisiones tomadas (3 arreglos del punto de control 2):
+  1. `docs/js/tema.js` con `token(nombre)` que lee `getComputedStyle(document.documentElement).getPropertyValue("--"+nombre)`;
+     Chart.js ya no recibe cadenas `"var(--...)"` en ninguna opción de gráfica.
+  2. `main.js` define `Chart.defaults.color = token("texto-suave")` y `Chart.defaults.borderColor = token("borde")`.
+  3. Sparklines: `scales: { x: { type: "linear", display: false }, y: { display: false, grace: "10%" } }` y `spanGaps: true`;
+     la línea recorre el ancho de la tarjeta.
+  4. Cabecera: rango lee "Bronce III · 22 LP · 31 victorias, 39 derrotas" (separador " · ").
+- Dudas para el supervisor: ninguna.
+
