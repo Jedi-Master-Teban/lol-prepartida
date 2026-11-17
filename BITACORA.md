@@ -692,4 +692,12 @@ Medido en un navegador real, tras recargar la caché.
      del mapa del repositorio.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T13
+
+- `app.py`, el comando `app` y la dependencia `streamlit` retirados; ninguna mención fuera de bitácora y plan.
+- Verificado en una instalación limpia: `pytest` 32 pasan; `prepartida --help` lista init, estaticos,
+  ingesta, estado, exportar y publicar; `streamlit` no se instala.
+- El commit de T13 incluye la corrección del supervisor al flujo de T12 (estaba en el árbol de trabajo).
+- Veredicto: T13 aprobada. T12 sigue pendiente: los commits no se habían subido a GitHub, así que el flujo
+  "Actualizar datos" aún no existía allí; la ejecución en cola era la de GitHub Pages.
 
