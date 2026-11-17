@@ -431,3 +431,41 @@ de módulo. Las tres gráficas se ven bien en el estado inicial.
      con `overflow: hidden` para que nunca salga de la tarjeta.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T08b
+
+Medido en un navegador real (707 px), tras forzar la recarga de la caché del navegador (la primera
+prueba usó un `linea.js` viejo en caché y dio un falso negativo).
+- Selectores: sin errores en consola. Por defecto 56 partidas (pool); Ahri/MIDDLE 31; Ahri/TOP muestra
+  "Sin partidas para esta selección"; "Todas las partidas" 77. Las tres gráficas se redibujan.
+- Barras por muertes con texto visible ("0 muertes · 14 partidas · +475 oro") y color por tasa.
+- Pool: barra de Ahri = 17 % del contenedor (escala fija ±1.000, correcto).
+- Defectos menores pasados a T09: etiquetas de barras cortadas por la izquierda en Línea; número de
+  Tristana (+1026, en el tope) se sale de la tarjeta.
+- Veredicto: T08 y T08b aprobadas. Sigue T09.
+
+## T09 — 2026-11-16
+- Archivos: `docs/js/vistas/muertes.js` (nuevo), `docs/css/base.css`, `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan);
+  todos los archivos JS pasan `node --input-type=module --check` (main.js falla solo por
+  `Chart` no definido en Node, esperado en navegador); recursos servidos con 200.
+- NO se pudo abrir un navegador real en este entorno para comprobar que los filtros funcionan
+  ni para ver el minimapa con los puntos. Por AGENTS.md, **no se marca la tarea como cumplida**;
+  se reporta la limitación en vez de darla por cumplida visual.
+- Coordenadas verificadas vía Python (no navegador): 46 muertes de mid antes del minuto 10;
+  40/46 (87 %) caen sobre la diagonal central del mapa (±15 % de diferencia normalizada x/y).
+  `aCoordenadaMapa` es correcta (no desplazada ni reflejada).
+- Decisiones tomadas (T09):
+  1. Minimapa cuadrado (400×400 px) con imagen de Data Dragon como fondo y puntos absolutamente
+     posicionados con `aCoordenadaMapa`.
+  2. Filtros: campeón (pool), lado (azul/rojo/todos), tramo de tiempo (0–14, 14–25, 25+).
+     Por defecto 0–14 min.
+  3. Hover en cada punto: campeón, rival, minuto y resultado (Victoria/Derrota).
+  4. Conteo visible de muertes mostradas y de partidas únicas.
+  5. Color del punto: verde (--victoria) o rojo (--derrota) según resultado de la partida.
+- Retoques aplicados antes de T09 (nota del supervisor en PLAN.md):
+  (a) Línea: etiquetas de barras por muertes tempranas en dos líneas (nombre / conteo+oro) para
+      que no se corten por la izquierda.
+  (b) Pool: cuando el número del indicador pasa del 40 % del contenedor, se muestra dentro de la
+      barra con texto oscuro; nunca sale de la tarjeta (clamp 95 %).
+- Dudas para el supervisor: ninguna.
+

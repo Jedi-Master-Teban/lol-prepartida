@@ -71,22 +71,45 @@ function renderTarjeta(contenedor, grupo, version, escala, esReducida) {
     numero.style.marginRight = "";
   } else {
     const pct = escala > 0 ? Math.min((Math.abs(oroEntero) / escala) * 50, 50) : 0;
+    const dentro = pct > 40;
     if (oroEntero >= 0) {
       barra.style.left = "50%";
       barra.style.width = `${pct}%`;
-      const left = Math.min(50 + pct, 95);
-      numero.style.left = left.toFixed(1) + "%";
-      numero.style.right = "";
-      numero.style.marginLeft = "";
-      numero.style.marginRight = "";
+      if (dentro) {
+        numero.style.left = (50 + pct / 2).toFixed(1) + "%";
+        numero.style.right = "";
+        numero.style.marginLeft = "";
+        numero.style.marginRight = "";
+        numero.style.color = "#1a1a2e";
+        numero.style.fontWeight = "700";
+      } else {
+        const left = Math.min(50 + pct, 95);
+        numero.style.left = left.toFixed(1) + "%";
+        numero.style.right = "";
+        numero.style.marginLeft = "";
+        numero.style.marginRight = "";
+        numero.style.color = "";
+        numero.style.fontWeight = "";
+      }
     } else {
       barra.style.left = `${50 - pct}%`;
       barra.style.width = `${pct}%`;
-      const right = Math.min(50 + pct, 95);
-      numero.style.right = right.toFixed(1) + "%";
-      numero.style.left = "";
-      numero.style.marginLeft = "";
-      numero.style.marginRight = "";
+      if (dentro) {
+        numero.style.left = (50 - pct / 2).toFixed(1) + "%";
+        numero.style.right = "";
+        numero.style.marginLeft = "";
+        numero.style.marginRight = "";
+        numero.style.color = "#1a1a2e";
+        numero.style.fontWeight = "700";
+      } else {
+        const right = Math.min(50 + pct, 95);
+        numero.style.right = right.toFixed(1) + "%";
+        numero.style.left = "";
+        numero.style.marginLeft = "";
+        numero.style.marginRight = "";
+        numero.style.color = "";
+        numero.style.fontWeight = "";
+      }
     }
   }
 

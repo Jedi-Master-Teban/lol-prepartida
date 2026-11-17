@@ -318,7 +318,7 @@ export function render(container, datos) {
       const nombre = k === "0" ? "0 muertes" : k === "1" ? "1 muerte" : "2 o más muertes";
       const oro = orosMedios[i];
       const oroTexto = oro == null ? "—" : numeroConSigno(oro);
-      return `${nombre} · ${conteos[i]} partidas · ${oroTexto} oro`;
+      return [nombre, `${conteos[i]} partidas · ${oroTexto} oro`];
     });
 
     const ctxMuertes = document.getElementById("grafica-muertes").getContext("2d");

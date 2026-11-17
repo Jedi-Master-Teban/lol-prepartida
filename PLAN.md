@@ -510,7 +510,7 @@ Hecho cuando (medido en un navegador real; si no hay navegador, no marques):
 > tarjeta en 3 filas de 2 como ahora, pero reduce el espacio vertical (cada tarjeta mide ~360 px).
 > Medición de referencia: `#pool` mide 2.849 px a 390 px con "Fuera del pool" plegado.
 
-### [ ] T08 — Vista Línea
+### [x] T08 — Vista Línea
 
 `docs/js/vistas/linea.js`:
 - Selector de campeón (pool) y de posición.
@@ -523,7 +523,7 @@ Hecho cuando (medido en un navegador real; si no hay navegador, no marques):
 
 Hecho cuando: cambiar el selector actualiza las tres gráficas y cada una indica cuántas partidas promedia.
 
-### [ ] T08b — Correcciones de la vista Línea y del indicador de Pool
+### [x] T08b — Correcciones de la vista Línea y del indicador de Pool
 
 El supervisor abrió `#linea` y `#pool` en un navegador real. Las tres gráficas de Línea se dibujan
 bien al cargar (oro vs rival, CS con meta, barras por muertes tempranas), pero:
@@ -551,6 +551,13 @@ Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
 - La barra de Ahri en Pool mide aproximadamente el 17 % del ancho del contenedor (350/1000 × 50 %), y
   ningún número del indicador sale de su tarjeta.
 - `pytest` y `node --test docs/js/calc.test.js` pasan.
+
+> **Retoques pendientes (haz esto primero, en el commit de T09):** (a) en Línea, las etiquetas de las
+> barras por muertes tempranas se cortan por la izquierda ("ertes · 8 partidas · +778 oro"): pon el
+> texto en dos líneas (`["0 muertes", "8 partidas · +778 oro"]`) o reserva ancho para el eje Y
+> (`afterFit` o `scales.y.ticks.padding`). (b) En Pool, el número de una barra que llega al tope
+> (Tristana +1026) se sale de la tarjeta: cuando la barra pase del 40 % del contenedor, pon el número
+> dentro de la barra (texto oscuro) o del lado contrario del cero.
 
 ### [ ] T09 — Vista Muertes
 
