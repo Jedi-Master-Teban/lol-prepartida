@@ -65,17 +65,25 @@ function renderTarjeta(contenedor, grupo, version, escala, esReducida) {
   const numero = tarjeta.querySelector(".numero-linea");
   if (oroEntero == null) {
     barra.style.width = "0";
+    numero.style.left = "";
+    numero.style.right = "";
+    numero.style.marginLeft = "";
+    numero.style.marginRight = "";
   } else {
     const pct = escala > 0 ? Math.min((Math.abs(oroEntero) / escala) * 50, 50) : 0;
     if (oroEntero >= 0) {
       barra.style.left = "50%";
       barra.style.width = `${pct}%`;
+      numero.style.left = (50 + pct).toFixed(1) + "%";
       numero.style.marginLeft = "8px";
+      numero.style.right = "";
       numero.style.marginRight = "";
     } else {
       barra.style.left = `${50 - pct}%`;
       barra.style.width = `${pct}%`;
+      numero.style.right = (50 + pct).toFixed(1) + "%";
       numero.style.marginRight = "8px";
+      numero.style.left = "";
       numero.style.marginLeft = "";
     }
   }
@@ -96,8 +104,13 @@ export function render(container, datos) {
   const gruposFuera = agrupar(fueraPool, claveGrupo).sort((a, b) => b.partidas - a.partidas);
 
   // Escala común para las barras de oro al 15 (mitad del ancho a cada lado del cero).
+  // Usa el máximo de combinaciones con 10+ partidas, o tope fijo ±1000.
   const todos = [...gruposPool, ...gruposFuera];
-  const escala = Math.max(1, ...todos.map((g) => Math.abs(g.difOro15 ?? 0)));
+  const conSuficientes = todos.filter((g) => g.partidas >= 10);
+  const escalaBase = conSuficientes.length > 0
+    ? Math.max(...conSuficientes.map((g) => Math.abs(g.difOro15 ?? 0)))
+    : Math.max(1, ...todos.map((g) => Math.abs(g.difOro15 ?? 0)));
+  const escala = Math.min(escalaBase, 1000);
 
   // --- En el pool ---
   const seccionPool = document.createElement("div");

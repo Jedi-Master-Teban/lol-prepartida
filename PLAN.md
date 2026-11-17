@@ -457,7 +457,7 @@ sigue T07.
 > los textos bajo las barras de "Pool vs fuera del pool" salen pegados ("27 de 56 Fuera del pool"),
 > sepáralos con un espacio de 24 px o en dos líneas.
 
-### [ ] T07 — Vista Pool (reabierta: ver T07b)
+### [x] T07 — Vista Pool
 
 `docs/js/vistas/pool.js`:
 - Una tarjeta por combinación campeón–posición del pool, ordenadas por partidas.
@@ -469,7 +469,7 @@ sigue T07.
 
 Hecho cuando: las cifras de Ahri MIDDLE coinciden con `prepartida estado`.
 
-### [ ] T07b — Correcciones de la vista Pool
+### [x] T07b — Correcciones de la vista Pool
 
 El supervisor abrió `#pool` en un navegador real. Antes de revisar tuvo que borrar una línea de
 `docs/js/main.js` (declaración doble de `const partes`, "Identifier 'partes' has already been
@@ -499,6 +499,16 @@ Hecho cuando (medido en un navegador real; si no hay navegador, no marques):
 - Ninguna tarjeta del pool muestra "—" salvo que el dato no exista.
 - La página `#pool` a 390 px de ancho mide menos de 4.500 px y no desborda horizontalmente.
 - `pytest` y `node --test docs/js/calc.test.js` pasan.
+
+> **Retoque pendiente de la vista Pool (haz esto primero, en el commit de T08):** el indicador de línea
+> de las tarjetas no se lee bien. (a) El número ("−350") queda pegado a la esquina inferior izquierda
+> de la tarjeta, lejos de la barra: debe ir junto a la barra, en su extremo. (b) No se ve la línea del cero:
+> dibuja una línea vertical fina (`--borde`) en el centro del contenedor, de 20 px de alto. (c) Las barras
+> son muy cortas (Ahri −350 mide ~24 px): la escala común usa el máximo de todas las combinaciones
+> (hasta ±1.609) y casi todo queda diminuto; usa el máximo de las combinaciones con 10 o más partidas, o
+> un valor fijo de ±1.000 con la barra recortada a ese tope. (d) A 390 px agrupa las seis cifras de la
+> tarjeta en 3 filas de 2 como ahora, pero reduce el espacio vertical (cada tarjeta mide ~360 px).
+> Medición de referencia: `#pool` mide 2.849 px a 390 px con "Fuera del pool" plegado.
 
 ### [ ] T08 — Vista Línea
 

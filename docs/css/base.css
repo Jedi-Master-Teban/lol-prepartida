@@ -403,9 +403,10 @@ img {
 .cero {
   position: absolute;
   left: 50%;
-  top: 0;
-  bottom: 0;
+  top: 50%;
+  transform: translateY(-50%);
   width: 1px;
+  height: 20px;
   background: var(--borde);
 }
 
@@ -461,5 +462,74 @@ img {
 
 .leyenda-item {
   white-space: nowrap;
+}
+
+/* --- Vista Línea (T08) --- */
+.selectores {
+  display: flex;
+  gap: var(--espacio);
+  align-items: center;
+  margin-bottom: var(--espacio);
+  flex-wrap: wrap;
+}
+
+.selectores label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.selectores select {
+  font-size: 14px;
+  padding: 6px 10px;
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  color: var(--texto);
+}
+
+.graficas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--espacio);
+}
+
+.graficas .grafica {
+  position: relative;
+  height: 220px;
+}
+
+.cuenta-oro,
+.cuenta-cs,
+.cuenta-muertes {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.barras-muertes {
+  position: relative;
+  height: 160px;
+}
+
+@media (max-width: 599px) {
+  .graficas {
+    grid-template-columns: 1fr;
+  }
+  .tarjeta-campeon {
+    padding: 10px;
+  }
+  .tarjeta-campeon .estadisticas {
+    gap: 4px;
+    font-size: 12px;
+  }
+  .tarjeta-campeon .estadisticas .valor {
+    font-size: 13px;
+  }
+  .indicador-linea {
+    margin-top: 6px;
+  }
+  .barra-contenedor {
+    margin-top: 2px;
+  }
 }
 

@@ -350,3 +350,43 @@ Veredicto: T06d aprobada. Punto de control 2 superado; sigue T07.
   6. `pool.js`: barra de indicador de línea con ancho proporcional y número al lado; sin barra cuando el dato es null.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T07b
+
+Medido en un navegador real. La página carga sin errores de módulo y `node --input-type=module --check`
+pasa en todos los archivos de `docs/js`.
+- Cifras correctas: Ahri MIDDLE 31 partidas, 14 victorias, 46.3 %, CS 56.5, oro −350, muertes 1.65; ya
+  no hay "—" salvo datos inexistentes; tarjetas de más a menos partidas; 17 combinaciones en total.
+- Medidas: `#pool` a 707 px mide 1.568 px; a 390 px mide 2.849 px con "Fuera del pool" plegado y
+  5.083 px desplegado; sin desbordamiento horizontal.
+- Defecto menor: indicador de línea con el número lejos de la barra, sin línea del cero y barras muy
+  cortas por la escala común. Pasa a T08 como retoque previo.
+- Veredicto: T07 y T07b aprobadas. El agente volvió a reportar que no tenía navegador y no marcó la tarea
+  (conducta correcta); el supervisor midió y la marcó.
+
+## T08 — 2026-11-16
+- Archivos: `docs/js/vistas/linea.js` (nuevo), `docs/js/vistas/pool.js` (retoques del supervisor),
+  `docs/css/base.css`, `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan);
+  `node --input-type=module --check < archivo.js` OK en todos los archivos de `docs/js/`;
+  recursos servidos con 200 (`linea.js`, `pool.js`, `main.js`, `tema.js`, `chart.umd.js`, datos).
+- NO se pudo abrir un navegador real en este entorno para comprobar que cambiar el selector
+  actualiza las tres gráficas ni que cada una indica cuántas partidas promedia (hecho cuando de T08).
+  Por AGENTS.md, **no se marca la tarea como cumplida**; se reporta la limitación en vez de
+  darla por cumplida visual. El supervisor puede medir y marcar T08 cuando disponga de navegador.
+- Decisiones tomadas (linea.js):
+  1. Selectores de campeón (pool) y posición con filtrado combinado de ambas selecciones.
+  2. Gráfica 1: diferencia de oro frente al rival (0-20 min), línea promedio, área sombreada
+     (verde a favor / roja en contra), línea de cero marcada.
+  3. Gráfica 2: CS acumulado (0-20 min), línea promedio + línea de meta recta de (0,0) a
+     (10, meta_cs_10) prolongada con la misma pendiente hasta el minuto 20.
+  4. Gráfica 3: 3 barras horizontales (0, 1, 2+ muertes antes del 14) con tasa, partidas y
+     oro medio al 15 en el tooltip.
+  5. Cada gráfica indica cuántas partidas promedia ("Promedio de N partidas").
+  6. Colores vía `token()` de `tema.js`; ninguna cadena `var(--` en opciones de Chart.js.
+- Retoques previos aplicados a pool.js (nota del supervisor en PLAN.md):
+  1. Número del indicador de línea junto al extremo de la barra (no en la esquina).
+  2. Línea del cero vertical fina (20 px) en el centro del contenedor.
+  3. Escala común usa máximo de combinaciones con 10+ partidas, tope fijo ±1000.
+  4. Espacio vertical reducido a 390 px (tarjetas ~360 px).
+- Dudas para el supervisor: ninguna.
+
