@@ -18,8 +18,13 @@ No es un predictor de victoria. Nunca muestres "probabilidad de ganar".
 2. Haz **una sola tarea por sesión**. No adelantes trabajo de otras tareas.
 3. Cumple todos los puntos de "Hecho cuando" de la tarea. Si no puedes cumplir uno, detente.
 4. Ejecuta las verificaciones (sección "Comandos"). Todas deben pasar.
+   Un "Hecho cuando" visual ("se ve bien") solo se da por cumplido si lo comprobaste en un
+   navegador real y anotaste en la bitácora las medidas que pide la tarea. Si no puedes abrir un
+   navegador, dilo en la bitácora en vez de darlo por cumplido.
 5. Marca la tarea con `[x]` en `PLAN.md` y agrega una entrada al final de `BITACORA.md`.
 6. Haz un commit por tarea: `T05: funciones de cálculo y pruebas`.
+   El commit de una tarea contiene el código de esa tarea y nada de tareas posteriores.
+   Respeta el orden del plan: no empieces una tarea si hay una anterior sin marcar.
 7. Si la tarea termina en un **PUNTO DE CONTROL**, detente y avisa al usuario: el supervisor revisa antes de seguir.
 
 ### Formato de la entrada en BITACORA.md
@@ -69,7 +74,7 @@ Detente, no improvises, y escribe la duda en `BITACORA.md` si:
 source .venv/bin/activate          # entorno de Python
 pip install -e ".[dev]"            # tras cambiar pyproject.toml
 pytest                             # pruebas de Python (deben pasar todas)
-node --test docs/js                # pruebas de JavaScript (desde T05)
+node --test docs/js/calc.test.js   # pruebas de JavaScript (desde T05)
 prepartida exportar                # genera docs/data/*.json (desde T03)
 python -m http.server 8000 -d docs # ver la página en http://localhost:8000
 ```

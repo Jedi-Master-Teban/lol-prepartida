@@ -196,7 +196,7 @@ img {
 }
 
 /* Móvil: una columna, sin desplazamiento horizontal */
-@media (max-width: 390px) {
+@media (max-width: 599px) {
   .tarjetas {
     grid-template-columns: 1fr;
   }
@@ -213,3 +213,165 @@ img {
     height: 220px;
   }
 }
+
+/* Contenedores de gráficas con altura fija (sin canvas.height a mano) */
+.grafica {
+  position: relative;
+  height: 260px;
+}
+
+.minigrafica {
+  position: relative;
+  height: 44px;
+}
+
+.barras-pool {
+  position: relative;
+  height: 120px;
+}
+
+/* --- Vista Pool (T07) --- */
+.seccion-pool,
+.seccion-fuera {
+  margin-top: var(--espacio);
+}
+
+.seccion-pool h3,
+.seccion-fuera summary {
+  font-size: 17px;
+  color: var(--texto);
+  margin-bottom: var(--espacio);
+}
+
+.seccion-fuera summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  color: var(--acento);
+  padding: 8px 0;
+}
+
+.tarjeta-campeon {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cabecera-tarjeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.retrato {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radio);
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+}
+
+.retrato.reducida {
+  width: 32px;
+  height: 32px;
+}
+
+.identidad {
+  min-width: 0;
+}
+
+.nombre {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--texto);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.posicion {
+  font-size: 12px;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.estadisticas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 6px;
+  font-size: 13px;
+  color: var(--texto-suave);
+}
+
+.estadisticas .valor {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+.estadisticas .valor.oro {
+  font-variant-numeric: tabular-nums;
+}
+
+.indicador-linea {
+  margin-top: 8px;
+}
+
+.barra-contenedor {
+  position: relative;
+  height: 10px;
+  margin-top: 4px;
+}
+
+.cero {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--borde);
+}
+
+.barra {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 4px;
+}
+
+.numero-linea {
+  position: absolute;
+  top: 100%;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.muestra-pequena {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--texto-suave);
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  background: var(--fondo);
+}
+
+.tarjeta-reducida .estadisticas {
+  font-size: 11.5px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.tarjeta-reducida .estadisticas .valor {
+  font-size: 13px;
+}
+
+.tarjeta-reducida .numero-linea {
+  font-size: 10px;
+}
+

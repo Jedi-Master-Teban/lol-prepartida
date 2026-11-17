@@ -159,3 +159,51 @@
   - Barras "Pool vs fuera del pool" con tasa y nº de partidas (eje Y invertido).
   - Colores solo como refuerzo: cada valor lleva su texto (victoria/derrota o meta).
 - Dudas para el supervisor: ninguna.
+
+## Revisión del supervisor — punto de control 2 (T03b a T06) — 2026-11-16
+- T03b y T05: aprobadas. 32 pruebas de Python y 16 de JavaScript pasan.
+- T04 y T06: **no aprobadas**. La vista Inicio se renderizó en un navegador real y está rota:
+  11.142 px de alto en escritorio y 28.213 px en móvil, porque las gráficas no tienen altura fija.
+  El "Hecho cuando: se ve bien a 390 px" se dio por cumplido sin comprobarlo. Las correcciones
+  están en la tarea nueva **T06b** de `PLAN.md`. Hazla antes de T07.
+- Lo que sí está bien: los valores coinciden con la base (55.0, −414, 47 de 74, 1.52, 48.2 %),
+  los colores salen de `tokens.css`, la navegación funciona y no hay desbordamiento horizontal.
+- Problemas de proceso:
+  - `docs/js/vistas/inicio.js` (trabajo de T06) entró en el commit de T04, y T04 se hizo antes
+    que T03b. El commit de T06 no contiene código. Las reglas quedaron reforzadas en `AGENTS.md`.
+  - `docs/data` no se regeneró tras T03b (ver punto 8 de T06b).
+- Error del plan corregido: `node --test docs/js` falla en Node 22; el comando correcto es
+  `node --test docs/js/calc.test.js`. Cambiado en `AGENTS.md`.
+- Los cambios de `PLAN.md`, `AGENTS.md` y esta entrada quedan sin commit: inclúyelos en el de T06b.
+
+## T06b — 2026-11-16
+- Archivos: `docs/js/vistas/inicio.js`, `docs/js/main.js`, `docs/index.html`, `docs/css/base.css`,
+  `docs/data/*.json` (regenerados), `PLAN.md`, `BITACORA.md`, `AGENTS.md` (cambios del supervisor)
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan);
+  `"3003" in docs/data/estaticos.items` = true (93 ítems); todos los `canvas` tienen altura fija
+  por CSS (gráfica 260 px / 220 px <600 px, minigrafica 44 px, barras-pool 120 px), ninguno supera
+  300 px de alto.
+- No se pudo abrir un navegador real en este entorno para medir
+  `document.documentElement.scrollHeight` (1280 px < 1800 px; 390 px < 3000 px); se anota la
+  limitación en vez de darlo por cumplido visual.
+- Decisiones tomadas (8 arreglos del punto de control 2):
+  1. Cada `canvas` va dentro de un contenedor con `position: relative` y altura fija en CSS;
+     se quitó `canvas.height` a mano; se mantiene `responsive: true` y
+     `maintainAspectRatio: false`.
+  2. Indicadores: cifra principal a 28 px negrita; CS al 10 con 1 decimal; oro entero con signo;
+     muertes con 2 decimales; tasa con `%`; número de partidas una sola vez por tarjeta; CS y
+     muertes muestran diferencia con la meta en texto ("15.0 por debajo de la meta de 70");
+     tasa del pool muestra "27 de 56 ganadas".
+  3. Cabecera: rango legible "Bronce III · 22 LP · 31 victorias, 39 derrotas" con tier traducido.
+  4. Título de la sección: "Resumen".
+  5. Gráfica de progreso: título, eje Y con unidad, eje X con como mucho 8 etiquetas, línea de meta
+     rotulada "Meta 70".
+  6. Pool contra fuera del pool: dos barras horizontales delgadas (contenedor 120 px), cada una con
+     su texto "48.2 % · 27 de 56", eje 0 a 100 %, sin invertir.
+  7. Franja del pool: bajo los indicadores, fila con retratos (48 px) de los campeones de
+     `perfil.pool`, con nombre y partidas, enlazando a `#pool`; si la imagen no carga se muestra el
+     nombre.
+  8. `docs/data` regenerado con `prepartida exportar` tras T03b: `estaticos.json` incluye el ítem
+     `3003`.
+- Dudas para el supervisor: ninguna.
+

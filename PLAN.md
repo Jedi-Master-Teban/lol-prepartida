@@ -334,6 +334,49 @@ Hecho cuando:
 
 **PUNTO DE CONTROL 2.** Detente. El supervisor revisa el diseño visual antes de replicarlo en las demás vistas.
 
+### [x] T06b — Correcciones del punto de control 2
+
+La vista Inicio no cumple "se ve bien": el supervisor la renderizó y la página mide 11.142 px de
+alto a 1280 px de ancho y 28.213 px a 390 px. Arreglos, en un solo commit:
+
+1. **Gráficas sin altura fija.** Los `canvas` crecen sin límite (minigráficas de 7.500 px, gráficas
+   de 2.300 px). Regla para toda la página, también en T07 a T10: cada `canvas` va dentro de un
+   contenedor propio con `position: relative` y altura fija en CSS (minigráfica 44 px; gráfica
+   normal 260 px; 220 px por debajo de 600 px de ancho). No asignes `canvas.height` a mano.
+   Mantén `responsive: true` y `maintainAspectRatio: false`.
+2. **Indicadores.**
+   - La cifra principal va a 28 px y en negrita (sección 4).
+   - Formato: CS al 10 con 1 decimal (`55.0`); oro como entero con signo (`−414`); muertes con
+     2 decimales (`1.52`); tasa con signo de porcentaje (`48.2 %`).
+   - Quita la línea repetida de partidas: cada tarjeta muestra el número de partidas una sola vez.
+   - CS y muertes muestran la diferencia con la meta en texto: "15.0 por debajo de la meta de 70",
+     "0.52 por encima de la meta de 1".
+   - La tasa dentro del pool muestra "27 de 56 ganadas".
+3. **Cabecera.** Rango legible: "Bronce III · 22 LP · 31 victorias, 39 derrotas". Traduce el tier
+   (IRON Hierro, BRONZE Bronce, SILVER Plata, GOLD Oro, PLATINUM Platino, EMERALD Esmeralda,
+   DIAMOND Diamante, MASTER Maestro, GRANDMASTER Gran Maestro, CHALLENGER Retador).
+4. **Título de la sección:** "Resumen", no "Resumen de sesión".
+5. **Gráfica de progreso:** título, eje Y con la unidad ("CS al minuto 10"), eje X con como mucho
+   8 etiquetas, y la línea de meta rotulada "Meta 70".
+6. **Pool contra fuera del pool:** dos barras horizontales delgadas (contenedor de 120 px de alto),
+   cada una con su texto "48.2 % · 27 de 56" y "33.3 % · 7 de 21". Eje de 0 a 100 %, sin invertir.
+7. **Franja del pool.** Bajo los indicadores, una fila con los retratos (48 px) de los campeones de
+   `perfil.pool`, cada uno con su nombre y sus partidas, que enlaza a `#pool`. Usa `imagenes.js`.
+   Si la imagen no carga, se muestra el nombre.
+8. **Datos sin regenerar.** `docs/data/estaticos.json` sigue sin el ítem `3003`: tras T03b no se
+   volvió a ejecutar `prepartida exportar` sobre `docs/data`. Ejecútalo y versiona el resultado.
+
+Hecho cuando:
+- En el navegador, a 1280 px de ancho, la vista Inicio completa mide menos de 1.800 px de alto;
+  a 390 px, menos de 3.000 px. Compruébalo en la consola con
+  `document.documentElement.scrollHeight` y anota los dos valores en la bitácora.
+- Ningún `canvas` mide más de 300 px de alto:
+  `Math.max(...[...document.querySelectorAll("canvas")].map(c => c.clientHeight))`.
+- `"3003" in estaticos.items` es verdadero en `docs/data/estaticos.json`.
+- `pytest` y `node --test docs/js/calc.test.js` pasan.
+
+**PUNTO DE CONTROL 2 (repetido).** Detente. El supervisor vuelve a renderizar la página.
+
 ### [ ] T07 — Vista Pool
 
 `docs/js/vistas/pool.js`:

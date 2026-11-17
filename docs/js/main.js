@@ -37,13 +37,26 @@ function mostrarError(mensaje) {
   console.error(mensaje);
 }
 
+const TIER_ESPANOL = {
+  IRON: "Hierro",
+  BRONZE: "Bronce",
+  SILVER: "Plata",
+  GOLD: "Oro",
+  PLATINUM: "Platino",
+  EMERALD: "Esmeralda",
+  DIAMOND: "Diamante",
+  MASTER: "Maestro",
+  GRANDMASTER: "Gran Maestro",
+  CHALLENGER: "Retador",
+};
+
 function renderCabecera(meta) {
   const jugador = meta.jugador;
-  const rango = [jugador.tier, jugador.division, jugador.lp]
-    .filter((v) => v != null)
-    .join(" ");
+  const tierTexto = jugador.tier ? TIER_ESPANOL[jugador.tier] || jugador.tier : "";
+  const partes = [tierTexto, jugador.division, jugador.lp != null ? `${jugador.lp} LP` : null].filter(Boolean);
+  const rango = partes.length ? partes.join(" ") : "Sin rango";
   nombreEl.textContent = `${jugador.game_name} #${jugador.tag_line}`;
-  rangoEl.textContent = rango || "Sin rango";
+  rangoEl.textContent = `${rango} · ${jugador.victorias} victorias, ${jugador.derrotas} derrotas`;
   const fecha = new Date(meta.generado).toLocaleString("es-ES", {
     timeZone: "UTC",
     day: "2-digit",
