@@ -634,6 +634,36 @@ Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
 
 **PUNTO DE CONTROL 3 (repetido).** Detente.
 
+### [ ] T10c — Restaurar las gráficas del detalle de partida
+
+El supervisor revisó T10b en un navegador real. Corrigió él mismo, sin commit, cuatro defectos pequeños
+(inclúyelos tal cual en el commit de esta tarea, no los deshagas):
+- `muertes.js`: T10b borró el bloque `matchLookup` y la vista fallaba con
+  `ReferenceError: matchLookup is not defined` (0 puntos). Restaurado con `en_pool`.
+- `base.css`: `.punto-leyenda` estaba limitado a `.minimapa` y los puntos de la leyenda no se veían.
+- `partidas.js`: la fila de detalle se insertaba al final de la tabla; ahora va con `trFila.after(filaDetalle)`.
+- `base.css`: `.celda-iconos` y `.celda-runa` tenían `display: flex` en el `td`; ahora son `table-cell`.
+
+Queda un defecto grave, que debes arreglar tú:
+
+1. **T10b borró el código de las dos gráficas del detalle.** Los títulos "Diferencia de oro por minuto" y
+   "CS contra la meta" y sus `canvas` siguen, pero no hay ningún `new Chart` en `partidas.js`: los canvas
+   quedan vacíos. Recupera ese código del commit de T10 (`git show b896847:docs/js/vistas/partidas.js`,
+   los dos bloques `new Chart` de oro y CS) y vuelve a crearlas DESPUÉS de mostrar la fila
+   (`filaDetalle.style.display = "table-row"` antes de `new Chart`). Destruye las gráficas anteriores al
+   abrir otra partida (`Chart.getChart(canvas)?.destroy()`).
+2. **Regla nueva para AGENTS.md:** "Antes de borrar un bloque de código, busca con `grep` dónde se usa. Una
+   corrección no puede quitar una función que la tarea no pidió quitar." Añádela a la sección de reglas.
+
+Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
+- Al pulsar tres partidas distintas, una tras otra, cada detalle muestra las dos gráficas con datos y la
+  fila de iconos de compras, justo bajo la fila pulsada, sin errores en la consola.
+- `Object.keys(Chart.instances).length` no crece al abrir partidas repetidas (se destruyen las anteriores).
+- Ninguna vista se desborda en horizontal a 1280 px ni a 390 px (hoy ya se cumple, no lo rompas).
+- `pytest` y `node --test docs/js/calc.test.js` pasan.
+
+**PUNTO DE CONTROL 3 (tercer repaso).** Detente.
+
 ### [ ] T11 — Publicación en GitHub Pages
 
 - Actualiza `README.md`: cómo ver la página en local y cómo publicar.

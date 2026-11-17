@@ -64,6 +64,8 @@ Detente, no improvises, y escribe la duda en `BITACORA.md` si:
   (matchups, tiempos de objetivos, builds). Ese contenido lo define el supervisor.
 - **Alcance:** no refactorices código que la tarea no menciona. No borres archivos existentes
   salvo que la tarea lo pida.
+- **Código existente:** antes de borrar un bloque de código, busca con `grep` dónde se usa.
+  Una corrección no puede quitar una función que la tarea no pidió quitar.
 - **Base de datos:** no cambies el esquema de `db.py` salvo que la tarea lo pida.
   La base `data/prepartida.duckdb` contiene datos reales: ábrela en modo solo lectura
   fuera de `ingest.py`.

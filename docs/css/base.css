@@ -602,7 +602,7 @@ img {
   }
 }
 
-.minimapa .punto-leyenda {
+.punto-leyenda {
   display: inline-block;
   width: 10px;
   height: 10px;
@@ -771,9 +771,11 @@ img {
 }
 
 .celda-iconos {
-  display: flex;
-  gap: 4px;
-  align-items: center;
+  white-space: nowrap; /* el td sigue siendo table-cell (supervisor, T10b) */
+}
+.celda-iconos img {
+  vertical-align: middle;
+  margin-right: 4px;
 }
 
 .icono-hechizo {
@@ -790,9 +792,11 @@ img {
 }
 
 .celda-runa {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  white-space: nowrap; /* el td sigue siendo table-cell (supervisor, T10b) */
+}
+.celda-runa img {
+  vertical-align: middle;
+  margin-right: 4px;
 }
 
 .icono-runa {

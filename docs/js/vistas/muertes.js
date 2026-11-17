@@ -15,6 +15,18 @@ export function render(container, datos) {
   const version = meta.version_ddragon;
   container.innerHTML = "";
 
+  // Lookup: match_id → {campeon, rival, lado, victoria, en_pool} (restaurado por el supervisor en T10b)
+  const matchLookup = {};
+  for (const p of partidas) {
+    matchLookup[p.match_id] = {
+      campeon: p.campeon,
+      rival: p.rival,
+      lado: p.lado,
+      victoria: p.victoria,
+      en_pool: p.en_pool,
+    };
+  }
+
   // Lookup: clave de campeón → nombre visible (p. ej. "MissFortune" → "Miss Fortune")
   const nombreCampeon = {};
   for (const [id, info] of Object.entries(estaticos.campeones || {})) {

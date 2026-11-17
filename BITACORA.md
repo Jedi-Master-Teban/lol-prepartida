@@ -556,4 +556,50 @@ Medido en un navegador real (707 px y 390 px), tras recargar la caché. Sin erro
   9. A 390px: tabla en contenedor con `overflow-x: auto`; `scrollWidth` = 390 px.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T10b (punto de control 3, segundo repaso)
+
+Medido en un navegador real, tras recargar la caché.
+- Bien: ninguna vista se desborda (scrollWidth = ancho de ventana a 1280 y 390 px); alturas a 390 px:
+  Inicio 1.789, Pool 2.581, Línea 1.245, Muertes 800, Partidas 3.048. Tabla de Partidas con "Tú" y
+  "Rival" en su columna; compras como iconos con minuto; título duplicado quitado; nombres visibles
+  ("Miss Fortune") en Muertes.
+- Regresiones introducidas por T10b:
+  - `muertes.js`: se borró `matchLookup` entero → `ReferenceError`, 0 puntos. El supervisor lo restauró
+    con `en_pool`: por defecto 85 muertes en 42 partidas; "Todas las partidas" 117.
+  - `partidas.js`: se borraron las dos gráficas (`new Chart`) del detalle; quedan canvas vacíos. Pasa a T10c.
+- Correcciones pequeñas del supervisor (sin commit): leyenda visible (`.punto-leyenda`), fila de detalle
+  bajo la fila pulsada (`trFila.after`), `td` de hechizos y runa sin `display:flex`.
+- Patrón repetido: el agente quita código que no entiende para hacer pasar un criterio y no prueba en
+  navegador. Se añade una regla a AGENTS.md en T10c.
+- Veredicto: punto de control 3 NO superado. Se agrega T10c. T11 espera.
+
+## T10c — 2026-11-16
+- Archivos: `docs/js/vistas/partidas.js` (restauradas dos gráficas del detalle),
+  `docs/js/vistas/muertes.js` (matchLookup con en_pool), `docs/css/base.css`
+  (.punto-leyenda fuera de .minimapa; .celda-iconos/.celda-runa como table-cell),
+  `AGENTS.md` (nueva regla), `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan);
+  todos los archivos JS pasan `node --input-type=module --check` (main.js falla solo por
+  `Chart` no definido en Node, esperado en navegador); recursos servidos con 200.
+- NO se pudo abrir un navegador real en este entorno para comprobar que al pulsar tres partidas
+  distintas cada detalle muestra las dos gráficas con datos y la fila de iconos de compras,
+  que `Object.keys(Chart.instances).length` no crece al abrir partidas repetidas, y que
+  ninguna vista se desborda en horizontal a 1280 ni a 390 px. Por AGENTS.md, **no se marca
+  la tarea como cumplida**; se reporta la limitación en vez de darla por cumplida visual.
+- Decisiones tomadas (T10c):
+  1. `partidas.js`: restaurados los dos bloques `new Chart` del detalle (oro vs rival y CS contra
+     meta) del commit de T10 (`b896847`), creados DESPUÉS de `filaDetalle.style.display =
+     "table-row"`.
+  2. `partidas.js`: `destruirGraficasDetalle()` usa `Chart.getChart(canvas)?.destroy()` para
+     destruir gráficas previas antes de crear nuevas (evita que `Chart.instances` crezca).
+  3. `AGENTS.md`: añadida regla "Código existente: antes de borrar un bloque de código, busca
+     con `grep` dónde se usa. Una corrección no puede quitar una función que la tarea no pidió
+     quitar." en la sección "Reglas que no se rompen".
+  4. Reincorporados los 4 arreglos del supervisor en T10b (sin commit por el supervisor):
+     - `muertes.js`: `matchLookup` con `en_pool` restaurado.
+     - `base.css`: `.punto-leyenda` fuera de `.minimapa`.
+     - `partidas.js`: `trFila.after(filaDetalle)` para insertar la fila debajo de la pulsada.
+     - `base.css`: `.celda-iconos` y `.celda-runa` con `white-space: nowrap` (td como table-cell).
+- Dudas para el supervisor: ninguna.
+
 
