@@ -682,7 +682,7 @@ Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
 
 Hecho cuando: el README tiene los pasos y las dos comprobaciones pasan.
 
-### [x] T12 — Actualización automática con GitHub Actions
+### [ ] T12 — Actualización automática con GitHub Actions (falta la ejecución manual en verde)
 
 Desbloqueada: el usuario ya tiene la clave personal de Riot (no expira). Él mismo la guarda como secreto
 `RIOT_API_KEY` del repositorio y crea las variables; tú NO pidas, leas ni escribas la clave en ningún archivo.
@@ -706,7 +706,7 @@ Hecho cuando: el archivo pasa `python3 -c "import yaml,sys; yaml.safe_load(open(
 `git grep -nE "RGAPI-[0-9a-f]{8}-"` no devuelve nada, y el usuario confirma una ejecución manual en verde
 (el supervisor revisa el registro). Hasta esa confirmación, no marques la tarea.
 
-### [ ] T13 — Retirar la app de Streamlit
+### [x] T13 — Retirar la app de Streamlit
 
 Solo después del punto de control 3 y con aprobación explícita del supervisor:
 - borra `src/prepartida/app.py` y el comando `app` de `cli.py`;

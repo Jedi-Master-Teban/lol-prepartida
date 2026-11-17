@@ -58,10 +58,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@github.com"
-          if git diff --quiet docs/data; then
-            echo "No hay cambios en docs/data"
+          # meta.json cambia en cada ejecución por la hora de generación: solo se publica
+          # si cambió algún otro archivo de datos (partidas nuevas, rango, etc.).
+          if git diff --quiet -- docs/data ':(exclude)docs/data/meta.json'; then
+            echo "Sin partidas nuevas: no hay nada que publicar"
           else
             git add docs/data
             git commit -m "Actualizar datos (automático)"
+            git pull --rebase origin main
             git push
           fi

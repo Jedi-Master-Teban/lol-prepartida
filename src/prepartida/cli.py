@@ -70,14 +70,6 @@ def _cmd_estado(_args: argparse.Namespace) -> int:
     return 0
 
 
-def _cmd_app(_args: argparse.Namespace) -> int:
-    import subprocess
-    from pathlib import Path
-
-    ruta = Path(__file__).with_name("app.py")
-    return subprocess.call([sys.executable, "-m", "streamlit", "run", str(ruta)])
-
-
 def _abrir_lectura(ruta: Path) -> duckdb.DuckDBPyConnection:
     """Abre la base en solo lectura: exportar no modifica los datos."""
     if not ruta.exists():
@@ -207,8 +199,6 @@ def main(argv: list[str] | None = None) -> int:
         "--todas-las-colas", action="store_true", help="Incluye colas distintas de Solo/Dúo"
     )
     p.set_defaults(func=_cmd_publicar)
-
-    sub.add_parser("app", help="Abre la app web local").set_defaults(func=_cmd_app)
 
     args = parser.parse_args(argv)
     try:

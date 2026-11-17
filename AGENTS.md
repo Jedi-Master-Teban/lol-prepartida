@@ -122,8 +122,7 @@ src/prepartida/
   composicion.py  perfil de composiciones (fase 3)
   redaccion.py    redacción del briefing con NIM (fase 3)
   estado.py       resumen en texto
-  app.py          app Streamlit provisional (se retira en T13)
-  cli.py          comandos
+  cli.py           comandos
 tests/            pruebas de Python
 docs/             página estática publicada (se crea en T04)
 asistente/        interfaz local del asistente de draft (fase 3; no se publica)

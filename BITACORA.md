@@ -666,3 +666,30 @@ Medido en un navegador real, tras recargar la caché.
     `workflow_dispatch`.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T12
+
+- El flujo cumple la especificación: secreto y variables por entorno, sin imprimir la clave, permisos
+  de escritura, concurrencia, caché de `data/`, YAML válido, sin claves en git.
+- Corrección del supervisor (sin commit): `meta.json` cambia en cada ejecución por `generado`, lo que
+  provocaba un commit cada 3 horas aunque no hubiera partidas nuevas. Ahora solo se publica si cambió otro
+  archivo de `docs/data`, y se hace `git pull --rebase` antes del push.
+- Proceso: la tarea pedía no marcarla hasta una ejecución manual en verde; se desmarca hasta entonces.
+- Veredicto: pendiente de la primera ejecución manual.
+
+## T13 — 2026-11-16
+- Archivos: `src/prepartida/app.py` (borrado), `src/prepartida/cli.py` (comando `app` eliminado),
+  `pyproject.toml` (streamlit eliminado de dependencias), `README.md` (comando `app` y referencia
+  a app.py eliminados), `AGENTS.md` (mapa del repositorio actualizado), `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `pip install -e ".[dev]"` funciona en el entorno actual;
+  `prepartida --help` ya no muestra el comando `app`.
+- Decisiones tomadas:
+  1. `src/prepartida/app.py` borrado completamente.
+  2. Función `_cmd_app` y subparser `app` eliminados de `cli.py`.
+  3. `streamlit>=1.67` eliminado de las dependencias de `pyproject.toml`.
+  4. `README.md`: eliminada la línea `prepartida app` del uso y la referencia a `app.py` en la
+     estructura del repositorio.
+  5. `AGENTS.md`: eliminada la línea `app.py          app Streamlit provisional (se retira en T13)`
+     del mapa del repositorio.
+- Dudas para el supervisor: ninguna.
+
+

@@ -3,7 +3,7 @@ name = "prepartida"
 version = "0.2.0"
 description = "Herramienta personal de preparación pre-partida para SoloQ de League of Legends"
 requires-python = ">=3.11"
-dependencies = ["duckdb>=1.0", "httpx>=0.27", "pandas>=2.0", "streamlit>=1.67"]
+dependencies = ["duckdb>=1.0", "httpx>=0.27", "pandas>=2.0"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]

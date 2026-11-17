@@ -44,7 +44,6 @@ prepartida estaticos            # campeones, ítems, runas y hechizos del parche
 prepartida ingesta --max 200    # tu perfil y tus últimas partidas de Solo/Dúo
 prepartida estado               # rango y rendimiento por campeón
 prepartida exportar             # genera docs/data/*.json para la página estática
-prepartida app                  # abre la app web local en el navegador
 ```
 
 Para ver la página estática en local:
@@ -116,7 +115,6 @@ src/prepartida/
   estado.py        resumen por campeón
   metricas.py      métricas de línea y agregados
   perfil.py        lectura de perfil.toml
-  app.py           app web local (Streamlit)
   cli.py           comandos
 reglas/            reglas del juego por parche (por verificar)
 data/              base local y respuestas crudas (no se versiona)
