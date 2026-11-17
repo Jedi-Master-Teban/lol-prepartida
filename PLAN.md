@@ -682,7 +682,7 @@ Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
 
 Hecho cuando: el README tiene los pasos y las dos comprobaciones pasan.
 
-### [ ] T12 — Actualización automática con GitHub Actions
+### [x] T12 — Actualización automática con GitHub Actions
 
 Desbloqueada: el usuario ya tiene la clave personal de Riot (no expira). Él mismo la guarda como secreto
 `RIOT_API_KEY` del repositorio y crea las variables; tú NO pidas, leas ni escribas la clave en ningún archivo.
@@ -715,22 +715,315 @@ Solo después del punto de control 3 y con aprobación explícita del supervisor
 
 Hecho cuando: `pytest` pasa y `pip install -e ".[dev]"` funciona en un entorno limpio.
 
-## 6. Fases posteriores (no ejecutar)
+## 6. Fase 2 — Referencias por rango (Plata, Oro, Diamante)
 
-Están aquí para dar contexto. No tienen tareas porque falta la especificación.
+Objetivo: comparar las métricas del jugador con las de jugadores reales de LAN de Plata, Oro y
+Diamante, en su mismo rol y con exactamente las mismas definiciones. Se hace después de T12 y T13.
 
-- **Fase 2 — Motor de reglas y base de conocimiento (mid).** Etiquetas por campeón, clasificación
-  de composiciones y reglas que derivan la condición de victoria, la postura en línea y la prioridad
-  de objetivos. Falta: taxonomía de etiquetas, reglas concretas y fuente del contenido de matchups.
-- **Fase 3 — Briefing y hoja de compras.** Entrada manual de champ select en la página; plan por
-  composición calculado en el navegador; textos por matchup precalculados con un modelo de lenguaje.
-- **Fase 4 — Estadísticas de LAN Bronce–Oro y baneos.** Muestreo de partidas y cifras de terceros.
-- **Fase 5 — Extensiones.** Magos en bot, panel de ítems en vivo, otros roles; jungla al final.
+Decisiones del supervisor para esta fase:
+- Rangos de referencia: `SILVER`, `GOLD`, `DIAMOND`, en la cola `RANKED_SOLO_5x5` de `la1`.
+  Bronce no se muestrea: la referencia de Bronce es el propio jugador.
+- Roles: `MIDDLE` y `BOTTOM`. De cada partida de la muestra se toman **los dos** jugadores de cada
+  uno de esos roles (los dos equipos), porque el emparejamiento los pone en un rango parecido.
+- Tamaño: 300 partidas por rango (unas 600 observaciones por rol y rango).
+- Solo partidas de los dos últimos parches presentes en la muestra.
+- La muestra vive en una base aparte, `data/muestra.duckdb`, con el mismo esquema que
+  `data/prepartida.duckdb`. Nunca se mezcla con la base del jugador.
+- Privacidad: a `docs/` solo llegan agregados (percentiles y conteos). Ningún PUUID, nombre ni
+  identificador de partida de la muestra sale de `data/`.
 
-## 7. Decisiones ya tomadas
+### [ ] R01 — Entradas de liga en el cliente de Riot
+
+- `RiotClient.entradas_de_liga(tier, division, pagina=1) -> list[dict]` llama a
+  `GET /lol/league/v4/entries/RANKED_SOLO_5x5/{tier}/{division}?page={pagina}` en el enrutamiento de
+  plataforma (`la1`). Devuelve la lista tal cual (cada entrada trae `puuid`, `tier`, `rank`, `leaguePoints`).
+- `ids_de_partidas` debe aceptar el filtro `queue=420` (Solo/Dúo) y `count`; si ya lo acepta, no lo cambies.
+- Pruebas con la API simulada de `tests/conftest.py`: ruta y parámetros correctos, página vacía → lista vacía.
+
+Hecho cuando: `pytest` pasa con las pruebas nuevas.
+
+### [ ] R02 — Comando `prepartida muestra`
+
+`src/prepartida/muestra.py` y el comando:
+
+```
+prepartida muestra --tier GOLD --partidas 300 [--por-jugador 2] [--semilla 7]
+```
+
+1. Recorre las divisiones I a IV del tier. En cada una pide páginas al azar (con la semilla) hasta
+   juntar suficientes jugadores; baraja la lista.
+2. De cada jugador toma sus `--por-jugador` partidas Solo/Dúo más recientes (`queue=420`).
+3. Descarta partidas ya guardadas, de otra cola o de más de 30 días.
+4. Descarga partida y timeline y las guarda en `data/muestra.duckdb` reutilizando `guardar_partida`
+   de `ingest.py` (sin copia cruda: `raw_dir=None`).
+5. Registra en una tabla nueva `muestra_partidas(match_id, tier_muestra, fecha_muestra)` el rango por el
+   que entró cada partida. Es la única tabla nueva; se crea en `muestra.py`, no en `db.py`.
+6. Se detiene al llegar a `--partidas` partidas del tier. Es reanudable: si se interrumpe y se vuelve a
+   ejecutar, sigue donde iba.
+7. Muestra progreso cada 25 partidas: "GOLD: 75 de 300 partidas".
+
+Con el límite de 100 peticiones cada 2 minutos, 300 partidas tardan unos 12 minutos por rango.
+
+Pruebas con la API simulada: se detiene en el tope, no duplica partidas, es reanudable, la tabla
+`muestra_partidas` queda poblada y no se escribe nada en `data/prepartida.duckdb`.
+
+Hecho cuando: `pytest` pasa. El usuario ejecuta, en su Mac, una muestra corta
+(`prepartida muestra --tier GOLD --partidas 20`) y pega la salida en la bitácora. No ejecutes la muestra
+completa: la ejecuta el usuario.
+
+### [ ] R03 — Métricas para cualquier participante
+
+Hoy `partidas_del_jugador` calcula las métricas de línea solo para un PUUID. Hace falta lo mismo para
+todos los participantes de un rol.
+
+- En `metricas.py`, nueva función `metricas_por_rol(con, posiciones=("MIDDLE","BOTTOM")) -> DataFrame`:
+  una fila por participante y partida con `match_id`, `posicion`, `campeon`, `victoria`, `cs_10`,
+  `dif_oro_10`, `dif_oro_15`, `muertes_14`, `parche`, y el `tier_muestra` si la tabla existe.
+  Usa la misma consulta de rival de posición que `SQL_PARTIDAS`: no inventes otra definición.
+- **Prueba de regresión obligatoria:** sobre la base de pruebas, las filas del jugador que devuelve
+  `metricas_por_rol` coinciden exactamente con las de `partidas_del_jugador` en esas cinco métricas.
+- No cambies `partidas_del_jugador`.
+
+Hecho cuando: `pytest` pasa, incluida la prueba de regresión.
+
+### [ ] R04 — Exportar `referencias.json`
+
+Nueva sección 3.8 del contrato de datos (aprobada por el supervisor; agrégala a la sección 3):
+
+```json
+{
+  "generado": "2026-11-20T15:00:00Z",
+  "parches": ["26.22", "26.23"],
+  "rangos": {
+    "GOLD": {
+      "partidas": 300,
+      "MIDDLE": {
+        "observaciones": 598,
+        "cs_10":      {"p25": 61.0, "p50": 68.0, "p75": 75.0},
+        "dif_oro_10": {"p25": -310, "p50": 0, "p75": 300},
+        "dif_oro_15": {"p25": -620, "p50": 0, "p75": 610},
+        "muertes_14": {"p25": 0, "p50": 1, "p75": 2},
+        "por_muertes_14": [
+          {"muertes": "0", "partidas": 210, "tasa": 58.1},
+          {"muertes": "1", "partidas": 190, "tasa": 49.5},
+          {"muertes": "2+", "partidas": 198, "tasa": 41.2}
+        ],
+        "curva_cs": [0, 0, 4, 11, ...]
+      },
+      "BOTTOM": { ... }
+    },
+    "SILVER": { ... },
+    "DIAMOND": { ... }
+  }
+}
+```
+
+- Las cifras del ejemplo son de relleno: las reales salen de la muestra.
+- `curva_cs`: mediana del CS acumulado por minuto, del 0 al 20 (21 valores).
+- Los percentiles de `dif_oro_10` y `dif_oro_15` son simétricos por construcción (cada partida aporta
+  las dos caras de la línea). Esto es esperado: lo útil es el p75 y la dispersión.
+- Un rango o rol con menos de 100 observaciones se exporta con `"muestra_pequena": true`.
+- `prepartida exportar` escribe `referencias.json` solo si existe `data/muestra.duckdb`; si no, no lo crea.
+- Prueba de privacidad: el JSON exportado no contiene ningún PUUID ni `match_id` de la base de pruebas.
+
+Hecho cuando: `pytest` pasa y `docs/data/referencias.json` cumple el contrato con la muestra corta de R02.
+
+### [ ] R05 — Referencias en la página
+
+Solo vistas; los cálculos van en `calc.js` con pruebas.
+
+1. **Inicio.** Bajo cada uno de los cuatro indicadores (CS al 10, oro al 15, muertes antes del 14 y,
+   para la tasa, nada), una regla horizontal con tres marcas de la mediana (Plata, Oro, Diamante) y un
+   punto con el valor del jugador. Texto: "Mediana en Oro: 68.0 · te faltan 13.0". El rol de referencia
+   es `perfil.roles.principal`.
+2. **Bloque "Tu brecha más grande frente a Oro".** Para cada métrica, la distancia del jugador a la
+   mediana de Oro medida en rangos intercuartílicos ((Oro p50 − tú) / (Oro p75 − Oro p25)). Se muestra
+   la métrica con la mayor distancia desfavorable, con su texto. Es la prioridad de entrenamiento.
+3. **Línea.** En la gráfica de CS acumulado, una línea discontinua con la `curva_cs` de Oro del rol
+   seleccionado. Leyenda "Mediana en Oro".
+4. Si `referencias.json` no existe, nada de lo anterior se muestra y la página funciona igual.
+5. Cada referencia muestra su número de observaciones y "muestra pequeña" cuando corresponde.
+
+Hecho cuando (navegador real; si no hay, dilo y no marques): las reglas de referencia se ven en Inicio a
+1280 y 390 px sin desbordar; la línea de Oro aparece en Línea; quitando `referencias.json` la página
+carga sin errores; `node --test docs/js/calc.test.js` y `pytest` pasan.
+
+**PUNTO DE CONTROL 4.** Detente. El supervisor revisa los números contra la muestra y la página.
+
+### [ ] R06 — Actualización semanal de las referencias
+
+- `.github/workflows/referencias.yml`: `schedule` semanal (lunes, minuto no redondo) y `workflow_dispatch`.
+- Restaura y guarda `data/muestra.duckdb` con `actions/cache@v4` (clave con `github.run_id`,
+  `restore-keys: prepartida-muestra-`).
+- Ejecuta `prepartida muestra` para SILVER, GOLD y DIAMOND con `--partidas 300`, luego
+  `prepartida exportar`, y hace commit de `docs/data/referencias.json` si cambió.
+- Mismo `concurrency: { group: actualizar }` que el flujo de T12, para que nunca corran a la vez y
+  compartan bien el límite de la clave.
+- Para que la muestra siga fresca, `muestra` descarta del cálculo las partidas de más de 30 días (no
+  las borra de la base).
+- `timeout-minutes: 90`.
+
+Hecho cuando: el YAML es válido, no hay claves en git y el usuario confirma una ejecución manual en verde.
+
+## 7. Fase 3 — Asistente de draft (antes de la partida)
+
+Objetivo: con la selección de campeones (5 aliados, 5 enemigos, roles y lado del mapa), producir antes
+de jugar: qué campeón del pool elegir y por qué, runas y hechizos, ruta de ítems para esa partida y el
+plan de juego (línea, mapa, objetivos y condición de victoria). No predice el resultado: nunca muestres
+una probabilidad de ganar.
+
+Decisiones del supervisor para esta fase:
+- **Aplicación local**, no en GitHub Pages: la clave de NVIDIA NIM no puede vivir en una página pública,
+  y la lectura automática del draft (fase 3c) solo funciona en el Mac del jugador.
+  Servidor en Python en `http://127.0.0.1:8765`, solo en la interfaz local (nunca `0.0.0.0`).
+  Interfaz en `asistente/` (HTML, CSS y módulos ES, sin framework), reutilizando `docs/css/tokens.css`.
+  `asistente/` no se publica.
+- **Dependencias aprobadas para esta fase:** `fastapi` y `uvicorn` (servidor local). Nada más. Las
+  llamadas a NIM se hacen con `httpx`, que ya está instalado. No agregues el paquete `openai`.
+- **Sin scraping de páginas de terceros.** Para estadísticas de matchups, el asistente muestra enlaces
+  a la página del matchup (por ejemplo `https://lolalytics.com/lol/<campeon>/vs/<rival>/build/`, con las
+  claves en minúscula); el jugador los consulta él mismo.
+- **El modelo de lenguaje solo redacta.** Todo dato (cifras, ítems, runas, tiempos) sale de las capas
+  de conocimiento. El modelo convierte una lista de hechos en texto y no puede añadir hechos.
+- **Dos versiones del briefing:** corta (máximo 5 líneas, para leer durante la selección) y larga
+  (para la pantalla de carga).
+
+### [ ] D01 — Ficha automática de campeones
+
+`src/prepartida/conocimiento.py` y el comando `prepartida conocimiento --generar`, que escribe
+`conocimiento/campeones.toml` con una entrada por campeón, calculada solo de Data Dragon:
+
+```toml
+[Ahri]
+dano = "magico"        # "fisico", "magico" o "mixto", de info.attack frente a info.magic
+alcance = "distancia"  # "cuerpo" si stats.attackrange <= 300, si no "distancia"
+etiquetas_riot = ["Mage", "Assassin"]
+# Campos curados (D02): vacíos aquí
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+```
+
+- Regla para `dano`: "magico" si `info.magic >= info.attack + 3`; "fisico" si `info.attack >= info.magic + 3`;
+  si no, "mixto". Es una aproximación y se anota así en el archivo.
+- Volver a generar **no borra** los campos curados ni `verificado` de las entradas existentes.
+
+Hecho cuando: `pytest` pasa (incluida la prueba de que regenerar conserva lo curado) y el archivo tiene
+todos los campeones de `estaticos`.
+
+### [ ] D02 — Borrador de los campos curados con NIM
+
+Los campos `enganche` (0–3), `control` (0–3), `escala` ("temprano", "medio", "tardio") y `arquetipo`
+(uno de: "asesino", "mago_control", "mago_poke", "tirador", "tanque", "luchador", "encantador",
+"desplazador") no salen de Data Dragon.
+
+- `prepartida conocimiento --borrador --top 60` toma los 60 campeones más frecuentes en
+  `data/muestra.duckdb` (más los del pool), pide a NIM un borrador de esos cuatro campos para cada uno
+  y lo escribe con `verificado = false` y `fuente = "borrador NIM"`. No toca entradas con `verificado = true`.
+- Variables en `.env`: `NIM_API_KEY` y `NIM_MODELO` (el usuario elige el modelo en build.nvidia.com).
+  Base: `https://integrate.api.nvidia.com/v1/chat/completions`. Respuesta pedida en JSON y validada:
+  un valor fuera de las opciones se descarta y el campo queda vacío.
+- Pausa entre llamadas para no pasar de 30 por minuto.
+- El jugador y el supervisor revisan el borrador y marcan `verificado = true` a mano. El motor de D03
+  solo usa campos de entradas verificadas; los demás cuentan como desconocidos.
+
+Hecho cuando: `pytest` pasa con NIM simulado (incluida la validación de valores) y la bitácora dice
+cuántos campeones quedaron con borrador. **Detente:** el usuario revisa el borrador antes de D03.
+
+### [ ] D03 — Perfil de una composición
+
+`src/prepartida/composicion.py`, funciones puras con pruebas:
+
+- `perfil_equipo(campeones: list[str], fichas) -> dict` con: proporción de daño físico y mágico,
+  enganche total, control total, escala dominante, arquetipos presentes, número de campeones cuerpo a
+  cuerpo, y `desconocidos` (campeones sin ficha verificada).
+- `contraste(aliado, enemigo) -> dict` con las diferencias: quién tiene más enganche, quién escala
+  mejor, si el enemigo es casi todo de un tipo de daño (≥ 70 %).
+- Las pruebas usan fichas inventadas en el propio test, no `conocimiento/campeones.toml`.
+
+Hecho cuando: `pytest` pasa.
+
+### [ ] D04 — Reglas del briefing y puntuación del pool
+
+1. `reglas/briefing.toml` con reglas declarativas `condicion → hecho`. El supervisor escribe el primer
+   lote de reglas (no las inventes): la tarea es el **intérprete**. Formato:
+
+```toml
+[[regla]]
+id = "enemigo_fisico"
+si = "enemigo.prop_fisico >= 0.7"
+hecho = "El equipo enemigo hace casi todo su daño físico: prioriza armadura en tu primer ítem defensivo."
+categoria = "compras"
+```
+
+   El intérprete evalúa solo comparaciones simples sobre los campos de `perfil_equipo` y `contraste`
+   (`>=`, `<=`, `==`, `and`). No uses `eval`.
+2. `puntuar_pool(seleccion, historial, fichas) -> list[dict]`: una fila por campeón del pool jugable en
+   el rol del jugador, con una puntuación que es la **suma explicada** de componentes, cada uno con su
+   texto y su número de partidas:
+   - tu tasa ajustada con ese campeón en ese rol (la de `metricas.tasa_ajustada`);
+   - tu historial contra el arquetipo del rival de línea;
+   - encaje con tu equipo (por ejemplo, tu equipo ya tiene 4 de daño físico y tu campeón hace daño mágico).
+   Los pesos van en `reglas/briefing.toml`, no en el código.
+3. Las runas, hechizos e ítems sugeridos salen de dos fuentes, cada una con su número de partidas:
+   tus propias partidas con ese campeón, y la muestra de Oro y Diamante (`muestra.duckdb`). Si hay
+   menos de 10, se muestra "muestra pequeña" y el enlace a la página del campeón.
+
+Hecho cuando: `pytest` pasa con un caso completo de selección inventado en el test.
+
+### [ ] D05 — Servidor local y entrada del draft
+
+- `prepartida asistente` levanta FastAPI en `127.0.0.1:8765` y abre el navegador.
+- Página `asistente/index.html`: dos columnas de 5 casillas (aliados y enemigos) con autocompletado
+  de nombres de campeón, selector de rol de cada uno, tu posición, lado (azul o rojo) y botón
+  "Preparar partida". Retratos de Data Dragon como en la página publicada.
+- `POST /api/briefing` recibe la selección y devuelve los hechos estructurados (D03 y D04), sin modelo
+  de lenguaje todavía. La página los muestra en secciones: Pick, Runas y hechizos, Compras, Línea,
+  Mapa y objetivos, Condición de victoria, Enlaces de matchup.
+- Los campeones aún no elegidos pueden quedar vacíos: el briefing se calcula con lo que haya.
+
+Hecho cuando (navegador real; si no hay, dilo y no marques): con una selección de prueba la página muestra
+las secciones sin errores en la consola, y con dos casillas enemigas vacías también funciona.
+
+### [ ] D06 — Redacción del briefing con NIM
+
+- `src/prepartida/redaccion.py`: recibe los hechos de D05 y pide a NIM dos textos (corto: máximo 5
+  líneas; largo: máximo 250 palabras), en español, en segunda persona.
+- El prompt incluye solo los hechos y la instrucción de no añadir cifras, ítems, runas ni tiempos que no
+  estén en ellos.
+- **Validación:** cada número que aparezca en el texto debe estar en los hechos; si no, se descarta el
+  texto y se muestran los hechos en viñetas. Lo mismo si NIM falla o tarda más de 15 s.
+- Caché por hash de los hechos, en `data/briefings/`.
+- La página muestra primero el corto y debajo "Ver plan completo".
+
+Hecho cuando: `pytest` pasa con NIM simulado (incluido un texto con una cifra inventada, que debe
+descartarse) y la bitácora incluye un briefing real generado por el usuario.
+
+**PUNTO DE CONTROL 5.** Detente. El supervisor y el jugador prueban el asistente con 5 drafts de partidas
+ya jugadas y comparan el plan con lo que pasó.
+
+### Fase 3b y 3c (no ejecutar todavía)
+
+- **3b — Conocimiento curado:** verificar `reglas/objetivos.toml` contra notas de parche oficiales;
+  incorporar la recopilación de xPeke como reglas y hechos con su fuente.
+- **3c — Automatización:** leer el draft en vivo desde el cliente con la API local del cliente (LCU,
+  ruta `/lol-champ-select/v1/session`; no oficial, puede cambiar con cada parche); decidir si se usan
+  estadísticas de terceros.
+- **Medición:** comparar muertes antes del 14 y oro al 15 antes y después de usar el asistente.
+
+## 8. Fases posteriores (no ejecutar)
+
+- Magos en la línea inferior, panel de ítems en vivo, otros roles; jungla al final.
+
+## 9. Decisiones ya tomadas
 
 - La página es pública. Por eso el contrato de datos excluye identificadores de otros jugadores.
 - Sin framework ni compilación en la página: HTML, CSS y módulos ES.
 - Chart.js 4 es la única librería de terceros en la página, en copia local.
 - La clave de Riot vive en `.env` en local. Cuando exista la clave personal, además como secreto de GitHub.
 - La carpeta publicada es `docs/` porque GitHub Pages solo admite la raíz o `/docs` al publicar desde una rama.
+- Fase 2: la muestra de referencia vive en `data/muestra.duckdb` y solo se publican agregados.
+- Fase 3: el asistente de draft es una aplicación local (127.0.0.1); el modelo de lenguaje solo redacta
+  hechos calculados; sin scraping de páginas de terceros.

@@ -645,3 +645,24 @@ Medido en un navegador real, tras recargar la caché.
 - Veredicto: T11 aprobada. El usuario publica (remoto, push y Pages). T12 sigue bloqueada hasta tener
   la clave personal de Riot.
 
+## T12 — 2026-11-16
+- Archivos: `.github/workflows/actualizar.yml` (nuevo), `README.md` (sección de Actions), `PLAN.md`,
+  `BITACORA.md`
+- Verificación: `python3 -c "import yaml; yaml.safe_load(open(...))"` → YAML válido;
+  `git grep -nE "RGAPI-[0-9a-f]{8}-"` → nada; `pytest` (32 pasan)
+- Decisiones tomadas:
+  - `schedule` cada 3 horas con `cron: "17 */3 * * *"` (minuto no redondo) y `workflow_dispatch`.
+  - `permissions: contents: write` y `concurrency: { group: actualizar, cancel-in-progress: false }`.
+  - Pasos: `actions/checkout@v4`, `actions/setup-python@v5` (Python 3.12, caché de pip),
+    `pip install -e .`, `actions/cache@v4` para `data/` (clave con `github.run_id`,
+    `restore-keys: prepartida-data-`), `prepartida init`, `prepartida estaticos`,
+    `prepartida ingesta --max 200`, `prepartida exportar`, commit y push de `docs/data`
+    solo si cambió (autor `github-actions[bot]`, mensaje "Actualizar datos (automático)").
+  - Variables de entorno del job: `RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}` y
+    `RIOT_GAME_NAME`, `RIOT_TAG_LINE`, `RIOT_PLATFORM`, `RIOT_REGION` como
+    `${{ vars.X }}`. La clave nunca se imprime (sin `set -x`, `env` ni `echo` de variables).
+  - `timeout-minutes: 30`. Si la ingesta falla, el job falla y no hace commit.
+  - Documentado en `README.md`: pestaña Actions y cómo lanzar manualmente con
+    `workflow_dispatch`.
+- Dudas para el supervisor: ninguna.
+

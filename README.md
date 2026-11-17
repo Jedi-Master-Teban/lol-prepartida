@@ -72,6 +72,29 @@ La página se publica desde la carpeta `docs/` en GitHub Pages. Los pasos que ha
 Antes del primer push, comprueba que `git ls-files` no incluye `.env` ni nada de `data/`,
 y que `git grep -nE "RGAPI-[0-9a-f]{8}-"` no devuelve nada.
 
+## Actualización automática con GitHub Actions
+
+La página se actualiza automáticamente cada 3 horas mediante un workflow de GitHub Actions
+(`.github/workflows/actualizar.yml`). El workflow:
+
+- Se ejecuta cada 3 horas (`schedule`) y también se puede lanzar manualmente desde la
+  pestaña **Actions** del repositorio (`workflow_dispatch`).
+- Descarga los datos estáticos de Data Dragon, hace ingesta de tus últimas 200 partidas
+  y exporta los JSON a `docs/data/`. Si hubo cambios, hace commit y push automáticamente.
+- Usa el secreto `RIOT_API_KEY` (tu clave personal de Riot) y las variables del repositorio
+  `RIOT_GAME_NAME`, `RIOT_TAG_LINE`, `RIOT_PLATFORM` y `RIOT_REGION`.
+- La clave nunca se imprime en los registros.
+
+Para configurarlo:
+
+1. En GitHub: Settings → Secrets and variables → Actions.
+2. Añade el secreto `RIOT_API_KEY` con tu clave personal de Riot.
+3. Añade las variables `RIOT_GAME_NAME`, `RIOT_TAG_LINE`, `RIOT_PLATFORM` y
+   `RIOT_REGION` con los valores de tu cuenta.
+
+Puedes ver las ejecuciones en la pestaña **Actions** del repositorio y lanzar una
+manualmente con el botón "Run workflow".
+
 ## Pruebas
 
 ```bash
@@ -98,5 +121,7 @@ src/prepartida/
 reglas/            reglas del juego por parche (por verificar)
 data/              base local y respuestas crudas (no se versiona)
 docs/              página estática publicada en GitHub Pages
+.github/workflows/
+  actualizar.yml   actualización automática cada 3 horas
 ```
 

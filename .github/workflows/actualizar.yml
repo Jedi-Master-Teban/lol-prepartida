@@ -1,0 +1,67 @@
+name: Actualizar datos
+
+on:
+  schedule:
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: actualizar
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
+      RIOT_GAME_NAME: ${{ vars.RIOT_GAME_NAME }}
+      RIOT_TAG_LINE: ${{ vars.RIOT_TAG_LINE }}
+      RIOT_PLATFORM: ${{ vars.RIOT_PLATFORM }}
+      RIOT_REGION: ${{ vars.RIOT_REGION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Instalar dependencias
+        run: pip install -e .
+
+      - name: Restaurar datos
+        uses: actions/cache@v4
+        with:
+          path: data
+          key: prepartida-data-${{ github.run_id }}
+          restore-keys: prepartida-data-
+
+      - name: Inicializar base si no existe
+        run: prepartida init
+
+      - name: Descargar datos estáticos
+        run: prepartida estaticos
+
+      - name: Ingesta de partidas
+        run: prepartida ingesta --max 200
+
+      - name: Exportar datos
+        run: prepartida exportar
+
+      - name: Commit y push si cambió
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@github.com"
+          if git diff --quiet docs/data; then
+            echo "No hay cambios en docs/data"
+          else
+            git add docs/data
+            git commit -m "Actualizar datos (automático)"
+            git push
+          fi

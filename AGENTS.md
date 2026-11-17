@@ -14,7 +14,8 @@ No es un predictor de victoria. Nunca muestres "probabilidad de ganar".
 
 ## Cómo trabajar
 
-1. Abre `PLAN.md` y toma **la primera tarea sin marcar** cuyo estado no sea BLOQUEADA.
+1. Abre `PLAN.md` y toma **la primera tarea sin marcar** cuyo estado no sea BLOQUEADA, en el orden en que
+   aparecen (T…, luego R… de la fase 2, luego D… de la fase 3).
 2. Haz **una sola tarea por sesión**. No adelantes trabajo de otras tareas.
 3. Cumple todos los puntos de "Hecho cuando" de la tarea. Si no puedes cumplir uno, detente.
 4. Ejecuta las verificaciones (sección "Comandos"). Todas deben pasar.
@@ -43,7 +44,7 @@ Detente, no improvises, y escribe la duda en `BITACORA.md` si:
 
 - el plan contradice el código existente;
 - un "Hecho cuando" no se puede cumplir;
-- necesitas una dependencia nueva;
+- necesitas una dependencia nueva que la tarea no aprueba expresamente;
 - necesitas cambiar el contrato de datos (sección 3 de `PLAN.md`);
 - una prueba existente falla y no sabes por qué;
 - la tarea está marcada BLOQUEADA.
@@ -78,7 +79,7 @@ pip install -e ".[dev]"            # tras cambiar pyproject.toml
 pytest                             # pruebas de Python (deben pasar todas)
 node --test docs/js/calc.test.js   # pruebas de JavaScript (desde T05)
 prepartida exportar                # genera docs/data/*.json (desde T03)
-python -m http.server 8000 -d docs # ver la página en http://localhost:8000
+python3 -m http.server 8000 -d docs # ver la página en http://localhost:8000
 ```
 
 ## Convenciones de código
@@ -116,13 +117,19 @@ src/prepartida/
   db.py           esquema DuckDB
   ddragon.py      datos estáticos oficiales (campeones, ítems, runas, hechizos)
   metricas.py     métricas por partida y agregados
+  muestra.py      muestra de partidas de Plata, Oro y Diamante (fase 2)
+  conocimiento.py fichas de campeones (fase 3)
+  composicion.py  perfil de composiciones (fase 3)
+  redaccion.py    redacción del briefing con NIM (fase 3)
   estado.py       resumen en texto
   app.py          app Streamlit provisional (se retira en T13)
   cli.py          comandos
 tests/            pruebas de Python
 docs/             página estática publicada (se crea en T04)
-data/             base local y respuestas crudas (no se versiona)
-reglas/           reglas del juego por parche (sin verificar; no usar todavía)
+asistente/        interfaz local del asistente de draft (fase 3; no se publica)
+conocimiento/     fichas de campeones (fase 3)
+data/             base local, muestra de referencia y respuestas crudas (no se versiona)
+reglas/           reglas del juego y del briefing (las escribe el supervisor)
 perfil.toml       pool, roles y metas del jugador
 PLAN.md           tareas
 BITACORA.md       registro de trabajo
