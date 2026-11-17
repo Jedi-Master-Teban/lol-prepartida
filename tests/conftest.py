@@ -110,6 +110,30 @@ class ApiFalsa:
                     }
                 ],
             )
+        if "/lol/league/v4/entries/RANKED_SOLO_5x5/" in ruta:
+            partes = ruta.split("/lol/league/v4/entries/RANKED_SOLO_5x5/")[1].split("?")[0].split("/")
+            tier = partes[0]
+            division = partes[1]
+            pagina = int(request.url.params.get("page", 1))
+            if pagina > 3:
+                return httpx.Response(200, json=[])
+            return httpx.Response(
+                200,
+                json=[
+                    {
+                        "puuid": f"puuid-{tier}-{division}-{pagina}-1",
+                        "tier": tier,
+                        "rank": division,
+                        "leaguePoints": 100,
+                    },
+                    {
+                        "puuid": f"puuid-{tier}-{division}-{pagina}-2",
+                        "tier": tier,
+                        "rank": division,
+                        "leaguePoints": 90,
+                    },
+                ],
+            )
         if "/champion-masteries/by-puuid/" in ruta:
             return httpx.Response(
                 200,

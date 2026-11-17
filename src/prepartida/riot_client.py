@@ -149,3 +149,19 @@ class RiotClient:
         return self._get(
             self.platform, f"/lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}"
         )
+
+    def entradas_de_liga(self, tier: str, division: str, pagina: int = 1) -> list[dict]:
+        """Entradas de liga para un rango y división dados (Solo/Dúo)."""
+        return self._get(
+            self.platform,
+            f"/lol/league/v4/entries/RANKED_SOLO_5x5/{tier}/{division}",
+            params={"page": pagina},
+        )
+
+    def entradas_de_liga(self, tier: str, division: str, pagina: int = 1) -> list[dict]:
+        """Entradas de liga para un rango y división dados (Solo/Dúo)."""
+        return self._get(
+            self.platform,
+            f"/lol/league/v4/entries/RANKED_SOLO_5x5/{tier}/{division}",
+            params={"page": pagina},
+        )

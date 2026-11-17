@@ -732,7 +732,7 @@ Decisiones del supervisor para esta fase:
 - Privacidad: a `docs/` solo llegan agregados (percentiles y conteos). Ningún PUUID, nombre ni
   identificador de partida de la muestra sale de `data/`.
 
-### [ ] R01 — Entradas de liga en el cliente de Riot
+### [x] R01 — Entradas de liga en el cliente de Riot
 
 - `RiotClient.entradas_de_liga(tier, division, pagina=1) -> list[dict]` llama a
   `GET /lol/league/v4/entries/RANKED_SOLO_5x5/{tier}/{division}?page={pagina}` en el enrutamiento de

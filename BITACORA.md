@@ -701,3 +701,17 @@ Medido en un navegador real, tras recargar la caché.
 - Veredicto: T13 aprobada. T12 sigue pendiente: los commits no se habían subido a GitHub, así que el flujo
   "Actualizar datos" aún no existía allí; la ejecución en cola era la de GitHub Pages.
 
+## R01 — 2026-11-16
+- Archivos: `src/prepartida/riot_client.py` (método `entradas_de_liga` nuevo), `tests/conftest.py`
+  (simulación de la ruta de entradas de liga), `tests/test_riot_client.py` (nuevo), `PLAN.md`,
+  `BITACORA.md`
+- Verificación: `pytest` (35 pasan, 3 nuevas)
+- Decisiones tomadas:
+  1. `RiotClient.entradas_de_liga(tier, division, pagina=1)` llama a
+     `GET /lol/league/v4/entries/RANKED_SOLO_5x5/{tier}/{division}?page={pagina}` en el enrutamiento
+     de plataforma (`self.platform`, por defecto `la1`) y devuelve la lista tal cual.
+  2. `ids_de_partidas` ya aceptaba `queue=420` y `count`; no se modificó.
+  3. En `ApiFalsa`, la ruta `/lol/league/v4/entries/RANKED_SOLO_5x5/{tier}/{division}` devuelve dos
+     entradas por página y lista vacía a partir de la página 4.
+- Dudas para el supervisor: ninguna.
+
