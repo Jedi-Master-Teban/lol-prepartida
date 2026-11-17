@@ -1,0 +1,14 @@
+/* Tokens de diseño — lol-prepartida (fase 1b, sección 4 de PLAN.md) */
+
+:root {
+  --fondo: #0b1220;
+  --panel: #131c2e;
+  --borde: #24304a;
+  --texto: #e6ebf5;
+  --texto-suave: #93a0b8;
+  --acento: #d4a94a;
+  --victoria: #4c9aff;
+  --derrota: #ef6b73;
+  --radio: 10px;
+  --espacio: 16px;
+}

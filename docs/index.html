@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prepartida — SithLordDropout #LAN</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="contenido">
+      <div class="identidad">
+        <span class="nombre">Cargando...</span>
+        <span class="rango"></span>
+      </div>
+      <span class="actualizado"></span>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <a href="#inicio">Inicio</a>
+    <a href="#pool">Pool</a>
+    <a href="#linea">Línea</a>
+    <a href="#muertes">Muertes</a>
+    <a href="#partidas">Partidas</a>
+  </nav>
+
+  <main class="container">
+    <div id="error-carga" style="display: none;" class="mensaje-error"></div>
+
+    <section id="inicio" class="seccion activa">
+      <h2>Resumen de sesión</h2>
+      <div id="vista-inicio"></div>
+    </section>
+
+    <section id="pool" class="seccion">
+      <h2>Pool de campeones</h2>
+      <div id="vista-pool"></div>
+    </section>
+
+    <section id="linea" class="seccion">
+      <h2>Análisis de línea</h2>
+      <div id="vista-linea"></div>
+    </section>
+
+    <section id="muertes" class="seccion">
+      <h2>Muertes tempranas</h2>
+      <div id="vista-muertes"></div>
+    </section>
+
+    <section id="partidas" class="seccion">
+      <h2>Historial de partidas</h2>
+      <div id="vista-partidas"></div>
+    </section>
+  </main>
+
+  <script src="vendor/chart.umd.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
