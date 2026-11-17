@@ -15,17 +15,6 @@ export function render(container, datos) {
   const version = meta.version_ddragon;
   container.innerHTML = "";
 
-  // Lookup: match_id → {campeon, rival, lado, victoria}
-  const matchLookup = {};
-  for (const p of partidas) {
-    matchLookup[p.match_id] = {
-      campeon: p.campeon,
-      rival: p.rival,
-      lado: p.lado,
-      victoria: p.victoria,
-    };
-  }
-
   // Lookup: clave de campeón → nombre visible (p. ej. "MissFortune" → "Miss Fortune")
   const nombreCampeon = {};
   for (const [id, info] of Object.entries(estaticos.campeones || {})) {
@@ -105,7 +94,12 @@ export function render(container, datos) {
   puntosDiv.style.height = "100%";
   mapaDiv.appendChild(puntosDiv);
 
-  // Leyenda
+  contenido.appendChild(mapaDiv);
+
+  // Leyenda y conteos (fuera del mapa, junto a los conteos)
+  const infoDiv = document.createElement("div");
+  infoDiv.className = "muertes-info";
+
   const leyendaDiv = document.createElement("div");
   leyendaDiv.className = "leyenda-mapa";
   const puntoVictoria = document.createElement("span");
@@ -122,11 +116,6 @@ export function render(container, datos) {
   leyendaDiv.appendChild(lblVictoria);
   leyendaDiv.appendChild(puntoDerrota);
   leyendaDiv.appendChild(lblDerrota);
-  mapaDiv.appendChild(leyendaDiv);
-
-  // Estadísticas
-  const statsDiv = document.createElement("div");
-  statsDiv.className = "stats";
 
   const conteoMuertes = document.createElement("div");
   conteoMuertes.className = "conteo";
@@ -134,11 +123,11 @@ export function render(container, datos) {
   const conteoPartidas = document.createElement("div");
   conteoPartidas.className = "conteo";
 
-  statsDiv.appendChild(conteoMuertes);
-  statsDiv.appendChild(conteoPartidas);
+  infoDiv.appendChild(leyendaDiv);
+  infoDiv.appendChild(conteoMuertes);
+  infoDiv.appendChild(conteoPartidas);
 
-  contenido.appendChild(mapaDiv);
-  contenido.appendChild(statsDiv);
+  contenido.appendChild(infoDiv);
 
   // --- Filtrar y render ---
   function filtrarYRender() {
@@ -186,15 +175,13 @@ export function render(container, datos) {
 
       const { izquierda, arriba } = aCoordenadaMapa(m.x, m.y);
 
-      const nombreCampeonVisible = nombreCampeon[info.campeon] || info.campeon;
-
       const punto = document.createElement("div");
       punto.className = "punto";
       punto.style.left = `${izquierda}%`;
       punto.style.top = `${arriba}%`;
       punto.style.backgroundColor = info.victoria ? token("victoria") : token("derrota");
 
-      punto.title = `${nombreCampeonVisible} vs ${info.rival} · ${formatoNumero(m.minuto)} min · ${info.victoria ? "Victoria" : "Derrota"}`;
+      punto.title = `${nombreCampeon[info.campeon] || info.campeon} vs ${nombreCampeon[info.rival] || info.rival} · ${formatoNumero(m.minuto)} min · ${info.victoria ? "Victoria" : "Derrota"}`;
 
       puntosDiv.appendChild(punto);
     }

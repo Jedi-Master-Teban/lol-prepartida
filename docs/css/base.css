@@ -621,15 +621,21 @@ img {
   flex-wrap: wrap;
 }
 
-/* --- Vista Partidas (T10) --- */
+/* --- Vista Partidas (T10b) --- */
+.tabla-wrap {
+  overflow-x: auto;
+  margin-top: var(--espacio);
+  max-width: 100%;
+}
+
 .tabla-partidas {
   width: 100%;
   border-collapse: collapse;
-  margin-top: var(--espacio);
   background: var(--panel);
   border: 1px solid var(--borde);
   border-radius: var(--radio);
   overflow: hidden;
+  min-width: 700px;
 }
 
 .tabla-partidas th {
@@ -647,11 +653,99 @@ img {
   padding: 8px;
   border-bottom: 1px solid var(--borde);
   font-size: 13px;
+  vertical-align: middle;
+}
+
+.tabla-partidas tr.fila-partida {
+  cursor: pointer;
 }
 
 .tabla-partidas tr.fila-partida:hover {
   background: rgba(212, 169, 74, 0.05);
+}
+
+.tabla-partidas tr.fila-partida.abierta {
+  background: rgba(212, 169, 74, 0.15);
+}
+
+.fila-detalle td {
+  padding: 0;
+  border: none;
+}
+
+.td-detalle {
+  padding: var(--espacio);
+}
+
+.cerrar-detalle {
+  position: absolute;
+  top: var(--espacio);
+  right: var(--espacio);
+  background: var(--borde);
+  color: var(--texto);
+  border: none;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.info-partida {
+  margin-bottom: var(--espacio);
+  padding-bottom: var(--espacio);
+  border-bottom: 1px solid var(--borde);
+  font-size: 13px;
+  color: var(--texto-suave);
+}
+
+.graficas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--espacio);
+  margin-bottom: var(--espacio);
+}
+
+.compras-timeline {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.compras-timeline::-webkit-scrollbar {
+  display: none;
+}
+
+.compra-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  min-width: 55px;
+}
+
+.icono-compra {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid var(--borde);
+}
+
+.compra-minuto {
+  font-size: 11px;
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
+.compras-vacias {
+  padding: 16px;
+  color: var(--texto-suave);
+  text-align: center;
 }
 
 .celda-con-icono {
@@ -714,42 +808,6 @@ img {
   white-space: nowrap;
 }
 
-.detalle-partida {
-  margin-top: var(--espacio);
-  background: var(--panel);
-  border: 1px solid var(--borde);
-  border-radius: var(--radio);
-  padding: var(--espacio);
-}
-
-.cerrar-detalle {
-  position: absolute;
-  top: var(--espacio);
-  right: var(--espacio);
-  background: var(--borde);
-  color: var(--texto);
-  border: none;
-  border-radius: 4px;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
-}
-
-.info-partida {
-  margin-bottom: var(--espacio);
-  padding-bottom: var(--espacio);
-  border-bottom: 1px solid var(--borde);
-  font-size: 13px;
-  color: var(--texto-suave);
-}
-
-.compras-timeline {
-  position: relative;
-  height: 200px;
-}
-
 @media (max-width: 599px) {
   .tabla-partidas {
     font-size: 11px;
@@ -766,7 +824,7 @@ img {
     max-width: 60px;
   }
   .compras-timeline {
-    height: 150px;
+    height: auto;
   }
 }
 

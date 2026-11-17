@@ -581,7 +581,7 @@ Hecho cuando: los filtros funcionan y la verificación de coordenadas se cumple.
 > "Miss Fortune", no "MissFortune"); igual en las demás vistas que muestren nombres. (c) Leyenda bajo el
 > mapa: punto azul = victoria, punto rojo = derrota.
 
-### [x] T10 — Vista Partidas
+### [ ] T10 — Vista Partidas (reabierta: ver T10b)
 
 `docs/js/vistas/partidas.js`:
 - Lista de las últimas 30 partidas, de la más reciente a la más antigua: fecha local, resultado
@@ -593,6 +593,46 @@ Hecho cuando: los filtros funcionan y la verificación de coordenadas se cumple.
 Hecho cuando: abrir cualquier partida muestra sus tres bloques sin errores en consola.
 
 **PUNTO DE CONTROL 3.** Detente. Revisión completa del supervisor antes de publicar.
+
+### [ ] T10b — Correcciones del punto de control 3
+
+El supervisor revisó las cinco vistas en un navegador real (707 px y 390 px). Sin errores en la
+consola. Defectos:
+
+**Muertes (regresión de los retoques de T10):**
+1. Con el valor por defecto "Todo el pool" el mapa muestra **0 muertes**. Causa: `matchLookup` en
+   `muertes.js` no copia `en_pool`, y el filtro `pool` pregunta `info.en_pool`. Añade `en_pool: p.en_pool`.
+   Criterio: por defecto (pool, todos los lados, 0–14) se ven más de 80 puntos.
+2. La leyenda (azul victoria / rojo derrota) se añade dentro de `.minimapa` y queda oculta o recortada:
+   ponla fuera del mapa, junto a los conteos.
+3. El rival en el título del punto sigue con la clave interna: aplica también `nombreCampeon` al rival.
+
+**Partidas:**
+4. **La página se desborda en horizontal** (`scrollWidth` 940 px a 707 px de ancho y 879 px a 390 px).
+   Envuelve la tabla en un contenedor con `overflow-x: auto`; la página nunca debe pasar del ancho de la ventana.
+5. **Celdas de campeón rotas.** Las celdas "Tú" y "Rival" tienen `display: flex` en el `td` (clase
+   `.celda-con-icono`), lo que rompe la tabla: el rival aparece debajo del propio y las columnas quedan
+   corridas. Pon el flex en un `<div>` dentro del `td`; el `td` sigue siendo `table-cell`.
+6. **Panel de detalle invisible al hacer clic.** Aparece al final de la página, 30 filas más abajo. Muéstralo
+   justo debajo de la fila pulsada (una fila extra con `colspan`) o haz `scrollIntoView({behavior:"smooth"})`
+   al abrirlo. Marca la fila abierta.
+7. **Compras sin iconos ni nombres.** La "línea de tiempo" es un scatter de puntos sin significado. Hazla
+   en HTML, no en Chart.js: una fila horizontal de iconos de ítem (32 px, `urlItem`) ordenados por minuto,
+   cada uno con el minuto debajo ("17.1 min") y el nombre en `title`. Si no hay compras: "Sin compras de
+   ítems completos registradas".
+8. **Títulos duplicados.** Quita "Últimas partidas" (ya está "Historial de partidas").
+9. **A 390 px:** muestra una lista de tarjetas en vez de la tabla (fecha, resultado, retratos, KDA, CS@10,
+   Oro@15), o deja la tabla en su contenedor con scroll horizontal; en ambos casos `scrollWidth` = 390.
+
+Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
+- En las cinco vistas, a 1280 px y a 390 px, `document.documentElement.scrollWidth` es igual al ancho de
+  la ventana.
+- Muertes por defecto muestra más de 80 puntos y la leyenda es visible.
+- En Partidas, las columnas "Tú" y "Rival" muestran cada una un retrato y su nombre en la misma fila.
+- Al pulsar una partida el detalle se ve sin desplazarse a mano y las compras salen como iconos con minuto.
+- `pytest` y `node --test docs/js/calc.test.js` pasan.
+
+**PUNTO DE CONTROL 3 (repetido).** Detente.
 
 ### [ ] T11 — Publicación en GitHub Pages
 

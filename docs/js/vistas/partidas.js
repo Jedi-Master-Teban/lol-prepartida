@@ -1,4 +1,4 @@
-/* Vista Partidas (sección 1b, T10 de PLAN.md).
+/* Vista Partidas (sección 1b, T10b de PLAN.md).
    Recibe datos ya calculados y solo dibuja. */
 
 import { curvaPromedio } from "../calc.js";
@@ -84,12 +84,9 @@ export function render(container, datos) {
   // Últimas 30 partidas, más reciente primero
   const recientes = [...partidas].reverse().slice(0, 30);
 
-  // Título
-  const titulo = document.createElement("h2");
-  titulo.textContent = "Últimas partidas";
-  container.appendChild(titulo);
-
-  // Tabla
+  // Tabla envuelta en contenedor con scroll horizontal
+  const tablaWrap = document.createElement("div");
+  tablaWrap.className = "tabla-wrap";
   const tabla = document.createElement("table");
   tabla.className = "tabla-partidas";
   tabla.innerHTML = `
@@ -112,17 +109,25 @@ export function render(container, datos) {
     <tbody></tbody>
   `;
   const tbody = tabla.querySelector("tbody");
-  container.appendChild(tabla);
+  tablaWrap.appendChild(tabla);
+  container.appendChild(tablaWrap);
 
-  // Panel de detalle (oculto por defecto)
-  const detalle = document.createElement("div");
-  detalle.className = "detalle-partida";
-  detalle.style.display = "none";
-  container.appendChild(detalle);
+  // Fila de detalle (oculta por defecto)
+  const filaDetalle = document.createElement("tr");
+  filaDetalle.className = "fila-detalle";
+  filaDetalle.style.display = "none";
+  const tdDetalle = document.createElement("td");
+  tdDetalle.colSpan = 12;
+  tdDetalle.className = "td-detalle";
+  filaDetalle.appendChild(tdDetalle);
+  tbody.parentNode.insertBefore(filaDetalle, tbody.nextSibling);
+
+  let filaAbierta = null;
 
   function construirFila(p) {
     const tr = document.createElement("tr");
     tr.className = "fila-partida";
+    tr.dataset.matchId = p.match_id;
     const v = p.victoria;
     const resultadoTexto = v ? "Victoria" : "Derrota";
     const resultadoColor = v ? token("victoria") : token("derrota");
@@ -152,12 +157,8 @@ export function render(container, datos) {
     tr.innerHTML = `
       <td>${fechaLocal(p.inicio)} ${horaLocal(p.inicio)}</td>
       <td style="color:${resultadoColor};font-weight:700">${resultadoTexto}</td>
-      <td class="celda-con-icono">
-        <img src="${imgPropio}" alt="${propioNombre}" class="icono-pequeno" onerror="this.style.display='none';this.nextSibling.textContent='${propioNombre}';"><span class="nombre-pequeno">${propioNombre}</span>
-      </td>
-      <td class="celda-con-icono">
-        ${imgRival ? `<img src="${imgRival}" alt="${rivalNombre}" class="icono-pequeno" onerror="this.style.display='none';this.nextSibling.textContent='${rivalNombre}';"><span class="nombre-pequeno">${rivalNombre}</span>` : "<span>—</span>"}
-      </td>
+      <td><div class="celda-con-icono"><img src="${imgPropio}" alt="${propioNombre}" class="icono-pequeno" onerror="this.style.display='none';this.nextElementSibling.textContent='${propioNombre}';"><span class="nombre-pequeno">${propioNombre}</span></div></td>
+      <td><div class="celda-con-icono">${imgRival ? `<img src="${imgRival}" alt="${rivalNombre}" class="icono-pequeno" onerror="this.style.display='none';this.nextElementSibling.textContent='${rivalNombre}';"><span class="nombre-pequeno">${rivalNombre}</span>` : "<span>—</span>"}</div></td>
       <td>${p.posicion || "—"}</td>
       <td>${p.lado || "—"}</td>
       <td>${kda}</td>
@@ -165,15 +166,15 @@ export function render(container, datos) {
       <td>${numeroConSigno(p.dif_oro_15)}</td>
       <td>${p.muertes_14 != null ? p.muertes_14 : "—"}</td>
       <td class="celda-iconos">
-        ${h1 != null ? `<img src="${imgH1}" alt="${nombreHechizo(h1, estaticos)}" class="icono-hechizo" onerror="this.style.display='none';this.nextSibling.textContent='${nombreHechizo(h1, estaticos)}';"><span class="nombre-hechizo">${nombreHechizo(h1, estaticos)}</span>` : "<span>—</span>"}
-        ${h2 != null ? `<img src="${imgH2}" alt="${nombreHechizo(h2, estaticos)}" class="icono-hechizo" onerror="this.style.display='none';this.nextSibling.textContent='${nombreHechizo(h2, estaticos)}';"><span class="nombre-hechizo">${nombreHechizo(h2, estaticos)}</span>` : "<span>—</span>"}
+        ${h1 != null ? `<img src="${imgH1}" alt="${nombreHechizo(h1, estaticos)}" class="icono-hechizo" onerror="this.style.display='none';this.nextElementSibling.textContent='${nombreHechizo(h1, estaticos)}';"><span class="nombre-hechizo">${nombreHechizo(h1, estaticos)}</span>` : "<span>—</span>"}
+        ${h2 != null ? `<img src="${imgH2}" alt="${nombreHechizo(h2, estaticos)}" class="icono-hechizo" onerror="this.style.display='none';this.nextElementSibling.textContent='${nombreHechizo(h2, estaticos)}';"><span class="nombre-hechizo">${nombreHechizo(h2, estaticos)}</span>` : "<span>—</span>"}
       </td>
       <td class="celda-runa">
-        ${runaId != null ? `<img src="${imgRuna}" alt="${runaNombre}" class="icono-runa" onerror="this.style.display='none';this.nextSibling.textContent='${runaNombre}';"><span class="nombre-runa">${runaNombre}</span>` : "<span>—</span>"}
+        ${runaId != null ? `<img src="${imgRuna}" alt="${runaNombre}" class="icono-runa" onerror="this.style.display='none';this.nextElementSibling.textContent='${runaNombre}';"><span class="nombre-runa">${runaNombre}</span>` : "<span>—</span>"}
       </td>
     `;
 
-    tr.addEventListener("click", () => abrirDetalle(p));
+    tr.addEventListener("click", () => abrirDetalle(tr, p));
 
     return tr;
   }
@@ -182,18 +183,25 @@ export function render(container, datos) {
     tbody.appendChild(construirFila(p));
   }
 
-  function abrirDetalle(p) {
-    detalle.innerHTML = "";
-    detalle.style.display = "block";
+  function abrirDetalle(trFila, p) {
+    // Marcar fila abierta
+    if (filaAbierta) {
+      filaAbierta.classList.remove("abierta");
+    }
+    filaAbierta = trFila;
+    trFila.classList.add("abierta");
 
-    // Cerrar al hacer clic fuera
+    // Construir contenido del detalle
+    tdDetalle.innerHTML = "";
+
     const cerrar = document.createElement("button");
     cerrar.textContent = "×";
     cerrar.className = "cerrar-detalle";
-    cerrar.addEventListener("click", () => {
-      detalle.style.display = "none";
+    cerrar.addEventListener("click", (e) => {
+      e.stopPropagation();
+      cerrarDetalle();
     });
-    detalle.appendChild(cerrar);
+    tdDetalle.appendChild(cerrar);
 
     // Info de la partida
     const info = document.createElement("div");
@@ -203,12 +211,12 @@ export function render(container, datos) {
       <div><strong>${p.campeon}</strong> vs <strong>${p.rival || "—"}</strong> · ${p.posicion || "—"} · ${p.lado || "—"}</div>
       <div>${fechaLocal(p.inicio)} ${horaLocal(p.inicio)} · ${v ? "Victoria" : "Derrota"} · KDA ${p.asesinatos}/${p.muertes}/${p.asistencias} · CS@10 ${formatoNumero(p.cs_10)} · Oro@15 ${numeroConSigno(p.dif_oro_15)} · Muertes&lt;14 ${p.muertes_14 != null ? p.muertes_14 : "—"}</div>
     `;
-    detalle.appendChild(info);
+    tdDetalle.appendChild(info);
 
     // Gráficas
     const graficas = document.createElement("div");
     graficas.className = "graficas fila";
-    detalle.appendChild(graficas);
+    tdDetalle.appendChild(graficas);
 
     // Chart 1: Diferencia de oro por minuto
     const colOro = document.createElement("div");
@@ -222,210 +230,41 @@ export function render(container, datos) {
     colCs.innerHTML = `<h3>CS contra la meta</h3><div class="grafica"><canvas id="grafica-cs-detalle"></canvas></div>`;
     graficas.appendChild(colCs);
 
-    // Chart 3: Línea de tiempo de compras
+    // Chart 3: Línea de tiempo de compras - HTML en vez de Chart.js
     const colCompras = document.createElement("div");
     colCompras.className = "col";
-    colCompras.innerHTML = `<h3>Compras</h3><div class="grafica compras-timeline"><canvas id="grafica-compras-detalle"></canvas></div>`;
-    graficas.appendChild(colCompras);
-
-    const ids = [p.match_id];
-
-    // --- Chart 1: Oro vs rival ---
-    const difOro = curvaPromedio(curvas, ids, "dif_oro", 20);
-    const difPos = difOro.map((v) => (v != null && v > 0 ? v : 0));
-    const difNeg = difOro.map((v) => (v != null && v < 0 ? v : 0));
-    const difLine = difOro.map((v) => (v != null ? v : null));
-
-    const ctxOro = document.getElementById("grafica-oro-detalle").getContext("2d");
-    new Chart(ctxOro, {
-      type: "line",
-      data: {
-        labels: difOro.map((_, i) => i),
-        datasets: [
-          {
-            label: "A favor",
-            data: difPos,
-            backgroundColor: token("victoria"),
-            borderWidth: 0,
-            pointRadius: 0,
-            fill: "origin",
-            showInLegend: false,
-          },
-          {
-            label: "En contra",
-            data: difNeg,
-            backgroundColor: token("derrota"),
-            borderWidth: 0,
-            pointRadius: 0,
-            fill: "origin",
-            showInLegend: false,
-          },
-          {
-            label: "Oro vs rival",
-            data: difLine,
-            borderColor: token("texto"),
-            backgroundColor: "transparent",
-            borderWidth: 2,
-            pointRadius: 0,
-            fill: false,
-            tension: 0.15,
-          },
-          {
-            label: "Cero",
-            data: difOro.map(() => 0),
-            borderColor: token("borde"),
-            borderDash: [6, 4],
-            borderWidth: 1,
-            pointRadius: 0,
-            fill: false,
-            showInLegend: false,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false }, title: { display: false } },
-        scales: {
-          x: {
-            type: "linear",
-            title: { display: true, text: "Minuto", color: token("texto-suave") },
-            ticks: { color: token("texto-suave"), font: { size: 11 } },
-            grid: { color: token("borde") },
-            min: 0,
-            max: 20,
-          },
-          y: {
-            title: { display: true, text: "Diferencia de oro", color: token("texto-suave") },
-            ticks: { color: token("texto-suave"), font: { size: 11 } },
-            grid: { color: token("borde") },
-          },
-        },
-        animation: { duration: 0 },
-      },
-    });
-
-    // --- Chart 2: CS acumulado contra meta ---
-    const cs = curvaPromedio(curvas, ids, "cs", 20);
-    const metaCs10 = meta.perfil.meta_cs_10;
-    const pendiente = metaCs10 / 10;
-    const metaLine = cs.map((_, i) => i * pendiente);
-
-    const ctxCs = document.getElementById("grafica-cs-detalle").getContext("2d");
-    new Chart(ctxCs, {
-      type: "line",
-      data: {
-        labels: cs.map((_, i) => i),
-        datasets: [
-          {
-            label: "CS acumulado",
-            data: cs,
-            borderColor: token("texto"),
-            backgroundColor: "rgba(230, 235, 245, 0.1)",
-            borderWidth: 2,
-            pointRadius: 0,
-            fill: true,
-            tension: 0.15,
-          },
-          {
-            label: `Meta ${metaCs10}`,
-            data: metaLine,
-            borderColor: token("acento"),
-            backgroundColor: "transparent",
-            borderWidth: 2,
-            borderDash: [6, 4],
-            pointRadius: 0,
-            fill: false,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: true, labels: { color: token("texto-suave"), font: { size: 12 } } },
-          title: { display: false },
-        },
-        scales: {
-          x: {
-            type: "linear",
-            title: { display: true, text: "Minuto", color: token("texto-suave") },
-            ticks: { color: token("texto-suave"), font: { size: 11 } },
-            grid: { color: token("borde") },
-            min: 0,
-            max: 20,
-          },
-          y: {
-            title: { display: true, text: "CS acumulado", color: token("texto-suave") },
-            ticks: { color: token("texto-suave"), font: { size: 11 } },
-            grid: { color: token("borde") },
-            beginAtZero: true,
-          },
-        },
-        animation: { duration: 0 },
-      },
-    });
-
-    // --- Chart 3: Línea de tiempo de compras ---
+    tdDetalle.appendChild(colCompras);
     const comprasPartida = compras[p.match_id] || [];
-    const compraMinutos = comprasPartida.map((c) => c.minuto);
-    const compraItems = comprasPartida.map((c) => c.item_id);
+    if (comprasPartida.length === 0) {
+      colCompras.innerHTML = `<h3>Compras</h3><div class="compras-vacias">Sin compras de ítems completos registradas</div>`;
+    } else {
+      colCompras.innerHTML = `<h3>Compras</h3><div class="compras-timeline"></div>`;
+      const timeline = colCompras.querySelector(".compras-timeline");
+      comprasPartida.sort((a, b) => a.minuto - b.minuto);
+      for (const c of comprasPartida) {
+        const itemInfo = estaticos.items && estaticos.items[String(c.item_id)];
+        const nombre = itemInfo ? itemInfo.nombre : `Ítem ${c.item_id}`;
+        const itemUrl = urlItem(c.item_id, version);
+        const compra = document.createElement("div");
+        compra.className = "compra-item";
+        compra.title = `${nombre}`;
+        compra.innerHTML = `
+          <img src="${itemUrl}" alt="${nombre}" class="icono-compra" onerror="this.style.display='none';this.nextElementSibling.textContent='${nombre}';">
+          <div class="compra-minuto">${c.minuto.toFixed(1)} min</div>
+        `;
+        timeline.appendChild(compra);
+      }
+    }
 
-    const ctxCompras = document.getElementById("grafica-compras-detalle").getContext("2d");
-    new Chart(ctxCompras, {
-      type: "scatter",
-      data: {
-        datasets: [
-          {
-            label: "Compras",
-            data: comprasPartida.map((c, i) => ({
-              x: c.minuto,
-              y: i + 1,
-              item_id: c.item_id,
-            })),
-            backgroundColor: token("acento"),
-            pointRadius: 6,
-            pointBackgroundColor: token("acento"),
-            showLine: false,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          title: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (ctx) => {
-                const itemId = ctx.raw.item_id;
-                const info = estaticos.items && estaticos.items[String(itemId)];
-                const nombre = info ? info.nombre : `Ítem ${itemId}`;
-                return `Minuto ${ctx.raw.x.toFixed(1)} · ${nombre}`;
-              },
-            },
-          },
-        },
-        scales: {
-          x: {
-            type: "linear",
-            title: { display: true, text: "Minuto", color: token("texto-suave") },
-            ticks: { color: token("texto-suave"), font: { size: 11 } },
-            grid: { color: token("borde") },
-            min: 0,
-            max: 50,
-          },
-          y: {
-            title: { display: true, text: "Ítem comprado", color: token("texto-suave") },
-            ticks: {
-              display: false,
-            },
-            grid: { display: false },
-          },
-        },
-        animation: { duration: 0 },
-      },
-    });
+    filaDetalle.style.display = "table-row";
+    trFila.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function cerrarDetalle() {
+    if (filaAbierta) {
+      filaAbierta.classList.remove("abierta");
+      filaAbierta = null;
+    }
+    filaDetalle.style.display = "none";
   }
 }

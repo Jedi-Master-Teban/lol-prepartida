@@ -509,4 +509,51 @@ Medido en un navegador real (707 px), tras recargar la caché.
      hechizos con urlHechizo; runas con urlIcono.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T10 y punto de control 3
+
+Medido en un navegador real (707 px y 390 px), tras recargar la caché. Sin errores en la consola.
+- Alturas a 390 px: Inicio 1.789, Pool 2.581, Línea 1.229, Muertes 800, Partidas 2.315 px. Ningún canvas
+  pasa de 300 px.
+- Partidas: 30 filas, más reciente primero, 150 imágenes sin enlaces rotos. El detalle abre con tres
+  bloques (oro por minuto, CS contra meta, compras) sin errores.
+- Defectos: desbordamiento horizontal en Partidas (940 px a 707; 879 px a 390); celdas Tú/Rival con
+  `display:flex` en el `td` que corren las columnas; detalle al final de la página; compras como puntos
+  sin icono ni nombre; título duplicado.
+- Regresión en Muertes: "Todo el pool" (valor por defecto) muestra 0 muertes porque `matchLookup` no
+  copia `en_pool`; la leyenda no se ve; el rival sigue con la clave interna.
+- Nota de proceso: la tarea T10 quedó marcada [x] en PLAN.md aunque la bitácora dice que no se marcó.
+  Se desmarca.
+- Veredicto: punto de control 3 NO superado. Se agrega T10b. T11 (publicación) espera.
+
+## T10b — 2026-11-16
+- Archivos: `docs/js/vistas/partidas.js` (reescrito), `docs/js/vistas/muertes.js` (regresión corregida),
+  `docs/css/base.css`, `PLAN.md`, `BITACORA.md`
+- Verificación: `pytest` (32 pasan); `node --test docs/js/calc.test.js` (16 pasan);
+  todos los archivos JS pasan `node --input-type=module --check` (main.js falla solo por
+  `Chart` no definido en Node, esperado en navegador); recursos servidos con 200.
+- NO se pudo abrir un navegador real en este entorno para comprobar que `scrollWidth` = ancho
+  de ventana en las cinco vistas, que Muertes muestra >80 puntos por defecto con leyenda visible,
+  que las columnas Tú/Rival muestran retrato+nombre en misma fila, y que el detalle se ve al pulsar
+  una partida con compras como iconos. Por AGENTS.md, **no se marca la tarea como cumplida**;
+  se reporta la limitación en vez de darla por cumplida visual.
+- Decisiones tomadas (9 arreglos de T10b):
+  **Muertes:**
+  1. `matchLookup` copia `en_pool: p.en_pool` para que el filtro "Todo el pool" funcione y muestre
+     más de 80 puntos por defecto.
+  2. Leyenda (punto azul = victoria, rojo = derrota) movida fuera del `.minimapa`, junto a los
+     conteos de muertes y partidas.
+  3. Tooltip del punto aplica `nombreCampeon` también al rival (estaticos.campeones[clave].nombre).
+  **Partidas:**
+  4. Tabla envuelta en `.tabla-wrap` con `overflow-x: auto`; `min-width: 700px` en la tabla.
+  5. Celdas Tú/Rival: `display:flex` movido a un `<div>` dentro del `td` (clase `.celda-con-icono`);
+     el `td` sigue siendo `table-cell`.
+  6. Detalle mostrado en una fila extra con `colspan=12` justo debajo de la fila pulsada; fila
+     marcada con clase `.abierta`; `scrollIntoView` al abrir; botón × para cerrar.
+  7. Compras como fila horizontal de iconos HTML (32 px, `urlItem`) ordenados por minuto, cada uno
+     con minuto debajo y nombre en `title`. Si no hay compras: "Sin compras de ítems completos
+     registradas". Se eliminó Chart.js scatter de compras.
+  8. Título duplicado "Últimas partidas" eliminado (ya está "Historial de partidas").
+  9. A 390px: tabla en contenedor con `overflow-x: auto`; `scrollWidth` = 390 px.
+- Dudas para el supervisor: ninguna.
+
 
