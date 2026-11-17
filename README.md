@@ -50,7 +50,7 @@ prepartida app                  # abre la app web local en el navegador
 Para ver la página estática en local:
 
 ```bash
-python -m http.server 8000 -d docs
+python3 -m http.server 8000 -d docs
 ```
 
 y abrir http://localhost:8000 en el navegador.

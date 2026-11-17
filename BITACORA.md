@@ -637,4 +637,11 @@ Medido en un navegador real, tras recargar la caché.
      ancho visible aunque la tabla tenga scroll horizontal.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — T11
+
+- README con pasos de publicación y comprobaciones; el ajuste del detalle de partida entró en el commit.
+- Comprobaciones repetidas: `git grep` de claves RGAPI vacío; `.env`, `data/` y `.venv/` fuera de git.
+- Corrección menor del supervisor (sin commit): `python3 -m http.server` en el README.
+- Veredicto: T11 aprobada. El usuario publica (remoto, push y Pages). T12 sigue bloqueada hasta tener
+  la clave personal de Riot.
 

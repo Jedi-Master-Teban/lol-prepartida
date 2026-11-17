@@ -682,18 +682,29 @@ Hecho cuando (medido en un navegador real; si no hay, dilo y no marques):
 
 Hecho cuando: el README tiene los pasos y las dos comprobaciones pasan.
 
-### [ ] T12 — Actualización automática con GitHub Actions — BLOQUEADA
+### [ ] T12 — Actualización automática con GitHub Actions
 
-Bloqueada hasta que el usuario tenga la clave personal de Riot (no expira) y la guarde como
-secreto `RIOT_API_KEY` del repositorio. La clave de desarrollo expira cada 24 horas y no sirve.
+Desbloqueada: el usuario ya tiene la clave personal de Riot (no expira). Él mismo la guarda como secreto
+`RIOT_API_KEY` del repositorio y crea las variables; tú NO pidas, leas ni escribas la clave en ningún archivo.
 
-Especificación para cuando se desbloquee:
-- `.github/workflows/actualizar.yml`, con `schedule` cada 3 horas y `workflow_dispatch`.
-- Pasos: instalar Python 3.12, `pip install -e .`, restaurar `data/` con `actions/cache`,
-  `prepartida estaticos`, `prepartida ingesta`, `prepartida exportar`, y commit de `docs/data` si cambió.
-- Variables de cuenta (`RIOT_GAME_NAME`, `RIOT_TAG_LINE`, `RIOT_PLATFORM`, `RIOT_REGION`) como
-  variables del repositorio, no como secretos.
-- La clave nunca se imprime en los registros.
+`.github/workflows/actualizar.yml`:
+- Disparadores: `schedule` cada 3 horas (`cron: "17 */3 * * *"`, minuto no redondo) y `workflow_dispatch`.
+- `permissions: contents: write` y `concurrency: { group: actualizar, cancel-in-progress: false }`.
+- Pasos: `actions/checkout@v4`; `actions/setup-python@v5` con Python 3.12 y caché de pip;
+  `pip install -e .`; restaurar `data/` con `actions/cache@v4` (clave con `github.run_id` y
+  `restore-keys: prepartida-data-`, para que cada ejecución guarde la base nueva);
+  `prepartida init` (si no existe la base), `prepartida estaticos`, `prepartida ingesta --max 200`,
+  `prepartida exportar`; commit y push de `docs/data` solo si cambió, con autor
+  `github-actions[bot]` y mensaje "Actualizar datos (automático)".
+- Entorno del job: `RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}` y las variables del repositorio
+  `RIOT_GAME_NAME`, `RIOT_TAG_LINE`, `RIOT_PLATFORM`, `RIOT_REGION` (`${{ vars.X }}`).
+- La clave nunca se imprime: no uses `set -x`, ni `env`, ni `echo` de variables.
+- `timeout-minutes: 30`. Si la ingesta falla, el job falla y no hace commit.
+- Documenta en el README: dónde ver las ejecuciones (pestaña Actions) y cómo lanzar una a mano.
+
+Hecho cuando: el archivo pasa `python3 -c "import yaml,sys; yaml.safe_load(open('.github/workflows/actualizar.yml'))"`,
+`git grep -nE "RGAPI-[0-9a-f]{8}-"` no devuelve nada, y el usuario confirma una ejecución manual en verde
+(el supervisor revisa el registro). Hasta esa confirmación, no marques la tarea.
 
 ### [ ] T13 — Retirar la app de Streamlit
 
