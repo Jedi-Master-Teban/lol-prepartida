@@ -118,7 +118,8 @@ Arreglo con todas las muertes del jugador (eventos `CHAMPION_KILL` cuyo `victimI
 ### 3.5 `compras.json`
 
 Objeto con `match_id` como llave. Compras del jugador (eventos `ITEM_PURCHASED` con su `participantId`)
-cuyo ítem tiene `items.oro_total >= 2200`. Es una aproximación de "ítem completo".
+cuyo ítem tiene `items.oro_total >= 2200`. Las partidas sin ninguna compra de este tipo
+no aparecen en el objeto: la página debe tratarlas como lista vacía. Es una aproximación de "ítem completo".
 
 ```json
 { "LA1_123": [ { "minuto": 11.2, "item_id": 3157 } ] }
@@ -240,7 +241,26 @@ Hecho cuando:
 
 **PUNTO DE CONTROL 1.** Detente. El supervisor revisa los JSON reales antes de construir la página.
 
-### [ ] T04 — Esqueleto de la página
+### [x] T03b — Correcciones del punto de control 1
+
+Dos arreglos pedidos por el supervisor. Van en un solo commit.
+
+1. **`estaticos.json` no incluye los ítems que solo aparecen en `compras.json`.**
+   Con la base real falta el ítem `3003` (12 compras). En `exportar.py`, el conjunto de ítems
+   de `_estaticos` debe unir los de `partidas[].items` con los `item_id` de todas las compras.
+   Prueba nueva en `tests/test_exportar.py`: una compra de un ítem que no está en el inventario
+   final de ninguna partida aparece en `estaticos.items`.
+2. **`publicar` puede incluir en el commit archivos ajenos que ya estuvieran preparados.**
+   En `_publicar_en_git`, limita el commit a la carpeta de datos:
+   `git commit -m <mensaje> -- <destino>`. Prueba nueva en `tests/test_cli.py`: con otro archivo
+   preparado (`git add`) antes de publicar, ese archivo no entra en el commit de datos.
+
+Hecho cuando:
+- `pytest` pasa.
+- Tras `prepartida exportar` con la base real, todo `item_id` de `compras.json` y de
+  `partidas[].items` existe en `estaticos.items`.
+
+### [x] T04 — Esqueleto de la página
 
 Crea:
 
@@ -268,7 +288,7 @@ Hecho cuando:
 - `python -m http.server 8000 -d docs` muestra la cabecera con datos reales y las cinco pestañas cambian de sección.
 - No hay errores en la consola del navegador.
 
-### [ ] T05 — Funciones de cálculo
+### [x] T05 — Funciones de cálculo
 
 Crea `docs/js/calc.js` y `docs/js/calc.test.js`. Funciones puras, sin acceso al documento:
 

@@ -268,6 +268,34 @@ def test_estaticos_solo_los_referenciados(api, tmp_path):
     assert conteo["estaticos"] == sum(len(v) for v in estaticos.values())
 
 
+def test_estaticos_incluye_items_de_compras(api, tmp_path):
+    con, destino, _ = _exportar(api, tmp_path)
+    con.execute(
+        "INSERT OR REPLACE INTO items VALUES (9999, 'Ítem raro', 3000, '', ?)", [VERSION]
+    )
+    con.execute(
+        "INSERT INTO eventos VALUES (?, ?, ?, ?, ?)",
+        [
+            "LA1_1",
+            600000,
+            "ITEM_PURCHASED",
+            3,
+            json.dumps(
+                {
+                    "type": "ITEM_PURCHASED",
+                    "timestamp": 600000,
+                    "participantId": 3,
+                    "itemId": 9999,
+                }
+            ),
+        ],
+    )
+    destino.mkdir(parents=True, exist_ok=True)
+    exportar.exportar(con, PERFIL, tmp_path, destino)
+    estaticos = json.loads((destino / "estaticos.json").read_text(encoding="utf-8"))
+    assert estaticos["items"]["9999"] == {"nombre": "Ítem raro"}
+
+
 def test_sin_jugador_da_error(tmp_path):
     con = db.conectar()
     with pytest.raises(ValueError, match="No hay jugador en la base"):

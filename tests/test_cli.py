@@ -109,3 +109,24 @@ def test_publicar_en_git_no_hace_commit_sin_cambios(tmp_path, monkeypatch, capsy
         ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True
     ).stdout.strip().splitlines()
     assert len(log) == 1
+
+
+def test_publicar_en_git_no_incluye_archivo_ajeno_preparado(tmp_path, monkeypatch, capsys):
+    repo = _repo(tmp_path, monkeypatch)
+    (repo / "docs" / "data" / "meta.json").write_text("{}\n", encoding="utf-8")
+    ajeno = repo / "nota.txt"
+    ajeno.write_text("otro\n", encoding="utf-8")
+    subprocess.run(["git", "add", "nota.txt"], cwd=repo, check=True)
+    monkeypatch.setenv("GIT_AUTHOR_NAME", "Prueba")
+    monkeypatch.setenv("GIT_AUTHOR_EMAIL", "prueba@example.com")
+    monkeypatch.setenv("GIT_COMMITTER_NAME", "Prueba")
+    monkeypatch.setenv("GIT_COMMITTER_EMAIL", "prueba@example.com")
+    monkeypatch.chdir(repo)
+
+    assert cli._publicar_en_git(repo / "docs" / "data") == 0
+
+    archivos = subprocess.run(
+        ["git", "show", "--stat", "--format=", "HEAD"], cwd=repo, capture_output=True, text=True
+    ).stdout
+    assert "docs/data/meta.json" in archivos
+    assert "nota.txt" not in archivos

@@ -148,7 +148,10 @@ def _publicar_en_git(destino: Path) -> int:
 
     mensaje = f"datos: {datetime.now().strftime('%Y-%m-%d %H:%M')}"
     commit = subprocess.run(
-        ["git", "commit", "-m", mensaje], cwd=raiz, capture_output=True, text=True
+        ["git", "commit", "-m", mensaje, "--", str(destino)],
+        cwd=raiz,
+        capture_output=True,
+        text=True,
     )
     if commit.returncode != 0:
         print(f"No se pudo hacer el commit: {commit.stderr.strip()}", file=sys.stderr)

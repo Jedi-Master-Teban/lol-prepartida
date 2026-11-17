@@ -47,7 +47,7 @@ def exportar(
     curvas = _curvas(con, puuid, list(df["match_id"]))
     muertes = _muertes(con, puuid)
     compras = _compras(con, puuid)
-    estaticos = _estaticos(con, df, static_dir, version)
+    estaticos = _estaticos(con, df, static_dir, version, compras)
 
     destino = Path(destino)
     destino.mkdir(parents=True, exist_ok=True)
@@ -229,6 +229,7 @@ def _estaticos(
     df: pd.DataFrame,
     static_dir: Path,
     version: str | None,
+    compras: dict[str, list[dict[str, Any]]],
 ) -> dict[str, dict[str, dict[str, Any]]]:
     """Solo los elementos referenciados por el resto de los archivos."""
     camp_ids: set[int] = set()
@@ -242,6 +243,18 @@ def _estaticos(
                 camp_ids.add(int(valor))
         for item in _items(fila):
             item_ids.add(int(item))
+        for valor in (fila.get("runa_clave"),):
+            if valor is not None:
+                runa_ids.add(int(valor))
+        for valor in (fila.get("arbol_primario"), fila.get("arbol_secundario")):
+            if valor is not None:
+                arbol_ids.add(int(valor))
+        for valor in (fila.get("hechizo1"), fila.get("hechizo2")):
+            if valor is not None:
+                hechizo_ids.add(int(valor))
+    for lista in compras.values():
+        for compra in lista:
+            item_ids.add(int(compra["item_id"]))
         for valor in (fila.get("runa_clave"),):
             if valor is not None:
                 runa_ids.add(int(valor))
