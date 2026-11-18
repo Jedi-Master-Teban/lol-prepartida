@@ -105,3 +105,25 @@ def test_exportar_sin_muestra_no_crea_referencias(api, tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     assert cli.main(["exportar"]) == 0
     assert not (tmp_path / "docs" / "data" / "referencias.json").exists()
+
+
+def test_ignora_partidas_de_mas_de_30_dias(api, tmp_path):
+    con = _muestra(api, tmp_path / "muestra.duckdb")
+    con.execute("UPDATE muestra_partidas SET fecha_muestra = now() - INTERVAL 40 DAY WHERE match_id = 'LA1_3'")
+    assert referencias.construir(con)["rangos"]["GOLD"]["partidas"] == 2
+
+
+def test_comando_referencias_escribe_solo_ese_archivo(api, tmp_path, monkeypatch):
+    datos = tmp_path / "data"
+    _muestra(api, datos / "muestra.duckdb").close()
+    monkeypatch.setenv("PREPARTIDA_DATA_DIR", str(datos))
+    monkeypatch.chdir(tmp_path)
+    assert cli.main(["referencias"]) == 0
+    destino = tmp_path / "docs" / "data"
+    assert sorted(p.name for p in destino.iterdir()) == ["referencias.json"]
+
+
+def test_comando_referencias_sin_muestra_falla(tmp_path, monkeypatch):
+    monkeypatch.setenv("PREPARTIDA_DATA_DIR", str(tmp_path / "data"))
+    monkeypatch.chdir(tmp_path)
+    assert cli.main(["referencias"]) == 2

@@ -1,0 +1,78 @@
+name: Actualizar referencias
+
+# Semanal: renueva la muestra de Plata, Oro y Diamante y publica solo referencias.json.
+# No toca los datos del jugador (eso lo hace "Actualizar datos").
+on:
+  schedule:
+    - cron: "41 7 * * 1" # lunes 07:41 UTC (02:41 en Colombia)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Mismo grupo que "Actualizar datos": nunca corren a la vez y no se pisan el límite de la clave.
+concurrency:
+  group: actualizar
+  cancel-in-progress: false
+
+jobs:
+  referencias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
+      RIOT_PLATFORM: ${{ vars.RIOT_PLATFORM }}
+      RIOT_REGION: ${{ vars.RIOT_REGION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Instalar dependencias
+        run: pip install -e .
+
+      - name: Restaurar la muestra
+        uses: actions/cache/restore@v4
+        with:
+          path: data/muestra.duckdb
+          key: prepartida-muestra-${{ github.run_id }}
+          restore-keys: prepartida-muestra-
+
+      # Cada rango purga lo de más de 30 días y descarga solo lo que falta para 300.
+      - name: Muestra de Plata
+        run: prepartida muestra --tier SILVER --partidas 300
+
+      - name: Muestra de Oro
+        run: prepartida muestra --tier GOLD --partidas 300
+
+      - name: Muestra de Diamante
+        run: prepartida muestra --tier DIAMOND --partidas 300
+
+      # Se guarda aunque un paso falle, para no perder lo ya descargado.
+      - name: Guardar la muestra
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/muestra.duckdb
+          key: prepartida-muestra-${{ github.run_id }}
+
+      - name: Escribir referencias.json
+        run: prepartida referencias
+
+      - name: Commit y push si cambió
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@github.com"
+          if git diff --quiet -- docs/data/referencias.json; then
+            echo "referencias.json no cambió"
+          else
+            git add docs/data/referencias.json
+            git commit -m "Actualizar referencias (automático)"
+            git pull --rebase origin main
+            git push
+          fi

@@ -934,6 +934,15 @@ carga sin errores; `node --test docs/js/calc.test.js` y `pytest` pasan.
 
 Hecho cuando: el YAML es válido, no hay claves en git y el usuario confirma una ejecución manual en verde.
 
+> Ajustes del supervisor al implementar (2026-11-17): (1) `muestra` **borra** las partidas de más de
+> 30 días del tier y descarga solo lo que falta para llegar al objetivo; sin esto la base crecería
+> 900 partidas por semana (unos 275 MB por cada 300) y pasaría el límite de 10 GB de caché de GitHub.
+> (2) El flujo usa el comando nuevo `prepartida referencias`, que escribe solo `referencias.json`; no
+> ejecuta `exportar`, así no reescribe los datos del jugador ni necesita su base. (3) La muestra se
+> restaura con `actions/cache/restore` y se guarda con `actions/cache/save` con `if: always()`, para no
+> perder lo descargado si un paso falla. (4) `referencias.construir` solo usa partidas de los últimos
+> 30 días.
+
 ## 7. Fase 3 — Asistente de draft (antes de la partida)
 
 Objetivo: con la selección de campeones (5 aliados, 5 enemigos, roles y lado del mapa), producir antes

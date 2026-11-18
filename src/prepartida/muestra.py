@@ -38,6 +38,43 @@ def _partidas_ya_guardadas(con: duckdb.DuckDBPyConnection) -> set[str]:
     return {fila[0] for fila in filas}
 
 
+def _umbral() -> datetime:
+    """Inicio de la ventana de la muestra, en UTC sin zona (como se guarda)."""
+    return datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(days=LIMITE_DIAS)
+
+
+def _recientes(con: duckdb.DuckDBPyConnection, tier: str) -> int:
+    return con.execute(
+        "SELECT count(*) FROM muestra_partidas WHERE tier_muestra = ? AND fecha_muestra >= ?",
+        [tier, _umbral()],
+    ).fetchone()[0]
+
+
+def _purgar_viejas(con: duckdb.DuckDBPyConnection, tier: str) -> int:
+    """Borra del tier las partidas de más de LIMITE_DIAS días (ya no cuentan en las referencias).
+
+    Mantiene acotado el tamaño de la base, que se guarda en la caché de GitHub Actions.
+    """
+    viejas = [
+        f[0]
+        for f in con.execute(
+            "SELECT match_id FROM muestra_partidas WHERE tier_muestra = ? AND fecha_muestra < ?",
+            [tier, _umbral()],
+        ).fetchall()
+    ]
+    if not viejas:
+        return 0
+    con.execute("BEGIN")
+    try:
+        for tabla in ("cuadros", "eventos", "participantes", "partidas", "muestra_partidas"):
+            con.execute(f"DELETE FROM {tabla} WHERE list_contains(?, match_id)", [viejas])
+        con.execute("COMMIT")
+    except Exception:
+        con.execute("ROLLBACK")
+        raise
+    return len(viejas)
+
+
 def _es_reciente(momento: datetime | None, limite_dias: int = LIMITE_DIAS) -> bool:
     """Devuelve True si el momento está dentro de los últimos límite_dias días."""
     if momento is None:
@@ -139,8 +176,20 @@ def run(
     inicio_tiempo = int(
         (datetime.now(timezone.utc) - timedelta(days=LIMITE_DIAS)).timestamp()
     )
-    cupo_base = math.ceil(partidas_objetivo / len(DIVISIONES))
     por_division: dict[str, int] = {d: 0 for d in DIVISIONES}
+
+    # Tope: se borran las partidas que ya no cuentan y solo se descarga lo que falta.
+    purgadas = _purgar_viejas(con, tier)
+    recientes = _recientes(con, tier)
+    faltan = max(0, partidas_objetivo - recientes)
+    if faltan == 0:
+        aviso(f"{tier}: ya hay {recientes} partidas recientes de {partidas_objetivo}; nada que descargar")
+        return {"partidas": 0, "por_division": por_division, "purgadas": purgadas}
+    if recientes:
+        aviso(f"{tier}: {recientes} partidas recientes en la base; faltan {faltan}")
+    partidas_objetivo = faltan
+
+    cupo_base = math.ceil(partidas_objetivo / len(DIVISIONES))
     total = 0
     sobrante = 0
     ya = _partidas_ya_guardadas(con)
@@ -172,4 +221,4 @@ def run(
 
     partes = ", ".join(f"{d}: {n}" for d, n in por_division.items())
     aviso(f"{tier}: {total} de {partidas_objetivo} partidas ({partes})")
-    return {"partidas": total, "por_division": por_division}
+    return {"partidas": total, "por_division": por_division, "purgadas": purgadas}

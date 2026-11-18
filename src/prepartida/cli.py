@@ -101,6 +101,19 @@ def _cmd_exportar(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_referencias(args: argparse.Namespace) -> int:
+    """Escribe solo referencias.json (lo usa el flujo semanal, sin tocar los datos del jugador)."""
+    cfg = leer_config()
+    ruta = cfg.data_dir / "muestra.duckdb"
+    if not ruta.exists():
+        print(f"No existe la base {ruta}. Ejecuta primero: prepartida muestra", file=sys.stderr)
+        return 2
+    destino = Path(args.destino).resolve()
+    destino.mkdir(parents=True, exist_ok=True)
+    _exportar_referencias(ruta, destino)
+    return 0
+
+
 def _exportar_referencias(ruta_muestra: Path, destino: Path) -> None:
     """Escribe referencias.json solo si existe la base de muestra (fase 2)."""
     if not ruta_muestra.exists():
@@ -238,6 +251,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--destino", default="docs/data", help="Carpeta de destino (docs/data)")
     p.add_argument("--perfil", default="perfil.toml", help="Archivo de perfil (perfil.toml)")
     p.set_defaults(func=_cmd_exportar)
+
+    p = sub.add_parser("referencias", help="Escribe solo docs/data/referencias.json desde la muestra")
+    p.add_argument("--destino", default="docs/data", help="Carpeta de destino (docs/data)")
+    p.set_defaults(func=_cmd_referencias)
 
     p = sub.add_parser("publicar", help="Ingesta, exporta y sube los datos a git")
     p.add_argument("--destino", default="docs/data", help="Carpeta de destino (docs/data)")

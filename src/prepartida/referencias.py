@@ -7,7 +7,7 @@ exporta PUUIDs ni match_id.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 import duckdb
@@ -18,6 +18,7 @@ from prepartida import metricas
 ROLES = ("MIDDLE", "BOTTOM")
 MUESTRA_MINIMA = 100
 MINUTO_FINAL_CURVA = 20
+DIAS_VENTANA = 30  # solo cuentan las partidas de la muestra de los últimos 30 días
 # métrica -> decimales al redondear los percentiles
 DECIMALES = {"cs_10": 1, "dif_oro_10": 0, "dif_oro_15": 0, "muertes_14": 1}
 
@@ -29,6 +30,7 @@ JOIN partidas m USING (match_id)
 JOIN muestra_partidas ms USING (match_id)
 JOIN cuadros c ON c.match_id = p.match_id AND c.participant_id = p.participant_id
 WHERE list_contains(?, p.posicion) AND m.duracion_s >= ? AND c.minuto <= ?
+  AND ms.fecha_muestra >= ?
 GROUP BY 1, 2, 3
 """
 
@@ -68,10 +70,17 @@ def _clave_parche(parche: str) -> tuple[int, ...]:
 
 def construir(con: duckdb.DuckDBPyConnection) -> dict[str, Any]:
     """Arma el diccionario de `referencias.json` a partir de la base de muestra."""
+    umbral = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(days=DIAS_VENTANA)
+    recientes = {
+        f[0]
+        for f in con.execute(
+            "SELECT match_id FROM muestra_partidas WHERE fecha_muestra >= ?", [umbral]
+        ).fetchall()
+    }
     df = metricas.metricas_por_rol(con, ROLES)
-    df = df[df["tier_muestra"].notna()]
+    df = df[df["tier_muestra"].notna() & df["match_id"].isin(recientes)]
     curvas = con.execute(
-        SQL_CURVA, [list(ROLES), metricas.DURACION_MINIMA_S, MINUTO_FINAL_CURVA]
+        SQL_CURVA, [list(ROLES), metricas.DURACION_MINIMA_S, MINUTO_FINAL_CURVA, umbral]
     ).df()
 
     rangos: dict[str, Any] = {}

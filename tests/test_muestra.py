@@ -131,3 +131,50 @@ def test_la_base_de_muestra_va_en_data_dir(tmp_path, monkeypatch):
     monkeypatch.setenv("PREPARTIDA_DATA_DIR", str(tmp_path / "mi_data"))
     cfg = leer_config()
     assert (cfg.data_dir / "muestra.duckdb").parent == tmp_path / "mi_data"
+
+
+# --- R06: muestra con tope (solo lo que falta) y purga de lo viejo ---
+
+
+def test_solo_descarga_lo_que_falta(api, tmp_path):
+    _preparar(api)
+    con = _con(tmp_path)
+    r1 = run(con, _cliente(api), "GOLD", 8, 2, semilla=1, aviso=lambda _m: None)
+    assert r1["partidas"] == 8
+    llamadas_antes = len(api.consultas)
+    mensajes: list[str] = []
+    r2 = run(con, _cliente(api), "GOLD", 8, 2, semilla=1, aviso=mensajes.append)
+    assert r2["partidas"] == 0
+    assert len(api.consultas) == llamadas_antes  # ninguna llamada a la API
+    assert mensajes[-1] == "GOLD: ya hay 8 partidas recientes de 8; nada que descargar"
+    r3 = run(con, _cliente(api), "GOLD", 12, 2, semilla=2, aviso=lambda _m: None)
+    assert r3["partidas"] == 4
+    assert con.execute("SELECT count(*) FROM muestra_partidas").fetchone()[0] == 12
+
+
+def test_purga_las_partidas_de_mas_de_30_dias(api, tmp_path):
+    _preparar(api)
+    con = _con(tmp_path)
+    run(con, _cliente(api), "GOLD", 8, 2, semilla=1, aviso=lambda _m: None)
+    vieja = con.execute("SELECT match_id FROM muestra_partidas LIMIT 1").fetchone()[0]
+    con.execute(
+        "UPDATE muestra_partidas SET fecha_muestra = now() - INTERVAL 40 DAY WHERE match_id = ?",
+        [vieja],
+    )
+    api.creacion[vieja] = HACE_60_DIAS_MS  # en Riot también es vieja
+    resumen = run(con, _cliente(api), "GOLD", 8, 2, semilla=3, aviso=lambda _m: None)
+    assert resumen["purgadas"] == 1
+    assert resumen["partidas"] == 1  # repone la purgada
+    for tabla in ("muestra_partidas", "partidas", "participantes", "cuadros", "eventos"):
+        n = con.execute(f"SELECT count(*) FROM {tabla} WHERE match_id = ?", [vieja]).fetchone()[0]
+        assert n == 0, tabla
+
+
+def test_la_purga_no_toca_otros_tiers(api, tmp_path):
+    _preparar(api)
+    con = _con(tmp_path)
+    run(con, _cliente(api), "GOLD", 4, 1, semilla=1, aviso=lambda _m: None)
+    con.execute("UPDATE muestra_partidas SET tier_muestra = 'SILVER', fecha_muestra = now() - INTERVAL 40 DAY")
+    resumen = run(con, _cliente(api), "GOLD", 4, 1, semilla=1, aviso=lambda _m: None)
+    assert resumen["purgadas"] == 0
+    assert con.execute("SELECT count(*) FROM muestra_partidas WHERE tier_muestra = 'SILVER'").fetchone()[0] == 4

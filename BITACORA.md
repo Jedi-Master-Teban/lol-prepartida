@@ -801,3 +801,11 @@ El commit `d83f432` se llamó "r02b" pero contiene R03 (`metricas_por_rol`). No 
 - Revisión en Chrome sin interfaz (Playwright) con los datos reales: 1280 y 390 px sin desborde en Inicio y Línea (altura de Inicio 1258 y 2299 px); 3 reglas; curva de Oro en mid y ADC; sin `referencias.json` no hay reglas ni bloque, las cinco vistas cargan sin errores de JavaScript. Las imágenes de Data Dragon no cargan en ese entorno (sin red), así que falta verlas en el navegador real.
 - Resultado con datos reales (mid, 51 partidas): CS al 10 57.3 frente a 65.0 de Oro (brecha 0.43 rangos intercuartílicos, la mayor); oro al 15 −335 frente a 0 (0.17); muertes antes del 14 1.53 frente a 2.00 (mejor que Oro).
 - PUNTO DE CONTROL 4: números contrastados con la muestra (sección R04). Pendiente: ver la página publicada en el navegador real. Sigue R06.
+
+## Supervisor — R06 implementada por el supervisor (2026-11-17)
+- `.github/workflows/referencias.yml`: lunes 07:41 UTC y manual; grupo de concurrencia `actualizar`; 90 min; Plata, Oro y Diamante con 300 partidas; caché de `data/muestra.duckdb` (restaurar y guardar siempre); escribe y publica solo `referencias.json`.
+- `muestra.py`: purga del tier las partidas de más de 30 días y descarga solo lo que falta (si no falta nada, no llama a la API). `referencias.py`: solo cuenta los últimos 30 días. Nuevo comando `prepartida referencias`.
+- Ajustes al plan explicados en la tarea R06 de PLAN.md (tamaño de la caché y separación de los datos del jugador).
+- 6 pruebas nuevas; suite 65 de 65. YAML válido; sin claves.
+- Con la muestra real: 286 de 289 partidas siguen dentro de los 30 días; medianas sin cambio.
+- Falta: ejecución manual en verde (la primera tarda unos 45 min: descarga unas 900 partidas).
