@@ -12,6 +12,7 @@ import duckdb
 
 from prepartida import db, ddragon, estado, exportar, ingest, muestra
 from prepartida.config import leer_config
+from prepartida.muestra import PAGINAS_MAX_DEFAULT
 from prepartida.perfil import leer_perfil
 from prepartida.riot_client import ClaveInvalida, RiotClient, RiotError
 
@@ -171,7 +172,7 @@ def _cmd_muestra(args: argparse.Namespace) -> int:
     if not cfg.api_key:
         print("Falta RIOT_API_KEY en .env", file=sys.stderr)
         return 2
-    ruta = Path("data") / "muestra.duckdb"
+    ruta = cfg.data_dir / "muestra.duckdb"
     ruta.parent.mkdir(parents=True, exist_ok=True)
     con = db.conectar(ruta)
     try:
@@ -184,6 +185,7 @@ def _cmd_muestra(args: argparse.Namespace) -> int:
                 args.partidas,
                 args.por_jugador,
                 args.semilla,
+                max_paginas=args.max_paginas,
                 aviso=print,
             )
         finally:
@@ -237,6 +239,9 @@ def main(argv: list[str] | None = None) -> int:
         "--por-jugador", type=int, default=2, help="Partidas por jugador a descargar"
     )
     p.add_argument("--semilla", type=int, default=None, help="Semilla aleatoria")
+    p.add_argument(
+        "--max-paginas", type=int, default=PAGINAS_MAX_DEFAULT, help="Máximo de páginas por división"
+    )
     p.set_defaults(func=_cmd_muestra)
 
     args = parser.parse_args(argv)

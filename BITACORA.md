@@ -743,3 +743,27 @@ Medido en un navegador real, tras recargar la caché.
   6. La tabla `muestra_partidas` registra `match_id`, `tier_muestra` y `fecha_muestra`.
 - Dudas para el supervisor: ninguna.
 
+## Revisión del supervisor — R02
+
+- Bien: base aparte `muestra.duckdb`, tabla `muestra_partidas`, reanudable, sin tocar la base principal,
+  cinco pruebas de los criterios.
+- Defectos: recorre todas las páginas de una división y llena el cupo solo con División I (muestra sesgada
+  y cientos de llamadas); descarga partidas viejas para descartarlas; guarda partidas sin timeline;
+  un error de un jugador detiene la muestra; sin resumen con menos de 25 partidas; ruta fija.
+- Proceso: se marcó sin la ejecución corta del usuario que pedía el "Hecho cuando".
+- Veredicto: R02 NO aprobada. Se agrega R02b.
+
+
+## Supervisor — R02b implementada por el supervisor (2026-11-17)
+OpenCode dejó R02b a medias (conftest dañado: 21 pruebas rotas). Se rehízo:
+- `muestra.py`: cupo por división `ceil(partidas/4)` con sobrante a la siguiente; páginas en orden aleatorio (tope `--max-paginas`), una página vacía o con error se salta; `start_time` de 30 días en la consulta de ids; partida sin timeline no se guarda ni cuenta; jugador con error se salta; resumen final siempre impreso.
+- `tests/conftest.py` restaurado desde el último commit + solo los ganchos nuevos (consultas con query, ids por jugador, fechas, timeline/jugador con error).
+- `tests/test_muestra.py`: 10 pruebas (reparto, páginas, start_time, sin timeline, jugador con error, antiguas, resumen, sin duplicar, base principal intacta, ruta en data_dir).
+- Resultado: `pytest` 45 de 45 en verde en entorno limpio (Python 3.13).
+- Pendiente para cerrar R02 y R02b: el usuario ejecuta `prepartida muestra --tier GOLD --partidas 20` y pega la línea final.
+
+## Supervisor — R02 y R02b aprobadas (2026-11-17)
+Ejecución real del usuario (300 partidas, por defecto): `GOLD: 300 de 300 partidas (I: 75, II: 75, III: 75, IV: 75)`.
+Revisión de `data/muestra.duckdb`: 300 partidas, todas cola 420 y todas con timeline; fechas del 18-oct al 17-nov (30 días); parches 16.22 (230), 16.21 (58), 16.20 (12); 2741 jugadores distintos de 3000 participaciones (sin concentración en pocos jugadores); 600 participaciones por rol.
+Hallazgo para R03: 15 partidas duran menos de 15 min (mínima 67 s). Se agregó nota a R03 para excluirlas.
+R02 y R02b marcadas. Sigue R03.

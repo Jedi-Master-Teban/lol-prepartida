@@ -771,7 +771,37 @@ Hecho cuando: `pytest` pasa. El usuario ejecuta, en su Mac, una muestra corta
 (`prepartida muestra --tier GOLD --partidas 20`) y pega la salida en la bitácora. No ejecutes la muestra
 completa: la ejecuta el usuario.
 
+### [x] R02b — Correcciones de la muestra
+
+El supervisor revisó R02. La estructura y las pruebas están bien, pero el muestreo no hace lo que pide el plan:
+
+1. **Lee todas las páginas de una división antes de muestrear y llena el cupo solo con División I.**
+   `run` pide páginas 1, 2, 3… hasta que una venga vacía (en Oro de LA1 pueden ser decenas de páginas,
+   cientos de llamadas) y luego toma jugadores de la División I hasta llegar a 300. La muestra quedaría
+   sesgada hacia lo más alto del rango y nunca llegaría a II, III ni IV.
+   Arreglo: cupo por división = `ceil(partidas / 4)`. En cada división, pide páginas en orden aleatorio
+   (con la semilla) entre 1 y `--max-paginas` (por defecto 10), y deja de pedir páginas cuando tengas
+   `cupo * 3` jugadores o una página venga vacía. Si una división no llena su cupo, el sobrante pasa a la
+   siguiente.
+2. **Descarga partidas viejas para descartarlas después.** Pasa `start_time` (ahora − 30 días, en segundos)
+   a `ids_de_partidas` para que la API solo devuelva partidas recientes; mantén la comprobación de fecha.
+3. **Guarda partidas sin timeline.** Si `linea_de_tiempo` falla, no guardes ni cuentes esa partida: las
+   métricas de la fase 2 necesitan la timeline. Captura solo `RiotError` (no `Exception`).
+4. **Un jugador que falla detiene todo.** Si `ids_de_partidas` o `partida` lanzan `NoEncontrado` o
+   `RiotError` para un jugador, pasa al siguiente.
+5. **Sin resumen final.** Con `--partidas 20` no se imprime nada (el aviso es cada 25). Al terminar,
+   imprime siempre: `GOLD: 20 de 20 partidas (I: 5, II: 5, III: 5, IV: 5)`.
+6. **Ruta fija.** Usa `cfg.data_dir / "muestra.duckdb"` en vez de `Path("data")`.
+
+Pruebas nuevas: reparto entre las cuatro divisiones, `start_time` presente en la llamada, partida con
+timeline fallida no se guarda, jugador con error se salta, resumen final impreso.
+
+Hecho cuando: `pytest` pasa y el usuario ejecuta en su Mac `prepartida muestra --tier GOLD --partidas 20`
+y la salida (el resumen final) queda en la bitácora. Entonces se marcan R02 y R02b.
+
 ### [ ] R03 — Métricas para cualquier participante
+
+> Nota del supervisor (tras R02b): la muestra GOLD tiene 15 de 300 partidas de menos de 15 minutos (remakes y rendiciones; la más corta dura 67 s). `metricas_por_rol` debe excluir partidas de menos de 15 minutos de las métricas a los 15 (dif_oro_15, muertes_14) y las de menos de 5 minutos de todo; agrega una prueba para cada caso.
 
 Hoy `partidas_del_jugador` calcula las métricas de línea solo para un PUUID. Hace falta lo mismo para
 todos los participantes de un rol.

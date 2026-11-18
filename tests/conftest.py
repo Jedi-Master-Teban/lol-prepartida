@@ -83,10 +83,17 @@ class ApiFalsa:
         self.resultados = {"LA1_1": True, "LA1_2": False, "LA1_3": True}
         self.llamadas: list[str] = []
         self.fallos_429 = 0
+        # Para las pruebas de la muestra (R02b)
+        self.consultas: list[str] = []  # host + ruta + query
+        self.ids_por_puuid: dict[str, list[str]] = {}
+        self.creacion: dict[str, int] = {}  # match_id -> gameCreation (ms)
+        self.sin_timeline: set[str] = set()
+        self.jugadores_con_error: set[str] = set()
 
     def __call__(self, request: httpx.Request) -> httpx.Response:
         ruta = request.url.path
         self.llamadas.append(f"{request.url.host}{ruta}")
+        self.consultas.append(f"{request.url.host}{ruta}?{request.url.query.decode()}")
         if request.headers.get("X-Riot-Token") != "clave-buena":
             return httpx.Response(403, json={"status": {"message": "Forbidden"}})
         if self.fallos_429 > 0:
@@ -149,13 +156,22 @@ class ApiFalsa:
         if ruta.endswith("/ids"):
             inicio = int(request.url.params.get("start", 0))
             cantidad = int(request.url.params.get("count", 20))
-            return httpx.Response(200, json=self.ids[inicio : inicio + cantidad])
+            puuid = ruta.split("/")[-2]
+            if puuid in self.jugadores_con_error:
+                return httpx.Response(404)
+            ids = self.ids_por_puuid.get(puuid, self.ids)
+            return httpx.Response(200, json=ids[inicio : inicio + cantidad])
         if ruta.endswith("/timeline"):
             match_id = ruta.split("/")[-2]
+            if match_id in self.sin_timeline:
+                return httpx.Response(404)
             return httpx.Response(200, json=linea_falsa(match_id))
         if "/match/v5/matches/" in ruta:
             match_id = ruta.split("/")[-1]
-            return httpx.Response(200, json=partida_falsa(match_id, self.resultados[match_id]))
+            partida = partida_falsa(match_id, self.resultados.get(match_id, True))
+            if match_id in self.creacion:
+                partida["info"]["gameCreation"] = self.creacion[match_id]
+            return httpx.Response(200, json=partida)
         return httpx.Response(404)
 
 
