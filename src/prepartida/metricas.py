@@ -16,11 +16,13 @@ from prepartida.perfil import Perfil
 PRIOR_PARTIDAS = 10
 MUESTRA_MINIMA = 10
 
-SQL_PARTIDAS = """
+# Una sola definición de "rival de posición" para el jugador y para la muestra:
+# misma posición, lado contrario. {filtro} elige a quién se mide.
+_SQL_PLANTILLA = """
 WITH yo AS (
     SELECT p.*, m.duracion_s, m.inicio, m.parche
     FROM participantes p JOIN partidas m USING (match_id)
-    WHERE p.puuid = ?
+    WHERE {filtro}
 ),
 muertes AS (
     SELECT match_id,
@@ -30,7 +32,7 @@ muertes AS (
     FROM eventos WHERE tipo = 'CHAMPION_KILL'
     GROUP BY 1, 2
 )
-SELECT yo.match_id, yo.inicio, yo.parche, yo.campeon, yo.posicion, yo.lado, yo.victoria,
+SELECT {extra}yo.match_id, yo.inicio, yo.parche, yo.campeon, yo.posicion, yo.lado, yo.victoria,
        yo.asesinatos, yo.muertes, yo.asistencias,
        yo.duracion_s / 60.0 AS duracion_min,
        yo.cs / (yo.duracion_s / 60.0) AS cs_min,
@@ -59,6 +61,15 @@ LEFT JOIN cuadros r15 ON r15.match_id = r.match_id AND r15.participant_id = r.pa
 LEFT JOIN muertes mu ON mu.match_id = yo.match_id AND mu.pid = yo.participant_id
 ORDER BY yo.inicio
 """
+
+SQL_PARTIDAS = _SQL_PLANTILLA.format(filtro="p.puuid = ?", extra="")
+
+SQL_POR_ROL = _SQL_PLANTILLA.format(
+    filtro="list_contains(?, p.posicion)", extra="yo.puuid AS puuid, "
+)
+
+DURACION_MINIMA_S = 5 * 60  # menos: remake, se descarta
+DURACION_MINIMA_15_S = 15 * 60  # menos: sin métricas a los 15 minutos
 
 
 def tasa_ajustada(victorias: float, partidas: float, prior: int = PRIOR_PARTIDAS) -> float:
@@ -141,3 +152,36 @@ def resumen(df: pd.DataFrame) -> dict[str, float | int | None]:
         "con_dato_15": int(con_linea.sum()),
         "muertes_14": round(float(df["muertes_14"].mean()), 2),
     }
+
+
+def metricas_por_rol(
+    con: duckdb.DuckDBPyConnection, posiciones: tuple[str, ...] = ("MIDDLE", "BOTTOM")
+) -> pd.DataFrame:
+    """Una fila por participante y partida de las posiciones dadas (ambos equipos).
+
+    Usa la misma consulta que `partidas_del_jugador`. Quita las partidas de menos
+    de 5 minutos y deja sin dif_oro_15 ni muertes_14 las de menos de 15.
+    Incluye `tier_muestra` si la base tiene la tabla `muestra_partidas`.
+    """
+    df = con.execute(SQL_POR_ROL, [list(posiciones)]).df()
+    df = df.drop_duplicates(["match_id", "puuid"])
+    df = df[df["duracion_min"] * 60 >= DURACION_MINIMA_S].copy()
+    corta = df["duracion_min"] * 60 < DURACION_MINIMA_15_S
+    df["muertes_14"] = df["muertes_14"].astype("float")
+    df.loc[corta, ["dif_oro_15", "muertes_14"]] = float("nan")
+    df["victoria"] = df["victoria"].astype(bool)
+
+    hay_muestra = con.execute(
+        "SELECT count(*) FROM information_schema.tables WHERE table_name = 'muestra_partidas'"
+    ).fetchone()[0]
+    if hay_muestra:
+        tiers = con.execute("SELECT match_id, tier_muestra FROM muestra_partidas").df()
+        df = df.merge(tiers, on="match_id", how="left")
+    else:
+        df["tier_muestra"] = None
+
+    columnas = [
+        "match_id", "puuid", "posicion", "campeon", "victoria", "cs_10", "dif_oro_10",
+        "dif_oro_15", "muertes_14", "parche", "duracion_min", "tier_muestra",
+    ]
+    return df[columnas].reset_index(drop=True)

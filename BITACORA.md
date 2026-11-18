@@ -767,3 +767,11 @@ Ejecución real del usuario (300 partidas, por defecto): `GOLD: 300 de 300 parti
 Revisión de `data/muestra.duckdb`: 300 partidas, todas cola 420 y todas con timeline; fechas del 18-oct al 17-nov (30 días); parches 16.22 (230), 16.21 (58), 16.20 (12); 2741 jugadores distintos de 3000 participaciones (sin concentración en pocos jugadores); 600 participaciones por rol.
 Hallazgo para R03: 15 partidas duran menos de 15 min (mínima 67 s). Se agregó nota a R03 para excluirlas.
 R02 y R02b marcadas. Sigue R03.
+
+## Supervisor — R03 implementada y verificada por el supervisor (2026-11-17)
+- Revisión previa: el commit 16b09ad (R02b) coincide byte a byte con la versión del supervisor; R02 no fue alterada.
+- `metricas.py`: la consulta se volvió una plantilla (`_SQL_PLANTILLA`) con un solo cambio de filtro. `SQL_PARTIDAS` sale idéntica a la anterior (mismo MD5); `partidas_del_jugador` no cambió.
+- Nueva `metricas_por_rol(con, posiciones=("MIDDLE","BOTTOM"))`: una fila por participante y partida (ambos equipos), con `match_id, puuid, posicion, campeon, victoria, cs_10, dif_oro_10, dif_oro_15, muertes_14, parche, duracion_min, tier_muestra`. Quita partidas de menos de 5 min; deja sin `dif_oro_15` ni `muertes_14` las de menos de 15. `puuid` es solo interno: R04 no debe exportarlo.
+- Pruebas nuevas (5): regresión contra `partidas_del_jugador`, ambos equipos y roles pedidos, `tier_muestra`, menos de 5 min, menos de 15 min. Suite: 50 de 50 en verde.
+- Con la muestra real GOLD: 289 partidas útiles (11 remakes fuera), 1156 filas (578 MIDDLE, 578 BOTTOM), 1140 con métricas a los 15; todas con rival; diferencias espejo suman 0. Medianas Oro: cs_10 67, muertes antes del 14: 2.
+- Sigue R04.

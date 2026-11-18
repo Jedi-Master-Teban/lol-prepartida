@@ -799,7 +799,7 @@ timeline fallida no se guarda, jugador con error se salta, resumen final impreso
 Hecho cuando: `pytest` pasa y el usuario ejecuta en su Mac `prepartida muestra --tier GOLD --partidas 20`
 y la salida (el resumen final) queda en la bitácora. Entonces se marcan R02 y R02b.
 
-### [ ] R03 — Métricas para cualquier participante
+### [x] R03 — Métricas para cualquier participante
 
 > Nota del supervisor (tras R02b): la muestra GOLD tiene 15 de 300 partidas de menos de 15 minutos (remakes y rendiciones; la más corta dura 67 s). `metricas_por_rol` debe excluir partidas de menos de 15 minutos de las métricas a los 15 (dif_oro_15, muertes_14) y las de menos de 5 minutos de todo; agrega una prueba para cada caso.
 
