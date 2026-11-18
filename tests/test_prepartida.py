@@ -152,3 +152,34 @@ def test_data_dragon_descarga_y_carga(tmp_path):
     con = db.conectar()
     assert ddragon.cargar_en_db(con, version, datos) == {"campeones": 1, "items": 1}
     assert con.execute("SELECT nombre FROM campeones WHERE champion_id = 103").fetchone()[0] == "Ahri"
+
+
+def test_cambio_de_clave_migra_el_puuid_del_jugador(api):
+    """Riot cifra el PUUID por clave: con una clave nueva, la misma cuenta trae otro PUUID.
+
+    Las partidas ya guardadas deben pasar al PUUID nuevo y quedar un solo jugador.
+    """
+    con = db.conectar()
+    c = cliente(api)
+    viejo = ingest.ingerir_perfil(c, con, "SithLordDropout", "LAN")
+    ingest.ingerir_historial(c, con, viejo)
+
+    c.cuenta_por_riot_id = lambda g, t: {"puuid": "puuid-nuevo", "gameName": g, "tagLine": t}
+    nuevo = ingest.ingerir_perfil(c, con, "SithLordDropout", "LAN")
+
+    assert nuevo == "puuid-nuevo"
+    assert con.execute("SELECT puuid FROM jugador").fetchall() == [("puuid-nuevo",)]
+    n = con.execute("SELECT count(*) FROM participantes WHERE puuid = 'puuid-nuevo'").fetchone()[0]
+    assert n == 3
+    assert con.execute("SELECT count(*) FROM participantes WHERE puuid = ?", [viejo]).fetchone()[0] == 0
+    assert con.execute("SELECT count(*) FROM rango_historial WHERE puuid = ?", [viejo]).fetchone()[0] == 0
+    assert con.execute("SELECT count(*) FROM maestria WHERE puuid = ?", [viejo]).fetchone()[0] == 0
+
+
+def test_otra_cuenta_no_se_migra(api):
+    con = db.conectar()
+    c = cliente(api)
+    ingest.ingerir_perfil(c, con, "SithLordDropout", "LAN")
+    c.cuenta_por_riot_id = lambda g, t: {"puuid": "puuid-otro", "gameName": "Otro", "tagLine": "LAN"}
+    ingest.ingerir_perfil(c, con, "Otro", "LAN")
+    assert con.execute("SELECT count(*) FROM jugador").fetchone()[0] == 2

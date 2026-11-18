@@ -49,12 +49,45 @@ def guardar_partida(
         raise
 
 
+def _migrar_puuid(
+    con: duckdb.DuckDBPyConnection, puuid: str, game_name: str, tag_line: str
+) -> None:
+    """Pasa los datos de la misma cuenta guardados con otro PUUID al PUUID actual.
+
+    Riot cifra el PUUID según la clave de API: al cambiar de clave (por ejemplo,
+    de desarrollo a personal) la misma cuenta llega con otro PUUID. Sin esta
+    migración las partidas ya guardadas quedarían huérfanas.
+    """
+    viejos = [
+        fila[0]
+        for fila in con.execute(
+            "SELECT puuid FROM jugador WHERE lower(game_name) = lower(?) "
+            "AND lower(tag_line) = lower(?) AND puuid <> ?",
+            [game_name, tag_line, puuid],
+        ).fetchall()
+    ]
+    if not viejos:
+        return
+    con.execute("BEGIN")
+    try:
+        for viejo in viejos:
+            con.execute("UPDATE participantes SET puuid = ? WHERE puuid = ?", [puuid, viejo])
+            con.execute("DELETE FROM rango_historial WHERE puuid = ?", [viejo])
+            con.execute("DELETE FROM maestria WHERE puuid = ?", [viejo])
+            con.execute("DELETE FROM jugador WHERE puuid = ?", [viejo])
+        con.execute("COMMIT")
+    except Exception:
+        con.execute("ROLLBACK")
+        raise
+
+
 def ingerir_perfil(
     client: RiotClient, con: duckdb.DuckDBPyConnection, game_name: str, tag_line: str
 ) -> str:
     """Resuelve el Riot ID, guarda rango y maestrías. Devuelve el PUUID."""
     cuenta = client.cuenta_por_riot_id(game_name, tag_line)
     puuid = cuenta["puuid"]
+    _migrar_puuid(con, puuid, cuenta.get("gameName", game_name), cuenta.get("tagLine", tag_line))
     con.execute(
         "INSERT OR REPLACE INTO jugador (puuid, game_name, tag_line, plataforma) VALUES (?, ?, ?, ?)",
         [puuid, cuenta.get("gameName", game_name), cuenta.get("tagLine", tag_line), client.platform],

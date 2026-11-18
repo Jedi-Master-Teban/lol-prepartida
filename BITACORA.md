@@ -785,3 +785,9 @@ El commit `d83f432` se llamó "r02b" pero contiene R03 (`metricas_por_rol`). No 
 - Pruebas nuevas en `tests/test_referencias.py` (6): contrato, tasas por muertes, privacidad (sin PUUID ni match_id), varios rangos, exportar con y sin muestra. Suite: 56 de 56 en verde.
 - Con la muestra real GOLD (289 partidas, 578 obs. por rol, 0 fugas de identificadores). Mid: cs_10 p25/p50/p75 = 57/65/75; dif_oro_15 p75 = 958. ADC: cs_10 = 60/68/75. Victorias de Oro según muertes antes del 14 (mid): 0 → 62.7 %, 1 → 56.8 %, 2+ → 44.3 %.
 - Falta: el usuario ejecuta `prepartida exportar` para generar `docs/data/referencias.json` y lo sube. Sigue R05.
+
+## Supervisor — Incidente: página vaciada por cambio de PUUID (2026-11-17)
+- Síntoma: `prepartida exportar` escribió `partidas: 0` y el commit 63ad540 publicó los JSON del jugador vacíos.
+- Causa: Riot cifra el PUUID por clave de API. Con la clave personal la cuenta llegó con otro PUUID; la base local quedó con dos filas en `jugador` (77 partidas con el PUUID viejo, 0 con el nuevo) y `exportar` toma la más reciente.
+- Arreglo: `ingest._migrar_puuid` pasa participantes al PUUID nuevo y borra rango, maestrías y la fila vieja de la misma cuenta (Riot ID); `exportar` se niega a escribir si el jugador no tiene partidas (el CLI devuelve 2 con mensaje). 3 pruebas nuevas; suite 59 de 59. Probado sobre una copia de la base real: 1 jugador, 77 partidas.
+- Datos de la página restaurados desde d83f432 en la carpeta de trabajo.

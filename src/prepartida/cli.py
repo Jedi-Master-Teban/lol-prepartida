@@ -89,6 +89,9 @@ def _cmd_exportar(args: argparse.Namespace) -> int:
     try:
         perfil = leer_perfil(args.perfil)
         conteo = exportar.exportar(con, perfil, cfg.static_dir, destino)
+    except ValueError as e:
+        print(f"No se exportó: {e}", file=sys.stderr)
+        return 2
     finally:
         con.close()
     print(f"Datos escritos en {destino}")

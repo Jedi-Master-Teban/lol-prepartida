@@ -300,3 +300,14 @@ def test_sin_jugador_da_error(tmp_path):
     con = db.conectar()
     with pytest.raises(ValueError, match="No hay jugador en la base"):
         exportar.exportar(con, PERFIL, tmp_path, tmp_path / "salida")
+
+
+def test_no_exporta_si_el_jugador_no_tiene_partidas(api, tmp_path):
+    """Protege la página: nunca se publican archivos vacíos por un jugador sin partidas."""
+    con, _ = _base(api)
+    _estaticos_falsos(tmp_path / "estaticos")
+    con.execute("UPDATE participantes SET puuid = 'otro' WHERE puuid = 'puuid-yo'")
+    destino = tmp_path / "data"
+    with pytest.raises(ValueError, match="sin partidas"):
+        exportar.exportar(con, PERFIL, tmp_path / "estaticos", destino)
+    assert not (destino / "partidas.json").exists()

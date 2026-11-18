@@ -1,7 +1,607 @@
 {
-  "campeones": {},
-  "items": {},
-  "runas": {},
-  "arboles": {},
-  "hechizos": {}
+  "campeones": {
+    "1": {
+      "clave": "Annie",
+      "nombre": "Annie"
+    },
+    "3": {
+      "clave": "Galio",
+      "nombre": "Galio"
+    },
+    "4": {
+      "clave": "TwistedFate",
+      "nombre": "Twisted Fate"
+    },
+    "5": {
+      "clave": "XinZhao",
+      "nombre": "Xin Zhao"
+    },
+    "7": {
+      "clave": "Leblanc",
+      "nombre": "LeBlanc"
+    },
+    "8": {
+      "clave": "Vladimir",
+      "nombre": "Vladimir"
+    },
+    "10": {
+      "clave": "Kayle",
+      "nombre": "Kayle"
+    },
+    "14": {
+      "clave": "Sion",
+      "nombre": "Sion"
+    },
+    "18": {
+      "clave": "Tristana",
+      "nombre": "Tristana"
+    },
+    "21": {
+      "clave": "MissFortune",
+      "nombre": "Miss Fortune"
+    },
+    "22": {
+      "clave": "Ashe",
+      "nombre": "Ashe"
+    },
+    "25": {
+      "clave": "Morgana",
+      "nombre": "Morgana"
+    },
+    "28": {
+      "clave": "Evelynn",
+      "nombre": "Evelynn"
+    },
+    "29": {
+      "clave": "Twitch",
+      "nombre": "Twitch"
+    },
+    "34": {
+      "clave": "Anivia",
+      "nombre": "Anivia"
+    },
+    "39": {
+      "clave": "Irelia",
+      "nombre": "Irelia"
+    },
+    "45": {
+      "clave": "Veigar",
+      "nombre": "Veigar"
+    },
+    "50": {
+      "clave": "Swain",
+      "nombre": "Swain"
+    },
+    "51": {
+      "clave": "Caitlyn",
+      "nombre": "Caitlyn"
+    },
+    "55": {
+      "clave": "Katarina",
+      "nombre": "Katarina"
+    },
+    "67": {
+      "clave": "Vayne",
+      "nombre": "Vayne"
+    },
+    "69": {
+      "clave": "Cassiopeia",
+      "nombre": "Cassiopeia"
+    },
+    "81": {
+      "clave": "Ezreal",
+      "nombre": "Ezreal"
+    },
+    "82": {
+      "clave": "Mordekaiser",
+      "nombre": "Mordekaiser"
+    },
+    "84": {
+      "clave": "Akali",
+      "nombre": "Akali"
+    },
+    "86": {
+      "clave": "Garen",
+      "nombre": "Garen"
+    },
+    "90": {
+      "clave": "Malzahar",
+      "nombre": "Malzahar"
+    },
+    "91": {
+      "clave": "Talon",
+      "nombre": "Talon"
+    },
+    "99": {
+      "clave": "Lux",
+      "nombre": "Lux"
+    },
+    "103": {
+      "clave": "Ahri",
+      "nombre": "Ahri"
+    },
+    "105": {
+      "clave": "Fizz",
+      "nombre": "Fizz"
+    },
+    "110": {
+      "clave": "Varus",
+      "nombre": "Varus"
+    },
+    "112": {
+      "clave": "Viktor",
+      "nombre": "Viktor"
+    },
+    "115": {
+      "clave": "Ziggs",
+      "nombre": "Ziggs"
+    },
+    "131": {
+      "clave": "Diana",
+      "nombre": "Diana"
+    },
+    "136": {
+      "clave": "AurelionSol",
+      "nombre": "Aurelion Sol"
+    },
+    "142": {
+      "clave": "Zoe",
+      "nombre": "Zoe"
+    },
+    "145": {
+      "clave": "Kaisa",
+      "nombre": "Kai'Sa"
+    },
+    "147": {
+      "clave": "Seraphine",
+      "nombre": "Seraphine"
+    },
+    "157": {
+      "clave": "Yasuo",
+      "nombre": "Yasuo"
+    },
+    "161": {
+      "clave": "Velkoz",
+      "nombre": "Vel'Koz"
+    },
+    "163": {
+      "clave": "Taliyah",
+      "nombre": "Taliyah"
+    },
+    "166": {
+      "clave": "Akshan",
+      "nombre": "Akshan"
+    },
+    "222": {
+      "clave": "Jinx",
+      "nombre": "Jinx"
+    },
+    "238": {
+      "clave": "Zed",
+      "nombre": "Zed"
+    },
+    "268": {
+      "clave": "Azir",
+      "nombre": "Azir"
+    },
+    "360": {
+      "clave": "Samira",
+      "nombre": "Samira"
+    },
+    "432": {
+      "clave": "Bard",
+      "nombre": "Bardo"
+    },
+    "498": {
+      "clave": "Xayah",
+      "nombre": "Xayah"
+    },
+    "517": {
+      "clave": "Sylas",
+      "nombre": "Sylas"
+    },
+    "711": {
+      "clave": "Vex",
+      "nombre": "Vex"
+    },
+    "777": {
+      "clave": "Yone",
+      "nombre": "Yone"
+    },
+    "800": {
+      "clave": "Mel",
+      "nombre": "Mel"
+    },
+    "805": {
+      "clave": "Locke",
+      "nombre": "Locke"
+    },
+    "893": {
+      "clave": "Aurora",
+      "nombre": "Aurora"
+    },
+    "950": {
+      "clave": "Naafiri",
+      "nombre": "Naafiri"
+    }
+  },
+  "items": {
+    "1011": {
+      "nombre": "Cinturón de Gigante"
+    },
+    "1018": {
+      "nombre": "Capa de Agilidad"
+    },
+    "1026": {
+      "nombre": "Varita Explosiva"
+    },
+    "1028": {
+      "nombre": "Cristal de Rubí"
+    },
+    "1029": {
+      "nombre": "Armadura de Tela"
+    },
+    "1033": {
+      "nombre": "Manto Anulamagia"
+    },
+    "1036": {
+      "nombre": "Espada Larga"
+    },
+    "1037": {
+      "nombre": "Picacha"
+    },
+    "1038": {
+      "nombre": "Espadón"
+    },
+    "1043": {
+      "nombre": "Arco Recurvado"
+    },
+    "1052": {
+      "nombre": "Libro Amplificador"
+    },
+    "1054": {
+      "nombre": "Escudo de Doran"
+    },
+    "1055": {
+      "nombre": "Espada de Doran"
+    },
+    "1056": {
+      "nombre": "Sortija de Doran"
+    },
+    "1058": {
+      "nombre": "Vara Innecesariamente Grande"
+    },
+    "1082": {
+      "nombre": "El Sello de la Oscuridad"
+    },
+    "1086": {
+      "nombre": "Arco de Doran"
+    },
+    "2003": {
+      "nombre": "Poción de Vida"
+    },
+    "2010": {
+      "nombre": "Galleta Definitiva de la Voluntad Eterna"
+    },
+    "2022": {
+      "nombre": "Mena Brillante"
+    },
+    "2031": {
+      "nombre": "Poción Reutilizable"
+    },
+    "2055": {
+      "nombre": "Centinela de Control"
+    },
+    "2420": {
+      "nombre": "Guardabrazo del Buscador"
+    },
+    "2421": {
+      "nombre": "Guardabrazo Fragmentado"
+    },
+    "2503": {
+      "nombre": "Antorcha de Fuegoscuro"
+    },
+    "2522": {
+      "nombre": "Actualizador"
+    },
+    "2523": {
+      "nombre": "Hexóptica C44"
+    },
+    "3003": {
+      "nombre": "Báculo del Arcángel"
+    },
+    "3006": {
+      "nombre": "Grebas del Berserker"
+    },
+    "3009": {
+      "nombre": "Botas de Rapidez"
+    },
+    "3020": {
+      "nombre": "Botas del Hechicero"
+    },
+    "3031": {
+      "nombre": "Filo del Infinito"
+    },
+    "3032": {
+      "nombre": "Flechas Salvajes de Yun Tal"
+    },
+    "3033": {
+      "nombre": "Recordatorio Mortal"
+    },
+    "3035": {
+      "nombre": "Último Suspiro"
+    },
+    "3036": {
+      "nombre": "Recuerdos de Lord Dominik"
+    },
+    "3040": {
+      "nombre": "Abrazo del Serafín"
+    },
+    "3057": {
+      "nombre": "Brillo"
+    },
+    "3067": {
+      "nombre": "Gemaluz"
+    },
+    "3085": {
+      "nombre": "Huracán de Runaan"
+    },
+    "3087": {
+      "nombre": "Navaja de Statikk"
+    },
+    "3089": {
+      "nombre": "Sombrero Mortífero de Rabadon"
+    },
+    "3094": {
+      "nombre": "Cañón de Fuego Rápido"
+    },
+    "3100": {
+      "nombre": "Maldición del Liche"
+    },
+    "3102": {
+      "nombre": "Velo de la Banshee"
+    },
+    "3107": {
+      "nombre": "Redención"
+    },
+    "3108": {
+      "nombre": "Códice Diabólico"
+    },
+    "3113": {
+      "nombre": "Brisa de Éter"
+    },
+    "3116": {
+      "nombre": "Cetro de Cristal de Rylai"
+    },
+    "3118": {
+      "nombre": "Maldad"
+    },
+    "3123": {
+      "nombre": "El Llamado del Verdugo"
+    },
+    "3124": {
+      "nombre": "Espadafuria de Guinsoo"
+    },
+    "3134": {
+      "nombre": "Puñal Serrado"
+    },
+    "3135": {
+      "nombre": "Báculo del Vacío"
+    },
+    "3137": {
+      "nombre": "Criptorretoño"
+    },
+    "3142": {
+      "nombre": "Espada Fantasma de Youmuu"
+    },
+    "3144": {
+      "nombre": "Honda del Explorador"
+    },
+    "3145": {
+      "nombre": "Alternador Hextech"
+    },
+    "3146": {
+      "nombre": "Sablepistola Hextech"
+    },
+    "3147": {
+      "nombre": "Antifaz Embrujado"
+    },
+    "3152": {
+      "nombre": "Cinturón Cohete Hextech"
+    },
+    "3157": {
+      "nombre": "Reloj de Arena de Zhonya"
+    },
+    "3158": {
+      "nombre": "Botas Jonias de la Lucidez"
+    },
+    "3165": {
+      "nombre": "Morellonomicón"
+    },
+    "3170": {
+      "nombre": "Botas de Marcha Rápida"
+    },
+    "3171": {
+      "nombre": "Botas de Lucidez Carmesí "
+    },
+    "3173": {
+      "nombre": "Trituradoras Aceradas"
+    },
+    "3174": {
+      "nombre": "Blindadas de Avance "
+    },
+    "3175": {
+      "nombre": "Zapatos de Lanzahechizos"
+    },
+    "3302": {
+      "nombre": "Terminus"
+    },
+    "3340": {
+      "nombre": "Centinela Invisible"
+    },
+    "3363": {
+      "nombre": "Alteración de Visión Lejana"
+    },
+    "3364": {
+      "nombre": "Lente del Oráculo"
+    },
+    "3508": {
+      "nombre": "Saqueador de Esencias"
+    },
+    "3802": {
+      "nombre": "Capítulo Perdido"
+    },
+    "3803": {
+      "nombre": "Catalizador de Eones"
+    },
+    "3871": {
+      "nombre": "Espina Dimensional de Zaz'Zak"
+    },
+    "4628": {
+      "nombre": "Enfoque al Horizonte"
+    },
+    "4629": {
+      "nombre": "Impulso Cósmico"
+    },
+    "4630": {
+      "nombre": "Joya Maldita"
+    },
+    "4633": {
+      "nombre": "Agrietador"
+    },
+    "4645": {
+      "nombre": "Lumbría"
+    },
+    "4646": {
+      "nombre": "Descarga Tormentosa"
+    },
+    "6617": {
+      "nombre": "Renovador de Piedra Lunar"
+    },
+    "6620": {
+      "nombre": "Ecos de Helia"
+    },
+    "6653": {
+      "nombre": "El Tormento de Liandry"
+    },
+    "6655": {
+      "nombre": "Eco de Luden"
+    },
+    "6657": {
+      "nombre": "Vara de las Edades"
+    },
+    "6670": {
+      "nombre": "Carcaj de Mediodía"
+    },
+    "6672": {
+      "nombre": "Matakrakens"
+    },
+    "6675": {
+      "nombre": "Cuchilla Rauda de Navori"
+    },
+    "6676": {
+      "nombre": "El Coleccionista"
+    },
+    "8010": {
+      "nombre": "Maldición de la Vampiresa"
+    }
+  },
+  "runas": {
+    "8112": {
+      "nombre": "Electrocutar",
+      "icono": "perk-images/Styles/Domination/Electrocute/Electrocute.png"
+    },
+    "8128": {
+      "nombre": "Cosecha Oscura",
+      "icono": "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png"
+    },
+    "8369": {
+      "nombre": "Primer Golpe",
+      "icono": "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png"
+    },
+    "8005": {
+      "nombre": "Estrategia Ofensiva",
+      "icono": "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png"
+    },
+    "8008": {
+      "nombre": "Cadencia Letal",
+      "icono": "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png"
+    },
+    "8021": {
+      "nombre": "Sobre la Marcha",
+      "icono": "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png"
+    },
+    "8010": {
+      "nombre": "Conquistador",
+      "icono": "perk-images/Styles/Precision/Conqueror/Conqueror.png"
+    },
+    "8214": {
+      "nombre": "Invocación: Aery",
+      "icono": "perk-images/Styles/Sorcery/SummonAery/SummonAery.png"
+    },
+    "8229": {
+      "nombre": "Cometa Arcano",
+      "icono": "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png"
+    },
+    "8230": {
+      "nombre": "Arrebato del Cabalgatormentas",
+      "icono": "perk-images/Styles/Sorcery/PhaseRush/StormraidersSurgeRuneIcon2.png"
+    },
+    "8992": {
+      "nombre": "Toque de la Muerte Ígnea",
+      "icono": "perk-images/Styles/Sorcery/DeathfireTouch/DEATHFIRE_TOUCH_KEYSTONE.png"
+    }
+  },
+  "arboles": {
+    "8100": {
+      "nombre": "Dominación",
+      "icono": "perk-images/Styles/7200_Domination.png"
+    },
+    "8300": {
+      "nombre": "Inspiración",
+      "icono": "perk-images/Styles/7203_Whimsy.png"
+    },
+    "8000": {
+      "nombre": "Precisión",
+      "icono": "perk-images/Styles/7201_Precision.png"
+    },
+    "8400": {
+      "nombre": "Valor",
+      "icono": "perk-images/Styles/7204_Resolve.png"
+    },
+    "8200": {
+      "nombre": "Brujería",
+      "icono": "perk-images/Styles/7202_Sorcery.png"
+    }
+  },
+  "hechizos": {
+    "21": {
+      "clave": "SummonerBarrier",
+      "nombre": "Barrera"
+    },
+    "14": {
+      "clave": "SummonerDot",
+      "nombre": "Ignición"
+    },
+    "3": {
+      "clave": "SummonerExhaust",
+      "nombre": "Extenuación"
+    },
+    "4": {
+      "clave": "SummonerFlash",
+      "nombre": "Destello"
+    },
+    "6": {
+      "clave": "SummonerHaste",
+      "nombre": "Fantasma"
+    },
+    "7": {
+      "clave": "SummonerHeal",
+      "nombre": "Curación"
+    },
+    "12": {
+      "clave": "SummonerTeleport",
+      "nombre": "Teleportación"
+    }
+  }
 }

@@ -41,6 +41,11 @@ def exportar(
     if version is None:
         raise ValueError("No hay versión de Data Dragon: ejecuta `prepartida estaticos`")
     df = metricas.partidas_del_jugador(con, puuid, perfil)
+    if df.empty:
+        raise ValueError(
+            f"{game_name}#{tag_line} está sin partidas en la base: no se exporta para no "
+            "vaciar la página. Ejecuta `prepartida ingesta`."
+        )
 
     meta = _meta(con, puuid, perfil, game_name, tag_line, version)
     partidas = _partidas(df)
