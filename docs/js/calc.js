@@ -112,3 +112,67 @@ export function aCoordenadaMapa(x, y) {
     arriba: (1 - y / 14980) * 100,
   };
 }
+
+/* --- Referencias por rango (R05, sección 3.8 de PLAN.md) --- */
+
+/* Métricas comparables, en el orden en que se muestran.
+   mayorEsMejor: true si un valor más alto es mejor. */
+export const METRICAS_REFERENCIA = [
+  { clave: "cs_10", titulo: "CS al minuto 10", mayorEsMejor: true, decimales: 1 },
+  { clave: "dif_oro_15", titulo: "Oro al minuto 15", mayorEsMejor: true, decimales: 0 },
+  { clave: "muertes_14", titulo: "Muertes antes del 14", mayorEsMejor: false, decimales: 2 },
+];
+
+export function rolDeReferencia(perfil) {
+  return (perfil && perfil.rol_principal) || "MIDDLE";
+}
+
+/* Promedios del jugador solo en las partidas del rol, para compararlos con la referencia del mismo rol. */
+export function valoresDelRol(partidas, rol) {
+  const delRol = partidas.filter((p) => p.posicion === rol);
+  const media = (campo) => promedio(delRol.map((p) => p[campo]).filter((v) => v != null));
+  return {
+    partidas: delRol.length,
+    cs_10: media("cs_10"),
+    dif_oro_15: media("dif_oro_15"),
+    muertes_14: media("muertes_14"),
+  };
+}
+
+/* Distancia a la mediana medida en rangos intercuartílicos (p75 − p25).
+   Positiva = desfavorable para el jugador. */
+export function brechaIqr(valor, percentiles, mayorEsMejor) {
+  if (valor == null || !percentiles || percentiles.p50 == null) return null;
+  const iqr = percentiles.p75 - percentiles.p25;
+  if (!iqr) return null;
+  const diferencia = mayorEsMejor ? percentiles.p50 - valor : valor - percentiles.p50;
+  return diferencia / iqr;
+}
+
+/* La métrica con la mayor brecha desfavorable; null si ninguna es desfavorable. */
+export function mayorBrecha(valores, referenciaRol) {
+  let mejor = null;
+  for (const m of METRICAS_REFERENCIA) {
+    const b = brechaIqr(valores[m.clave], referenciaRol[m.clave], m.mayorEsMejor);
+    if (b != null && b > 0 && (mejor == null || b > mejor.brecha)) {
+      mejor = { metrica: m.clave, brecha: b };
+    }
+  }
+  return mejor;
+}
+
+export function textoDistancia(valor, mediana, mayorEsMejor, decimales) {
+  const diferencia = valor - mediana;
+  const abs = Math.abs(diferencia).toFixed(decimales);
+  if (Number(abs) === 0) return "en la mediana";
+  const peor = mayorEsMejor ? diferencia < 0 : diferencia > 0;
+  if (mayorEsMejor) return peor ? `te faltan ${abs}` : `le sacas ${abs}`;
+  return peor ? `te sobran ${abs}` : `tienes ${abs} menos`;
+}
+
+/* Posición horizontal (0–100 %) de un valor en una regla de minimo a maximo. */
+export function posicionEnRegla(valor, minimo, maximo) {
+  if (maximo === minimo) return 50;
+  const pct = ((valor - minimo) / (maximo - minimo)) * 100;
+  return Math.max(0, Math.min(100, pct));
+}

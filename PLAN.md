@@ -897,7 +897,7 @@ Nueva sección 3.8 del contrato de datos (aprobada por el supervisor; agrégala 
 
 Hecho cuando: `pytest` pasa y `docs/data/referencias.json` cumple el contrato con la muestra corta de R02.
 
-### [ ] R05 — Referencias en la página
+### [x] R05 — Referencias en la página
 
 Solo vistas; los cálculos van en `calc.js` con pruebas.
 

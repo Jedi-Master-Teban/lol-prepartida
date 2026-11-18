@@ -791,3 +791,13 @@ El commit `d83f432` se llamó "r02b" pero contiene R03 (`metricas_por_rol`). No 
 - Causa: Riot cifra el PUUID por clave de API. Con la clave personal la cuenta llegó con otro PUUID; la base local quedó con dos filas en `jugador` (77 partidas con el PUUID viejo, 0 con el nuevo) y `exportar` toma la más reciente.
 - Arreglo: `ingest._migrar_puuid` pasa participantes al PUUID nuevo y borra rango, maestrías y la fila vieja de la misma cuenta (Riot ID); `exportar` se niega a escribir si el jugador no tiene partidas (el CLI devuelve 2 con mensaje). 3 pruebas nuevas; suite 59 de 59. Probado sobre una copia de la base real: 1 jugador, 77 partidas.
 - Datos de la página restaurados desde d83f432 en la carpeta de trabajo.
+
+## Supervisor — R05 implementada y revisada por el supervisor (2026-11-17)
+- `calc.js`: `METRICAS_REFERENCIA`, `rolDeReferencia`, `valoresDelRol`, `brechaIqr`, `mayorBrecha`, `textoDistancia`, `posicionEnRegla`; 15 pruebas nuevas (33 de 33 en verde).
+- `datos.js`: `referencias.json` es opcional (sin él la página carga igual).
+- Inicio: regla bajo CS al 10, oro al 15 y muertes antes del 14 (franja central de Oro, marca de la mediana de cada rango disponible y punto del jugador). El valor del jugador se calcula solo con sus partidas del rol principal, porque la referencia es por rol. Bloque "Tu brecha más grande frente a Oro".
+- Línea: curva discontinua "Mediana en Oro" del rol elegido (rol principal con "Todas").
+- Arreglo previo encontrado al revisar: los `onerror` de imágenes armaban el texto con el nombre dentro de comillas y los nombres con apóstrofo (Kog'Maw, Kai'Sa) rompían el JavaScript. Ahora usan `this.alt` (7 casos en partidas.js e inicio.js).
+- Revisión en Chrome sin interfaz (Playwright) con los datos reales: 1280 y 390 px sin desborde en Inicio y Línea (altura de Inicio 1258 y 2299 px); 3 reglas; curva de Oro en mid y ADC; sin `referencias.json` no hay reglas ni bloque, las cinco vistas cargan sin errores de JavaScript. Las imágenes de Data Dragon no cargan en ese entorno (sin red), así que falta verlas en el navegador real.
+- Resultado con datos reales (mid, 51 partidas): CS al 10 57.3 frente a 65.0 de Oro (brecha 0.43 rangos intercuartílicos, la mayor); oro al 15 −335 frente a 0 (0.17); muertes antes del 14 1.53 frente a 2.00 (mejor que Oro).
+- PUNTO DE CONTROL 4: números contrastados con la muestra (sección R04). Pendiente: ver la página publicada en el navegador real. Sigue R06.

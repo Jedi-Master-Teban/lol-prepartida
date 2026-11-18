@@ -1,7 +1,17 @@
 /* Vista Inicio (sección 1b, T06/T06b/T06c/T06d de PLAN.md).
    Recibe datos ya calculados y solo dibuja. */
 
-import { agrupar, resumen, tendencia } from "../calc.js";
+import {
+  agrupar,
+  resumen,
+  tendencia,
+  METRICAS_REFERENCIA,
+  rolDeReferencia,
+  valoresDelRol,
+  mayorBrecha,
+  textoDistancia,
+  posicionEnRegla,
+} from "../calc.js";
 import { urlCampeonRetrato } from "../imagenes.js";
 import { token } from "../tema.js";
 
@@ -154,7 +164,7 @@ export function render(container, datos) {
     sparkPool.push((victoriasAcum / (i + 1)) * 100);
   }
 
-  tarjetaIndicador(
+  const tarjetaCs = tarjetaIndicador(
     indicadores,
     "CS al minuto 10",
     `${formatoNumero(res.cs10)}`,
@@ -163,7 +173,7 @@ export function render(container, datos) {
     sparkCs,
     token("victoria")
   );
-  tarjetaIndicador(
+  const tarjetaOro = tarjetaIndicador(
     indicadores,
     "Oro al minuto 15",
     numeroConSigno(Math.round(res.difOro15 ?? 0)),
@@ -172,7 +182,7 @@ export function render(container, datos) {
     sparkOro,
     res.difOro15 < 0 ? token("derrota") : token("victoria")
   );
-  tarjetaIndicador(
+  const tarjetaMuertes = tarjetaIndicador(
     indicadores,
     "Muertes antes del 14",
     muertes14Texto,
@@ -191,6 +201,15 @@ export function render(container, datos) {
     `${partidasPool} partidas`,
     sparkPool.length ? sparkPool : null,
     token("acento")
+  );
+
+  // --- Referencias por rango (R05): solo si existe referencias.json ---
+  renderReferencias(
+    container,
+    datos.referencias,
+    partidas,
+    perfil,
+    { cs_10: tarjetaCs, dif_oro_15: tarjetaOro, muertes_14: tarjetaMuertes }
   );
 
   // --- Franja del pool (bajo los indicadores) ---
@@ -213,7 +232,7 @@ export function render(container, datos) {
     enlace.href = "#pool";
     enlace.className = "carta-pool";
     enlace.innerHTML = `
-      <img class="retrato-pool" src="${urlCampeonRetrato(campeon, meta.version_ddragon)}" alt="${campeon}" onerror="this.style.display='none'; this.nextElementSibling.textContent='${campeon}';">
+      <img class="retrato-pool" src="${urlCampeonRetrato(campeon, meta.version_ddragon)}" alt="${campeon}" onerror="this.style.display='none'; this.nextElementSibling.textContent=this.alt;">
       <span class="nombre-pool-fallback" style="display:none">${campeon}</span>
       <div>
         <div class="nombre-pool">${campeon}</div>
@@ -363,4 +382,129 @@ export function render(container, datos) {
     leyenda.appendChild(item);
   }
   poolVs.appendChild(leyenda);
+}
+
+/* --- Referencias por rango (R05) --- */
+
+const ORDEN_TIERS = ["SILVER", "GOLD", "PLATINUM", "EMERALD", "DIAMOND"];
+const ROL_ESPANOL = { MIDDLE: "mid", BOTTOM: "ADC", TOP: "top", JUNGLE: "jungla", UTILITY: "soporte" };
+const TIER_REFERENCIA = "GOLD";
+
+function formatoMetrica(valor, decimales) {
+  if (valor == null) return "—";
+  if (decimales === 0) return numeroConSigno(Math.round(valor));
+  return valor.toFixed(decimales);
+}
+
+function tiersConRol(referencias, rol) {
+  return ORDEN_TIERS.filter((t) => referencias.rangos[t] && referencias.rangos[t][rol]);
+}
+
+function textoMuestra(refRol) {
+  const n = refRol.observaciones;
+  return `${n} observaciones${refRol.muestra_pequena ? " · muestra pequeña" : ""}`;
+}
+
+function reglaReferencia(tarjeta, metrica, valor, nPartidas, referencias, rol) {
+  const tiers = tiersConRol(referencias, rol);
+  const oro = referencias.rangos[TIER_REFERENCIA][rol];
+  const pOro = oro[metrica.clave];
+  if (!pOro || pOro.p50 == null) return;
+
+  // Dominio: banda central de Oro, medianas de cada rango y el valor del jugador, con margen.
+  const puntos = [pOro.p25, pOro.p75, ...tiers.map((t) => referencias.rangos[t][rol][metrica.clave].p50)];
+  if (valor != null) puntos.push(valor);
+  let minimo = Math.min(...puntos);
+  let maximo = Math.max(...puntos);
+  const margen = (maximo - minimo) * 0.1 || 1;
+  minimo -= margen;
+  maximo += margen;
+
+  const bloque = document.createElement("div");
+  bloque.className = "referencia";
+
+  const regla = document.createElement("div");
+  regla.className = "regla";
+  const banda = document.createElement("div");
+  banda.className = "regla-banda";
+  const izq = posicionEnRegla(pOro.p25, minimo, maximo);
+  banda.style.left = `${izq}%`;
+  banda.style.width = `${posicionEnRegla(pOro.p75, minimo, maximo) - izq}%`;
+  banda.title = `Mitad central de Oro: ${formatoMetrica(pOro.p25, metrica.decimales)} a ${formatoMetrica(pOro.p75, metrica.decimales)}`;
+  regla.appendChild(banda);
+
+  for (const t of tiers) {
+    const p50 = referencias.rangos[t][rol][metrica.clave].p50;
+    if (p50 == null) continue;
+    const marca = document.createElement("div");
+    marca.className = `regla-marca tier-${t.toLowerCase()}`;
+    marca.style.left = `${posicionEnRegla(p50, minimo, maximo)}%`;
+    marca.title = `Mediana en ${TIER_ESPANOL[t]}: ${formatoMetrica(p50, metrica.decimales)}`;
+    marca.innerHTML = `<span>${TIER_ESPANOL[t]}</span>`;
+    regla.appendChild(marca);
+  }
+
+  if (valor != null) {
+    const punto = document.createElement("div");
+    punto.className = "regla-punto";
+    punto.style.left = `${posicionEnRegla(valor, minimo, maximo)}%`;
+    punto.title = `Tú: ${formatoMetrica(valor, metrica.decimales)}`;
+    regla.appendChild(punto);
+  }
+  bloque.appendChild(regla);
+
+  const rolTexto = ROL_ESPANOL[rol] || rol;
+  const texto = document.createElement("div");
+  texto.className = "referencia-texto";
+  const distancia =
+    valor != null ? ` · ${textoDistancia(valor, pOro.p50, metrica.mayorEsMejor, metrica.decimales)}` : "";
+  texto.innerHTML = `Mediana en Oro (${rolTexto}): <strong>${formatoMetrica(pOro.p50, metrica.decimales)}</strong>${distancia}`;
+  bloque.appendChild(texto);
+
+  const detalle = document.createElement("div");
+  detalle.className = "referencia-detalle suave";
+  detalle.textContent = `Tú en ${rolTexto}: ${formatoMetrica(valor, metrica.decimales)} (${nPartidas} partidas) · Oro: ${textoMuestra(oro)}`;
+  bloque.appendChild(detalle);
+
+  tarjeta.appendChild(bloque);
+}
+
+function bloqueBrecha(container, valores, oroRol, rol) {
+  const rolTexto = ROL_ESPANOL[rol] || rol;
+  const brecha = mayorBrecha(valores, oroRol);
+  const tarjeta = document.createElement("article");
+  tarjeta.className = "tarjeta brecha";
+  if (!brecha) {
+    tarjeta.innerHTML = `
+      <h3>Tu brecha más grande frente a Oro</h3>
+      <p>En ${rolTexto} estás a la par o por encima de la mediana de Oro en las tres métricas.</p>`;
+    container.appendChild(tarjeta);
+    return;
+  }
+  const m = METRICAS_REFERENCIA.find((x) => x.clave === brecha.metrica);
+  const p = oroRol[m.clave];
+  const valor = valores[m.clave];
+  tarjeta.innerHTML = `
+    <h3>Tu brecha más grande frente a Oro</h3>
+    <p class="brecha-titulo"><strong>${m.titulo}</strong> · ${textoDistancia(valor, p.p50, m.mayorEsMejor, m.decimales)}</p>
+    <p>Tienes ${formatoMetrica(valor, m.decimales)} en ${rolTexto}; la mediana de Oro es ${formatoMetrica(p.p50, m.decimales)}.
+    La mitad central de los jugadores de Oro está entre ${formatoMetrica(p.p25, m.decimales)} y ${formatoMetrica(p.p75, m.decimales)}:
+    tu distancia equivale a ${brecha.brecha.toFixed(2)} veces el ancho de esa franja, la mayor de tus tres métricas.
+    Es tu prioridad de entrenamiento.</p>
+    <p class="suave">Oro: ${textoMuestra(oroRol)} · tus ${valores.partidas} partidas de ${rolTexto}</p>`;
+  container.appendChild(tarjeta);
+}
+
+function renderReferencias(container, referencias, partidas, perfil, tarjetas) {
+  const rol = rolDeReferencia(perfil);
+  if (!referencias || !referencias.rangos || !referencias.rangos[TIER_REFERENCIA]) return;
+  const oroRol = referencias.rangos[TIER_REFERENCIA][rol];
+  if (!oroRol) return;
+  const valores = valoresDelRol(partidas, rol);
+  for (const m of METRICAS_REFERENCIA) {
+    if (tarjetas[m.clave]) {
+      reglaReferencia(tarjetas[m.clave], m, valores[m.clave], valores.partidas, referencias, rol);
+    }
+  }
+  bloqueBrecha(container, valores, oroRol, rol);
 }

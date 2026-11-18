@@ -1,7 +1,7 @@
 /* Vista Línea (sección 1b, T08b de PLAN.md).
    Recibe datos ya calculados y solo dibuja. */
 
-import { curvaPromedio } from "../calc.js";
+import { curvaPromedio, rolDeReferencia } from "../calc.js";
 import { token } from "../tema.js";
 
 function formatoNumero(valor, decimales = 1) {
@@ -58,7 +58,7 @@ function filtrar(partidas, campeon, posicion) {
 }
 
 export function render(container, datos) {
-  const { partidas, curvas, meta } = datos;
+  const { partidas, curvas, meta, referencias } = datos;
   const metaCs10 = meta.perfil.meta_cs_10;
   const pool = meta.perfil.pool;
   container.innerHTML = "";
@@ -248,6 +248,28 @@ export function render(container, datos) {
     const pendiente = metaCs10 / 10;
     const metaLine = cs.map((_, i) => i * pendiente);
 
+    // R05: curva mediana de Oro del rol seleccionado (o del rol principal con "Todas").
+    const datasetOro = [];
+    const rolCurva =
+      selPosicion.value !== "Todas" ? selPosicion.value : rolDeReferencia(meta.perfil);
+    const oroRol =
+      referencias && referencias.rangos && referencias.rangos.GOLD
+        ? referencias.rangos.GOLD[rolCurva]
+        : null;
+    if (oroRol && Array.isArray(oroRol.curva_cs)) {
+      const rolTexto = { MIDDLE: "mid", BOTTOM: "ADC" }[rolCurva] || rolCurva;
+      datasetOro.push({
+        label: `Mediana en Oro (${rolTexto}, ${oroRol.observaciones} obs.${oroRol.muestra_pequena ? ", muestra pequeña" : ""})`,
+        data: oroRol.curva_cs,
+        borderColor: token("victoria"),
+        backgroundColor: "transparent",
+        borderWidth: 2,
+        borderDash: [3, 3],
+        pointRadius: 0,
+        fill: false,
+      });
+    }
+
     const ctxCs = document.getElementById("grafica-cs").getContext("2d");
     chartCs = new Chart(ctxCs, {
       type: "line",
@@ -273,7 +295,8 @@ export function render(container, datos) {
             borderDash: [6, 4],
             pointRadius: 0,
             fill: false
-          }
+          },
+          ...datasetOro
         ]
       },
       options: {

@@ -164,8 +164,8 @@ let chartCsDetalle = null;
     tr.innerHTML = `
       <td>${fechaLocal(p.inicio)} ${horaLocal(p.inicio)}</td>
       <td style="color:${resultadoColor};font-weight:700">${resultadoTexto}</td>
-      <td><div class="celda-con-icono"><img src="${imgPropio}" alt="${propioNombre}" class="icono-pequeno" onerror="this.style.display='none';this.nextElementSibling.textContent='${propioNombre}';"><span class="nombre-pequeno">${propioNombre}</span></div></td>
-      <td><div class="celda-con-icono">${imgRival ? `<img src="${imgRival}" alt="${rivalNombre}" class="icono-pequeno" onerror="this.style.display='none';this.nextElementSibling.textContent='${rivalNombre}';"><span class="nombre-pequeno">${rivalNombre}</span>` : "<span>—</span>"}</div></td>
+      <td><div class="celda-con-icono"><img src="${imgPropio}" alt="${propioNombre}" class="icono-pequeno" onerror="this.style.display='none';this.nextElementSibling.textContent=this.alt;"><span class="nombre-pequeno">${propioNombre}</span></div></td>
+      <td><div class="celda-con-icono">${imgRival ? `<img src="${imgRival}" alt="${rivalNombre}" class="icono-pequeno" onerror="this.style.display='none';this.nextElementSibling.textContent=this.alt;"><span class="nombre-pequeno">${rivalNombre}</span>` : "<span>—</span>"}</div></td>
       <td>${p.posicion || "—"}</td>
       <td>${p.lado || "—"}</td>
       <td>${kda}</td>
@@ -173,11 +173,11 @@ let chartCsDetalle = null;
       <td>${numeroConSigno(p.dif_oro_15)}</td>
       <td>${p.muertes_14 != null ? p.muertes_14 : "—"}</td>
       <td class="celda-iconos">
-        ${h1 != null ? `<img src="${imgH1}" alt="${nombreHechizo(h1, estaticos)}" class="icono-hechizo" onerror="this.style.display='none';this.nextElementSibling.textContent='${nombreHechizo(h1, estaticos)}';"><span class="nombre-hechizo">${nombreHechizo(h1, estaticos)}</span>` : "<span>—</span>"}
-        ${h2 != null ? `<img src="${imgH2}" alt="${nombreHechizo(h2, estaticos)}" class="icono-hechizo" onerror="this.style.display='none';this.nextElementSibling.textContent='${nombreHechizo(h2, estaticos)}';"><span class="nombre-hechizo">${nombreHechizo(h2, estaticos)}</span>` : "<span>—</span>"}
+        ${h1 != null ? `<img src="${imgH1}" alt="${nombreHechizo(h1, estaticos)}" class="icono-hechizo" onerror="this.style.display='none';this.nextElementSibling.textContent=this.alt;"><span class="nombre-hechizo">${nombreHechizo(h1, estaticos)}</span>` : "<span>—</span>"}
+        ${h2 != null ? `<img src="${imgH2}" alt="${nombreHechizo(h2, estaticos)}" class="icono-hechizo" onerror="this.style.display='none';this.nextElementSibling.textContent=this.alt;"><span class="nombre-hechizo">${nombreHechizo(h2, estaticos)}</span>` : "<span>—</span>"}
       </td>
       <td class="celda-runa">
-        ${runaId != null ? `<img src="${imgRuna}" alt="${runaNombre}" class="icono-runa" onerror="this.style.display='none';this.nextElementSibling.textContent='${runaNombre}';"><span class="nombre-runa">${runaNombre}</span>` : "<span>—</span>"}
+        ${runaId != null ? `<img src="${imgRuna}" alt="${runaNombre}" class="icono-runa" onerror="this.style.display='none';this.nextElementSibling.textContent=this.alt;"><span class="nombre-runa">${runaNombre}</span>` : "<span>—</span>"}
       </td>
     `;
 
@@ -259,7 +259,7 @@ let chartCsDetalle = null;
         compra.className = "compra-item";
         compra.title = `${nombre}`;
         compra.innerHTML = `
-          <img src="${itemUrl}" alt="${nombre}" class="icono-compra" onerror="this.style.display='none';this.nextElementSibling.textContent='${nombre}';">
+          <img src="${itemUrl}" alt="${nombre}" class="icono-compra" onerror="this.style.display='none';this.nextElementSibling.textContent=this.alt;">
           <div class="compra-minuto">${c.minuto.toFixed(1)} min</div>
         `;
         timeline.appendChild(compra);

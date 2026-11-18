@@ -841,3 +841,95 @@ img {
   box-sizing: border-box;
 }
 
+
+/* --- Referencias por rango (R05) --- */
+.referencia {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--borde);
+}
+
+.regla {
+  position: relative;
+  height: 6px;
+  margin: 8px 6px 22px;
+  border-radius: 3px;
+  background: var(--borde);
+}
+
+.regla-banda {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 3px;
+  background: rgba(212, 169, 74, 0.35);
+}
+
+.regla-marca {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 14px;
+  transform: translateX(-1px);
+  background: var(--texto-suave);
+}
+
+.regla-marca span {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  white-space: nowrap;
+  color: var(--texto-suave);
+}
+
+.regla-marca.tier-gold {
+  background: var(--acento);
+}
+
+.regla-marca.tier-gold span {
+  color: var(--acento);
+}
+
+.regla-marca.tier-diamond {
+  background: var(--victoria);
+}
+
+.regla-marca.tier-diamond span {
+  color: var(--victoria);
+}
+
+.regla-punto {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--texto);
+  border: 2px solid var(--fondo);
+}
+
+.referencia-texto {
+  font-size: 13px;
+}
+
+.referencia-detalle {
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.tarjeta.brecha {
+  margin-top: var(--espacio);
+  border-left: 3px solid var(--acento);
+}
+
+.tarjeta.brecha p {
+  margin: 6px 0 0;
+  line-height: 1.5;
+}
+
+.brecha-titulo {
+  font-size: 15px;
+}
