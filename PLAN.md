@@ -161,6 +161,45 @@ Origen:
 Verifica cada patrón abriendo una URL real en el navegador la primera vez que lo uses.
 Si alguno falla, detente y anótalo en la bitácora.
 
+### 3.8 `referencias.json` (fase 2)
+
+Solo agregados de la muestra de otros rangos (`data/muestra.duckdb`). Lo escribe `prepartida exportar` únicamente si existe esa base. Sin PUUIDs ni `match_id`.
+
+```json
+{
+  "generado": "2026-11-20T15:00:00Z",
+  "parches": ["26.22", "26.23"],
+  "rangos": {
+    "GOLD": {
+      "partidas": 300,
+      "MIDDLE": {
+        "observaciones": 598,
+        "cs_10":      {"p25": 61.0, "p50": 68.0, "p75": 75.0},
+        "dif_oro_10": {"p25": -310, "p50": 0, "p75": 300},
+        "dif_oro_15": {"p25": -620, "p50": 0, "p75": 610},
+        "muertes_14": {"p25": 0, "p50": 1, "p75": 2},
+        "por_muertes_14": [
+          {"muertes": "0", "partidas": 210, "tasa": 58.1},
+          {"muertes": "1", "partidas": 190, "tasa": 49.5},
+          {"muertes": "2+", "partidas": 198, "tasa": 41.2}
+        ],
+        "curva_cs": [0, 0, 4, 11, ...]
+      },
+      "BOTTOM": { ... }
+    },
+    "SILVER": { ... },
+    "DIAMOND": { ... }
+  }
+}
+```
+
+- `partidas`: partidas útiles del rango (sin remakes de menos de 5 min).
+- `observaciones`: filas de ese rol (2 por partida: ambos equipos).
+- `dif_oro_15` y `muertes_14` excluyen las partidas de menos de 15 min; `por_muertes_14` también.
+- `tasa` es `null` si el cubo no tiene partidas.
+- `curva_cs`: mediana del CS acumulado del minuto 0 al 20 (21 valores; `null` si no hay cuadros).
+- `muestra_pequena: true` aparece solo si el rol tiene menos de 100 observaciones.
+
 ## 4. Diseño visual
 
 Tema oscuro. Todos los valores viven en `docs/css/tokens.css` como variables CSS.
@@ -816,7 +855,7 @@ todos los participantes de un rol.
 
 Hecho cuando: `pytest` pasa, incluida la prueba de regresión.
 
-### [ ] R04 — Exportar `referencias.json`
+### [x] R04 — Exportar `referencias.json`
 
 Nueva sección 3.8 del contrato de datos (aprobada por el supervisor; agrégala a la sección 3):
 

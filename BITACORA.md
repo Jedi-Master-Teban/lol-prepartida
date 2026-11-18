@@ -775,3 +775,13 @@ R02 y R02b marcadas. Sigue R03.
 - Pruebas nuevas (5): regresión contra `partidas_del_jugador`, ambos equipos y roles pedidos, `tier_muestra`, menos de 5 min, menos de 15 min. Suite: 50 de 50 en verde.
 - Con la muestra real GOLD: 289 partidas útiles (11 remakes fuera), 1156 filas (578 MIDDLE, 578 BOTTOM), 1140 con métricas a los 15; todas con rival; diferencias espejo suman 0. Medianas Oro: cs_10 67, muertes antes del 14: 2.
 - Sigue R04.
+
+## Supervisor — Nota de historial (2026-11-17)
+El commit `d83f432` se llamó "r02b" pero contiene R03 (`metricas_por_rol`). No se reescribe porque ya está publicado.
+
+## Supervisor — R04 implementada por el supervisor (2026-11-17)
+- Nuevo `src/prepartida/referencias.py` con `construir(con)`; `cli.py` escribe `referencias.json` al final de `exportar` solo si existe `data/muestra.duckdb`.
+- Contrato agregado a PLAN.md como sección 3.8 (con las reglas de remakes y partidas cortas de R03).
+- Pruebas nuevas en `tests/test_referencias.py` (6): contrato, tasas por muertes, privacidad (sin PUUID ni match_id), varios rangos, exportar con y sin muestra. Suite: 56 de 56 en verde.
+- Con la muestra real GOLD (289 partidas, 578 obs. por rol, 0 fugas de identificadores). Mid: cs_10 p25/p50/p75 = 57/65/75; dif_oro_15 p75 = 958. ADC: cs_10 = 60/68/75. Victorias de Oro según muertes antes del 14 (mid): 0 → 62.7 %, 1 → 56.8 %, 2+ → 44.3 %.
+- Falta: el usuario ejecuta `prepartida exportar` para generar `docs/data/referencias.json` y lo sube. Sigue R05.

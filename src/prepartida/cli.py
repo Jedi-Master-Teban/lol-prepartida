@@ -10,7 +10,7 @@ from pathlib import Path
 
 import duckdb
 
-from prepartida import db, ddragon, estado, exportar, ingest, muestra
+from prepartida import db, ddragon, estado, exportar, ingest, muestra, referencias
 from prepartida.config import leer_config
 from prepartida.muestra import PAGINAS_MAX_DEFAULT
 from prepartida.perfil import leer_perfil
@@ -94,7 +94,22 @@ def _cmd_exportar(args: argparse.Namespace) -> int:
     print(f"Datos escritos en {destino}")
     for nombre, n in conteo.items():
         print(f"  {nombre}: {n}")
+    _exportar_referencias(cfg.data_dir / "muestra.duckdb", destino)
     return 0
+
+
+def _exportar_referencias(ruta_muestra: Path, destino: Path) -> None:
+    """Escribe referencias.json solo si existe la base de muestra (fase 2)."""
+    if not ruta_muestra.exists():
+        return
+    con = duckdb.connect(str(ruta_muestra), read_only=True)
+    try:
+        datos = referencias.construir(con)
+    finally:
+        con.close()
+    exportar._escribir(destino, "referencias.json", datos)
+    rangos = ", ".join(f"{t}: {b['partidas']}" for t, b in datos["rangos"].items())
+    print(f"  referencias.json: {rangos or 'sin rangos'}")
 
 
 def _cmd_publicar(args: argparse.Namespace) -> int:
