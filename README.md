@@ -3,9 +3,21 @@
 Herramienta personal de preparación pre-partida para SoloQ de League of Legends.
 Documento de diseño: `claude/herramienta-prepartida-lol.md` en el proyecto de Claude.
 
-## Estado: fase 1b (página estática en GitHub Pages)
+**Página publicada:** https://jedi-master-teban.github.io/lol-prepartida/
 
-Hecho:
+## Estado: fase 2 (referencias por rango) casi terminada
+
+Fase 2, hecha (R01 a R05):
+- Muestra de partidas de otro rango (`prepartida muestra --tier GOLD`), repartida entre las cuatro
+  divisiones, en una base aparte (`data/muestra.duckdb`).
+- `referencias.json`: percentiles, tasas por muertes tempranas y curva mediana de CS por rango y rol,
+  sin identificadores de otros jugadores.
+- En la página: reglas frente a la mediana de Oro en Inicio, bloque "Tu brecha más grande frente a
+  Oro" y curva de Oro en Línea.
+
+Pendiente de la fase 2: R06 (actualización semanal de las referencias en GitHub Actions).
+
+Fase 1b, hecha (página estática en GitHub Pages):
 - Cliente de la API (interfaz de programación) de Riot con limitador de tasa
   (20 peticiones por segundo y 100 cada 2 minutos) y reintentos.
 - Ingesta de perfil (rango, maestrías) e historial de partidas con línea de tiempo.
