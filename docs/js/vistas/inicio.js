@@ -11,6 +11,7 @@ import {
   mayorBrecha,
   textoDistancia,
   posicionEnRegla,
+  agruparMarcas,
 } from "../calc.js";
 import { urlCampeonRetrato } from "../imagenes.js";
 import { token } from "../tema.js";
@@ -433,14 +434,18 @@ function reglaReferencia(tarjeta, metrica, valor, nPartidas, referencias, rol) {
   banda.title = `Mitad central de Oro: ${formatoMetrica(pOro.p25, metrica.decimales)} a ${formatoMetrica(pOro.p75, metrica.decimales)}`;
   regla.appendChild(banda);
 
-  for (const t of tiers) {
-    const p50 = referencias.rangos[t][rol][metrica.clave].p50;
-    if (p50 == null) continue;
+  const marcasTier = tiers.map((t) => ({
+    nombre: TIER_ESPANOL[t],
+    valor: referencias.rangos[t][rol][metrica.clave].p50,
+  }));
+  for (const g of agruparMarcas(marcasTier, minimo, maximo)) {
     const marca = document.createElement("div");
-    marca.className = `regla-marca tier-${t.toLowerCase()}`;
-    marca.style.left = `${posicionEnRegla(p50, minimo, maximo)}%`;
-    marca.title = `Mediana en ${TIER_ESPANOL[t]}: ${formatoMetrica(p50, metrica.decimales)}`;
-    marca.innerHTML = `<span>${TIER_ESPANOL[t]}</span>`;
+    const unico = g.texto === "Oro" ? "tier-gold" : g.texto === "Diamante" ? "tier-diamond" : "";
+    marca.className = `regla-marca ${unico} fila-${g.fila}`.trim();
+    marca.style.left = `${posicionEnRegla(g.valor, minimo, maximo)}%`;
+    marca.title = `Mediana en ${g.texto}: ${formatoMetrica(g.valor, metrica.decimales)}`;
+    marca.innerHTML = `<span>${g.texto}</span>`;
+    if (g.fila === 1) regla.classList.add("dos-filas");
     regla.appendChild(marca);
   }
 

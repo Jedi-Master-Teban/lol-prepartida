@@ -933,3 +933,16 @@ img {
 .brecha-titulo {
   font-size: 15px;
 }
+
+/* Etiquetas de la regla que se funden o alternan de fila (R05b) */
+.regla.dos-filas {
+  margin-bottom: 38px;
+}
+
+.regla-marca.fila-1 span {
+  top: 30px;
+}
+
+.regla-marca span {
+  max-width: 190px;
+}

@@ -176,3 +176,32 @@ export function posicionEnRegla(valor, minimo, maximo) {
   const pct = ((valor - minimo) / (maximo - minimo)) * 100;
   return Math.max(0, Math.min(100, pct));
 }
+
+/* Agrupa las marcas de una regla para que sus etiquetas no se tapen.
+   - Marcas con el mismo valor se funden en una ("Plata · Oro · Diamante").
+   - Marcas distintas pero a menos de `umbralPct` % de distancia alternan de fila.
+   Devuelve [{ texto, valor, fila }] ordenado por valor. */
+export function agruparMarcas(marcas, minimo, maximo, umbralPct = 14) {
+  const validas = marcas
+    .filter((m) => m.valor != null)
+    .sort((a, b) => a.valor - b.valor);
+  const grupos = [];
+  for (const m of validas) {
+    const ultimo = grupos[grupos.length - 1];
+    if (ultimo && ultimo.valor === m.valor) {
+      ultimo.nombres.push(m.nombre);
+    } else {
+      grupos.push({ valor: m.valor, nombres: [m.nombre] });
+    }
+  }
+  let filaAnterior = -1;
+  let posAnterior = null;
+  return grupos.map((g) => {
+    const pos = posicionEnRegla(g.valor, minimo, maximo);
+    const cerca = posAnterior != null && pos - posAnterior < umbralPct;
+    const fila = cerca ? (filaAnterior + 1) % 2 : 0;
+    filaAnterior = fila;
+    posAnterior = pos;
+    return { texto: g.nombres.join(" · "), valor: g.valor, fila };
+  });
+}

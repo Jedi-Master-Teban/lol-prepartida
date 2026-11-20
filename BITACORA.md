@@ -809,3 +809,10 @@ El commit `d83f432` se llamó "r02b" pero contiene R03 (`metricas_por_rol`). No 
 - 6 pruebas nuevas; suite 65 de 65. YAML válido; sin claves.
 - Con la muestra real: 286 de 289 partidas siguen dentro de los 30 días; medianas sin cambio.
 - Falta: ejecución manual en verde (la primera tarda unos 45 min: descarga unas 900 partidas).
+
+## Supervisor — R06 cerrada y PUNTO DE CONTROL 4 (2026-11-20)
+- Ejecución manual #1 de "Actualizar referencias" en verde (54 min 58 s): Plata, Oro y Diamante con 300 de 300 partidas (75 por división). El bot publicó `docs/data/referencias.json` en el commit 62a2637 (286/283/288 partidas útiles; sin PUUID ni identificadores de partida). El aviso de Node 20 de las acciones es inofensivo.
+- Medianas publicadas (mid, CS al 10): Plata 64, Oro 66, Diamante 75; ADC: 63, 66, 75.
+- Página publicada verificada en el navegador integrado: tres reglas con marcas, bloque de brecha ("CS al 10: te faltan 8.7"), sin errores ni desborde horizontal.
+- Ajuste visual (R05b): las etiquetas de la regla se tapaban cuando las medianas coincidían (Plata/Oro/Diamante en oro al 15 y muertes). Nueva función `agruparMarcas` en `calc.js` (funde valores iguales en "Plata · Oro · Diamante" y alterna fila si están cerca); 4 pruebas nuevas, 37 de 37. Python sin cambios.
+- Pendiente: el usuario ve la página (Cmd+Shift+R) y hace `git pull` antes del próximo commit (el bot hizo uno). Luego, fase 3 (D01).

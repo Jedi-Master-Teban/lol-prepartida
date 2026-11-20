@@ -14,6 +14,7 @@ import {
   mayorBrecha,
   textoDistancia,
   posicionEnRegla,
+  agruparMarcas,
 } from "./calc.js";
 
 describe("tasaAjustada", () => {
@@ -255,5 +256,42 @@ describe("posicionEnRegla", () => {
   test("recorta fuera del rango", () => {
     assert.strictEqual(posicionEnRegla(150, 0, 100), 100);
     assert.strictEqual(posicionEnRegla(-5, 0, 100), 0);
+  });
+});
+
+describe("agruparMarcas", () => {
+  const sep = (v) => ({ valor: v });
+  test("valores iguales se funden en una sola marca con todos los nombres", () => {
+    const g = agruparMarcas(
+      [{ nombre: "Plata", valor: 2 }, { nombre: "Oro", valor: 2 }, { nombre: "Diamante", valor: 2 }],
+      0, 10
+    );
+    assert.strictEqual(g.length, 1);
+    assert.strictEqual(g[0].texto, "Plata · Oro · Diamante");
+    assert.strictEqual(g[0].valor, 2);
+    assert.strictEqual(g[0].fila, 0);
+  });
+  test("valores lejanos quedan separados y en la misma fila", () => {
+    const g = agruparMarcas(
+      [{ nombre: "Plata", valor: 10 }, { nombre: "Oro", valor: 50 }, { nombre: "Diamante", valor: 90 }],
+      0, 100
+    );
+    assert.deepStrictEqual(g.map((x) => x.texto), ["Plata", "Oro", "Diamante"]);
+    assert.deepStrictEqual(g.map((x) => x.fila), [0, 0, 0]);
+  });
+  test("valores cercanos pero distintos alternan de fila para no tapar la etiqueta", () => {
+    const g = agruparMarcas(
+      [{ nombre: "Plata", valor: 64 }, { nombre: "Oro", valor: 66 }, { nombre: "Diamante", valor: 75 }],
+      40, 90, 12
+    );
+    assert.strictEqual(g.length, 3);
+    assert.notStrictEqual(g[0].fila, g[1].fila);
+  });
+  test("ordena por valor y descarta los nulos", () => {
+    const g = agruparMarcas(
+      [{ nombre: "Diamante", valor: 9 }, { nombre: "Plata", valor: null }, { nombre: "Oro", valor: 1 }],
+      0, 10
+    );
+    assert.deepStrictEqual(g.map((x) => x.texto), ["Oro", "Diamante"]);
   });
 });

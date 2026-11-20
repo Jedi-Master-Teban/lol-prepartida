@@ -919,7 +919,7 @@ carga sin errores; `node --test docs/js/calc.test.js` y `pytest` pasan.
 
 **PUNTO DE CONTROL 4.** Detente. El supervisor revisa los números contra la muestra y la página.
 
-### [ ] R06 — Actualización semanal de las referencias
+### [x] R06 — Actualización semanal de las referencias
 
 - `.github/workflows/referencias.yml`: `schedule` semanal (lunes, minuto no redondo) y `workflow_dispatch`.
 - Restaura y guarda `data/muestra.duckdb` con `actions/cache@v4` (clave con `github.run_id`,
