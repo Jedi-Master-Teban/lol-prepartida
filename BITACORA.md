@@ -816,3 +816,10 @@ El commit `d83f432` se llamó "r02b" pero contiene R03 (`metricas_por_rol`). No 
 - Página publicada verificada en el navegador integrado: tres reglas con marcas, bloque de brecha ("CS al 10: te faltan 8.7"), sin errores ni desborde horizontal.
 - Ajuste visual (R05b): las etiquetas de la regla se tapaban cuando las medianas coincidían (Plata/Oro/Diamante en oro al 15 y muertes). Nueva función `agruparMarcas` en `calc.js` (funde valores iguales en "Plata · Oro · Diamante" y alterna fila si están cerca); 4 pruebas nuevas, 37 de 37. Python sin cambios.
 - Pendiente: el usuario ve la página (Cmd+Shift+R) y hace `git pull` antes del próximo commit (el bot hizo uno). Luego, fase 3 (D01).
+
+## Supervisor — Paquetes de la fase 3 para OpenCode (2026-11-20)
+- Nuevo directorio `tareas/` con paquetes literales: `D01.md`, `D03.md`, `D04a.md` y `LEEME.md` (cómo lanzar a OpenCode). AGENTS.md tiene la sección "Paquetes de tarea".
+- Pruebas en rojo a propósito (escritas por el supervisor): `tests/test_conocimiento.py`, `tests/test_composicion.py`, `tests/test_reglas.py`. Comprobé que se pueden cumplir con una implementación de referencia (80 de 80 pasan) y luego la retiré.
+- `reglas/briefing.toml`: primer lote de 8 reglas y pesos provisionales (los umbrales se ajustan en el PUNTO DE CONTROL 5).
+- PLAN.md: D04 se divide en D04a (intérprete, listo) y D04b (puntuación del pool, bloqueada). D02, D04b, D05 y D06 quedan BLOQUEADAS para que OpenCode se detenga tras D04a.
+- Orden para OpenCode: D01, D03, D04a (una sesión y un commit por tarea).

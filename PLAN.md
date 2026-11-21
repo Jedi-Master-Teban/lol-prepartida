@@ -968,6 +968,8 @@ Decisiones del supervisor para esta fase:
 
 ### [ ] D01 — Ficha automática de campeones
 
+**Paquete detallado: `tareas/D01.md` (síguelo literalmente; las pruebas ya existen en `tests/test_conocimiento.py`).**
+
 `src/prepartida/conocimiento.py` y el comando `prepartida conocimiento --generar`, que escribe
 `conocimiento/campeones.toml` con una entrada por campeón, calculada solo de Data Dragon:
 
@@ -991,7 +993,9 @@ verificado = false
 Hecho cuando: `pytest` pasa (incluida la prueba de que regenerar conserva lo curado) y el archivo tiene
 todos los campeones de `estaticos`.
 
-### [ ] D02 — Borrador de los campos curados con NIM
+### [ ] D02 — Borrador de los campos curados con NIM — BLOQUEADA
+
+BLOQUEADA hasta que el usuario defina `NIM_MODELO` en su `.env` y el supervisor entregue el paquete `tareas/D02.md`.
 
 Los campos `enganche` (0–3), `control` (0–3), `escala` ("temprano", "medio", "tardio") y `arquetipo`
 (uno de: "asesino", "mago_control", "mago_poke", "tirador", "tanque", "luchador", "encantador",
@@ -1012,6 +1016,8 @@ cuántos campeones quedaron con borrador. **Detente:** el usuario revisa el borr
 
 ### [ ] D03 — Perfil de una composición
 
+**Paquete detallado: `tareas/D03.md` (las pruebas ya existen en `tests/test_composicion.py`). No depende de D02: usa fichas inventadas en las pruebas.**
+
 `src/prepartida/composicion.py`, funciones puras con pruebas:
 
 - `perfil_equipo(campeones: list[str], fichas) -> dict` con: proporción de daño físico y mágico,
@@ -1023,21 +1029,19 @@ cuántos campeones quedaron con borrador. **Detente:** el usuario revisa el borr
 
 Hecho cuando: `pytest` pasa.
 
-### [ ] D04 — Reglas del briefing y puntuación del pool
+### [ ] D04a — Reglas del briefing: intérprete
 
-1. `reglas/briefing.toml` con reglas declarativas `condicion → hecho`. El supervisor escribe el primer
-   lote de reglas (no las inventes): la tarea es el **intérprete**. Formato:
+**Paquete detallado: `tareas/D04a.md` (las pruebas ya existen en `tests/test_reglas.py`; `reglas/briefing.toml` ya está escrito por el supervisor).**
 
-```toml
-[[regla]]
-id = "enemigo_fisico"
-si = "enemigo.prop_fisico >= 0.7"
-hecho = "El equipo enemigo hace casi todo su daño físico: prioriza armadura en tu primer ítem defensivo."
-categoria = "compras"
-```
+`src/prepartida/reglas.py`: `evaluar_condicion`, `cargar_reglas` y `reglas_aplicables`. Evalúa solo comparaciones simples
+(`>=`, `<=`, `>`, `<`, `==`, `!=` y `and`) sobre el contexto de D03. No uses `eval`.
 
-   El intérprete evalúa solo comparaciones simples sobre los campos de `perfil_equipo` y `contraste`
-   (`>=`, `<=`, `==`, `and`). No uses `eval`.
+Hecho cuando: `pytest` pasa (todo el conjunto, incluidas las pruebas de D01 y D03).
+
+### [ ] D04b — Puntuación del pool y fuentes de runas, hechizos e ítems — BLOQUEADA
+
+BLOQUEADA: el supervisor entrega el paquete `tareas/D04b.md` después de D04a.
+
 2. `puntuar_pool(seleccion, historial, fichas) -> list[dict]`: una fila por campeón del pool jugable en
    el rol del jugador, con una puntuación que es la **suma explicada** de componentes, cada uno con su
    texto y su número de partidas:
@@ -1051,7 +1055,9 @@ categoria = "compras"
 
 Hecho cuando: `pytest` pasa con un caso completo de selección inventado en el test.
 
-### [ ] D05 — Servidor local y entrada del draft
+### [ ] D05 — Servidor local y entrada del draft — BLOQUEADA
+
+BLOQUEADA hasta que el supervisor entregue el paquete `tareas/D05.md` (tarea visual: requiere un modelo más capaz).
 
 - `prepartida asistente` levanta FastAPI en `127.0.0.1:8765` y abre el navegador.
 - Página `asistente/index.html`: dos columnas de 5 casillas (aliados y enemigos) con autocompletado
@@ -1065,7 +1071,9 @@ Hecho cuando: `pytest` pasa con un caso completo de selección inventado en el t
 Hecho cuando (navegador real; si no hay, dilo y no marques): con una selección de prueba la página muestra
 las secciones sin errores en la consola, y con dos casillas enemigas vacías también funciona.
 
-### [ ] D06 — Redacción del briefing con NIM
+### [ ] D06 — Redacción del briefing con NIM — BLOQUEADA
+
+BLOQUEADA hasta que el supervisor entregue el paquete `tareas/D06.md`.
 
 - `src/prepartida/redaccion.py`: recibe los hechos de D05 y pide a NIM dos textos (corto: máximo 5
   líneas; largo: máximo 250 palabras), en español, en segunda persona.

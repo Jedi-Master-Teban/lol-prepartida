@@ -49,6 +49,13 @@ Detente, no improvises, y escribe la duda en `BITACORA.md` si:
 - una prueba existente falla y no sabes por qué;
 - la tarea está marcada BLOQUEADA.
 
+## Paquetes de tarea (`tareas/`)
+
+Si la tarea tiene un paquete en `tareas/<id>.md`, síguelo **literalmente**. Las pruebas del paquete ya están
+escritas por el supervisor y fallan a propósito: tu trabajo es hacerlas pasar. No las edites, no las borres,
+no las marques como omitidas y no cambies `tests/conftest.py`. Si crees que una prueba está mal, detente y
+escríbelo en `BITACORA.md`. Modifica solo los archivos que el paquete te permite tocar.
+
 ## Reglas que no se rompen
 
 - **Secretos:** nunca leas en voz alta, imprimas, copies ni subas el contenido de `.env`.

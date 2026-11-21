@@ -1,0 +1,65 @@
+# Reglas del briefing (las escribe el supervisor; el código solo las interpreta).
+# Cada regla: si la condición es verdadera, el hecho se incluye en el briefing.
+# La condición compara campos de la composición. Campos disponibles:
+#   aliado.<campo> y enemigo.<campo>, con: prop_fisico, prop_magico, enganche_total,
+#     control_total, escala_dominante, n_cuerpo, n_conocidos
+#   contraste.<campo>, con: dif_enganche, dif_control, mas_enganche, mas_control,
+#     mejor_escala, enemigo_casi_todo_fisico, enemigo_casi_todo_magico, enemigo_un_tipo_dano
+# Operadores: >= <= > < == != y "and". Los textos van entre comillas dobles.
+# Categorías: pick, runas, compras, linea, mapa, victoria.
+# ESTADO: primer lote del supervisor. Los umbrales son provisionales: se ajustan en el
+# PUNTO DE CONTROL 5 comparando con partidas ya jugadas.
+
+[pesos]
+# Los usa la puntuación del pool (D04b). Provisionales.
+tasa_ajustada = 1.0
+historial_vs_arquetipo = 0.5
+encaje_equipo = 0.5
+
+[[regla]]
+id = "enemigo_fisico"
+si = "enemigo.prop_fisico >= 0.7"
+hecho = "El equipo enemigo hace casi todo su daño físico: prioriza armadura en tu primer ítem defensivo."
+categoria = "compras"
+
+[[regla]]
+id = "enemigo_magico"
+si = "enemigo.prop_magico >= 0.7"
+hecho = "El equipo enemigo hace casi todo su daño mágico: prioriza resistencia mágica en tu primer ítem defensivo."
+categoria = "compras"
+
+[[regla]]
+id = "enemigo_mucho_control"
+si = "enemigo.control_total >= 10"
+hecho = "El equipo enemigo tiene mucho control de masas: considera botas con tenacidad (Botas de Mercurio) o un ítem que te libere del control."
+categoria = "compras"
+
+[[regla]]
+id = "enemigo_mucho_enganche"
+si = "enemigo.enganche_total >= 10"
+hecho = "El equipo enemigo tiene mucho enganche: no te adelantes sin visión de los flancos y quédate cerca de tus aliados."
+categoria = "mapa"
+
+[[regla]]
+id = "aliado_todo_fisico"
+si = "aliado.prop_fisico >= 0.8 and aliado.n_conocidos >= 4"
+hecho = "Tu equipo hace casi todo su daño físico: el enemigo puede apilar armadura sin riesgo, así que un pick con daño mágico equilibra la composición."
+categoria = "pick"
+
+[[regla]]
+id = "aliado_todo_magico"
+si = "aliado.prop_magico >= 0.8 and aliado.n_conocidos >= 4"
+hecho = "Tu equipo hace casi todo su daño mágico: el enemigo puede apilar resistencia mágica sin riesgo, así que un pick con daño físico equilibra la composición."
+categoria = "pick"
+
+[[regla]]
+id = "tu_equipo_escala_mejor"
+si = "contraste.mejor_escala == \"aliado\""
+hecho = "Tu equipo escala mejor que el enemigo: evita peleas arriesgadas temprano y prioriza llegar vivo al juego medio y tardío."
+categoria = "victoria"
+
+[[regla]]
+id = "enemigo_escala_mejor"
+si = "contraste.mejor_escala == \"enemigo\""
+hecho = "El equipo enemigo escala mejor que el tuyo: busca ventaja temprano y convierte esa ventaja en objetivos antes de que lleguen a sus ítems fuertes."
+categoria = "victoria"
