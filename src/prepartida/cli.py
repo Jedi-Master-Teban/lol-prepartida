@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from datetime import datetime
@@ -10,7 +11,16 @@ from pathlib import Path
 
 import duckdb
 
-from prepartida import db, ddragon, estado, exportar, ingest, muestra, referencias
+from prepartida import (
+    db,
+    ddragon,
+    estado,
+    exportar,
+    ingest,
+    muestra,
+    referencias,
+    conocimiento,
+)
 from prepartida.config import leer_config
 from prepartida.muestra import PAGINAS_MAX_DEFAULT
 from prepartida.perfil import leer_perfil
@@ -126,6 +136,27 @@ def _exportar_referencias(ruta_muestra: Path, destino: Path) -> None:
     exportar._escribir(destino, "referencias.json", datos)
     rangos = ", ".join(f"{t}: {b['partidas']}" for t, b in datos["rangos"].items())
     print(f"  referencias.json: {rangos or 'sin rangos'}")
+
+
+def _cmd_conocimiento(args: argparse.Namespace) -> int:
+    """Genera fichas de campeones desde Data Dragon y las escribe en TOML."""
+    cfg = leer_config()
+    try:
+        version = conocimiento.version_mas_reciente(cfg.static_dir)
+    except FileNotFoundError:
+        print(
+            f"No hay datos en {cfg.static_dir}. Ejecuta primero: prepartida estaticos",
+            file=sys.stderr,
+        )
+        return 2
+    ruta_campeones = cfg.static_dir / version / "champion.json"
+    champion_json = json.loads(ruta_campeones.read_text(encoding="utf-8"))
+    destino = Path(args.destino)
+    actuales = conocimiento.leer_fichas(destino)
+    fichas = conocimiento.generar_fichas(champion_json, actuales)
+    conocimiento.escribir_fichas(fichas, destino)
+    print(f"Fichas escritas en {destino}: {len(fichas)} campeones")
+    return 0
 
 
 def _cmd_publicar(args: argparse.Namespace) -> int:
@@ -255,6 +286,15 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("referencias", help="Escribe solo docs/data/referencias.json desde la muestra")
     p.add_argument("--destino", default="docs/data", help="Carpeta de destino (docs/data)")
     p.set_defaults(func=_cmd_referencias)
+
+    p = sub.add_parser(
+        "conocimiento", help="Genera fichas automaticas de campeones desde Data Dragon"
+    )
+    p.add_argument("--generar", action="store_true", help="Genera las fichas (obligatorio por ahora)")
+    p.add_argument(
+        "--destino", default="conocimiento/campeones.toml", help="Archivo de destino"
+    )
+    p.set_defaults(func=_cmd_conocimiento)
 
     p = sub.add_parser("publicar", help="Ingesta, exporta y sube los datos a git")
     p.add_argument("--destino", default="docs/data", help="Carpeta de destino (docs/data)")

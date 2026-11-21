@@ -1,0 +1,1731 @@
+# Fichas de campeones. `dano` es una aproximación (info.attack frente a info.magic de Data Dragon).
+
+[Aatrox]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Ahri]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Akali]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Akshan]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Alistar]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Ambessa]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Amumu]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Anivia]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Annie]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Aphelios]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Ashe]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[AurelionSol]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Aurora]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Azir]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Bard]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Belveth]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Blitzcrank]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Brand]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Braum]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Briar]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Caitlyn]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Camille]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Cassiopeia]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Chogath]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Corki]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Darius]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Diana]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[DrMundo]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Draven]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Ekko]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Elise]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Assassin", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Evelynn]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Ezreal]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Fiddlesticks]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Fiora]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Fizz]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin", "Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Galio]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Gangplank]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Garen]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Gnar]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Gragas]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Graves]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Gwen]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Hecarim]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Heimerdinger]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Hwei]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Illaoi]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Irelia]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Ivern]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Janna]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[JarvanIV]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Jax]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Jayce]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Jhin]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Jinx]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[KSante]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Kaisa]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Kalista]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Karma]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Karthus]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Kassadin]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Katarina]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Kayle]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Marksman", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Kayn]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Kennen]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Khazix]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Kindred]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Kled]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[KogMaw]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Leblanc]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Assassin", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[LeeSin]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Leona]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Lillia]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Fighter", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Lissandra]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Locke]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Lucian]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Lulu]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Lux]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Malphite]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Malzahar]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Maokai]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[MasterYi]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Mel]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Milio]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[MissFortune]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[MonkeyKing]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Mordekaiser]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Morgana]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Naafiri]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin", "Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Nami]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Nasus]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Nautilus]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Neeko]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Nidalee]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Assassin", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Nilah]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Nocturne]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Nunu]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Olaf]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Orianna]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Ornn]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Pantheon]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Poppy]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Pyke]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Support", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Qiyana]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Quinn]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Rakan]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Rammus]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[RekSai]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Rell]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Renata]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Renekton]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Rengar]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin", "Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Riven]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Rumble]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Ryze]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Samira]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Sejuani]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Senna]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Seraphine]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Sett]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Shaco]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Shen]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Shyvana]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Singed]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Sion]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Sivir]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Skarner]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Smolder]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Sona]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Soraka]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Swain]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Sylas]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Mage", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Syndra]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[TahmKench]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Taliyah]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Talon]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Taric]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Support", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Teemo]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Thresh]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Tristana]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Trundle]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Tryndamere]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[TwistedFate]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Twitch]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Udyr]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Urgot]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Varus]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Vayne]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Veigar]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Velkoz]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Vex]
+dano = "mixto"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Vi]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Viego]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Viktor]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Vladimir]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Volibear]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Warwick]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Xayah]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Xerath]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[XinZhao]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Yasuo]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Yone]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Yorick]
+dano = "mixto"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter", "Tank"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Yunara]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Yuumi]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Zaahen]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Zac]
+dano = "magico"
+alcance = "cuerpo"
+etiquetas_riot = ["Tank", "Fighter"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Zed]
+dano = "fisico"
+alcance = "cuerpo"
+etiquetas_riot = ["Assassin"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Zeri]
+dano = "fisico"
+alcance = "distancia"
+etiquetas_riot = ["Marksman"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Ziggs]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Zilean]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Support", "Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Zoe]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false
+
+[Zyra]
+dano = "magico"
+alcance = "distancia"
+etiquetas_riot = ["Mage", "Support"]
+enganche = ""
+control = ""
+escala = ""
+arquetipo = ""
+verificado = false

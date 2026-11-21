@@ -966,7 +966,7 @@ Decisiones del supervisor para esta fase:
 - **Dos versiones del briefing:** corta (máximo 5 líneas, para leer durante la selección) y larga
   (para la pantalla de carga).
 
-### [ ] D01 — Ficha automática de campeones
+### [x] D01 — Ficha automática de campeones
 
 **Paquete detallado: `tareas/D01.md` (síguelo literalmente; las pruebas ya existen en `tests/test_conocimiento.py`).**
 

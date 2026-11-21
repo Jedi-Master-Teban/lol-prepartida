@@ -823,3 +823,9 @@ El commit `d83f432` se llamó "r02b" pero contiene R03 (`metricas_por_rol`). No 
 - `reglas/briefing.toml`: primer lote de 8 reglas y pesos provisionales (los umbrales se ajustan en el PUNTO DE CONTROL 5).
 - PLAN.md: D04 se divide en D04a (intérprete, listo) y D04b (puntuación del pool, bloqueada). D02, D04b, D05 y D06 quedan BLOQUEADAS para que OpenCode se detenga tras D04a.
 - Orden para OpenCode: D01, D03, D04a (una sesión y un commit por tarea).
+
+## D01 — 2026-11-20
+- Archivos: src/prepartida/conocimiento.py, src/prepartida/cli.py, conocimiento/campeones.toml, PLAN.md, BITACORA.md
+- Verificación: pytest tests/test_conocimiento.py (23 pasan); pytest completo sin test_composicion/test_reglas (modulos de D03/D04a inexistentes) 88 pasan; prepartida conocimiento --generar escribe 173 campeones y segunda ejecucion idéntica byte a byte (git diff vacio)
+- Decisiones tomadas: TOML escrito a mano sin libreria (tomllib solo para leer); bool antes que int en _valor_toml; entradas de existentes no en Data Dragon se conservan sin cambios; no se mutan los diccionarios recibidos.
+- Dudas para el supervisor: ninguna.
